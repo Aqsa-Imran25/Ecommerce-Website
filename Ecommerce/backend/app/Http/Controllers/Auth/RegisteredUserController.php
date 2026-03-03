@@ -36,7 +36,6 @@ class RegisteredUserController extends Controller
                 'errors' => $validator->errors()
             ], 400);
         }
-        $isFirstUser = User::count() === 0;
 
         $user = User::create([
             'name' => $request->name,

@@ -57,7 +57,7 @@ function Cart() {
                       {item.title}
                     </h3>
 
-                    <p className="text-gray-500 mt-1">Price: ${item.price}</p>
+                    <p className="text-gray-500 mt-1">Price: Rs {item.price}</p>
 
                     <div className="flex items-center gap-4 mt-4">
                       <button

@@ -70,8 +70,8 @@ class ProducController extends Controller
     // latestproduct
     public function latestProduct()
     {
-        $latestProduct = Product::orderBy('id', 'DESC')->where('status', 1)
-            ->limit(6)
+        $latestProduct = Product::orderBy('id', 'ASC')->where('status', 1)
+            ->limit(3)
             ->get();
 
         return response()->json([
@@ -82,7 +82,7 @@ class ProducController extends Controller
     // featured
     public function featuredProduct()
     {
-        $featuredProduct = Product::orderBy('created_at', 'DESC')->where('status', 1)->where('is_Featured', 'yes')->limit(8)->get();
+        $featuredProduct = Product::orderBy('created_at', 'DESC')->where('status', 1)->where('is_Featured', 'yes')->limit(6)->get();
 
         return response()->json([
             'status' => 200,

@@ -406,7 +406,8 @@ function ProductCreate({ placeholder }) {
                                             type="checkbox"
                                             value={size.id}
                                             className="md:w-5 md:h-5 w-3 h-3 mr-2"
-                                            {...register("sizes", { required: "Please select a size." })}
+                                            {...register("sizes"
+                                                )}
                                         />
                                         <span>{size.name}</span>
                                     </label>

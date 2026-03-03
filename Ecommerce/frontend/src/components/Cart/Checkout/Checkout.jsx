@@ -49,6 +49,36 @@ function Checkout() {
             toast.error("Something Went Wrong!");
         }
     };
+    // fetchprofile
+    // fetch user
+    const fetchProfileData = async () => {
+        try {
+            const res = await fetch(`${apiUrl}/myaccount`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Accept": "application/json",
+                    Authorization: `Bearer ${UserToken()}`
+                },
+            });
+
+            const result = await res.json();
+            console.log("API Response:", result);
+
+            if (result.status === 200 && result.data) {
+                setValue("phone_num", result.data.phone_num)
+                setValue("city", result.data.city)
+                setValue("state", result.data.state)
+                setValue("zip", result.data.zip)
+            }
+
+        } catch (error) {
+            console.error("Fetch error:", error);
+            toast.error("Something Went Wrong!");
+        }
+    };
+
+
 
     const handleCheckout = async (data) => {
 
@@ -99,13 +129,15 @@ function Checkout() {
                 },
             });
         } else {
-            console.log("Something went wrong!")
-            toast.error(result.message)
+
+            toast.error(result.message || "Something went wrong");
+
         }
     }
 
     useEffect(() => {
         fetchUserData();
+        fetchProfileData();
     }, []);
 
     return (

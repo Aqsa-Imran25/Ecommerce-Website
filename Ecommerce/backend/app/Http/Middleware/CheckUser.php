@@ -15,11 +15,12 @@ class CheckUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = auth()->user();
-        if ($user->hasRole('user')) {
+        $user = $request->user();
+        if ($user && $user->hasRole('user')) {
             return $next($request);
         } else {
             return response()->json([
+                'status' => 403,
                 'message' => "Access Denied"
             ]);
         }

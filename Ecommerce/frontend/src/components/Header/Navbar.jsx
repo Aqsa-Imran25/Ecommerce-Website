@@ -76,13 +76,27 @@ function Navbar() {
             <NavLink
               to="/cart"
               className={({ isActive }) =>
-                `relative ${isActive ? "text-[#007595] font-semibold border-b-2 border-[#007595]" : "text-gray-700 hover:text-[#007595]"}`
+                `relative flex items-center ${isActive
+                  ? "text-[#007595] font-semibold border-b-2 border-[#007595]"
+                  : "text-gray-700 hover:text-[#007595]"
+                }`
               }
             >
-              <FontAwesomeIcon icon={faShoppingCart} />
-              <span className="absolute -top-2 -right-3 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-600 rounded-full">
-                {totalItems()}
-              </span>
+              <FontAwesomeIcon icon={faShoppingCart} className="text-lg" />
+
+              {totalItems() > 0 && (
+                <span className="absolute -top-2 -right-2 
+      sm:-right-3 
+      flex items-center justify-center 
+      min-w-[18px] h-[18px] 
+      text-[10px] sm:text-xs 
+      font-bold 
+      text-white 
+      bg-red-600 
+      rounded-full">
+                  {totalItems()}
+                </span>
+              )}
             </NavLink>
 
             {!isLoggedIn ? (
@@ -120,10 +134,18 @@ function Navbar() {
             </NavLink>
             <NavLink className="py-2 relative" to="/cart">
               <FontAwesomeIcon icon={faShoppingCart} size="1x" />
-              <span className="absolute top-0 right-0 
-               px-1 py-0 text-sm leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-600 rounded-full">
-                {totalItems()}
-              </span>
+              {totalItems() > 0 && (
+                <span className="absolute -top-1 -right-2 
+    flex items-center justify-center 
+    min-w-[16px] h-[16px] 
+    text-[9px] 
+    font-bold 
+    text-white 
+    bg-red-600 
+    rounded-full">
+                  {totalItems()}
+                </span>
+              )}
             </NavLink>
 
             {!isLoggedIn ? (

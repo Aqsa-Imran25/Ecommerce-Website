@@ -173,9 +173,8 @@ class ProductController extends Controller
             'short_description' => 'nullable',
             'price' => 'required|numeric',
             'compare_price' => 'nullable|numeric',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'category_id' => 'required|exists:categories,id',
-            'brand_id' => 'nullable|nullable|exists:brands,id',
+            'brand_id' => 'nullable|exists:brands,id',
             'sku' => 'required|unique:products,sku,' . $id,
             'qty' => 'nullable|integer',
             'status' => 'required|integer',
@@ -185,7 +184,6 @@ class ProductController extends Controller
             'old_image_ids.*' => 'integer|exists:product_imgs,id',
             'sizes' => 'nullable|array',
             'sizes.*' => 'integer|exists:sizes,id',
-
         ]);
 
         if ($validator->fails()) {
@@ -194,6 +192,7 @@ class ProductController extends Controller
                 'errors' => $validator->errors()
             ]);
         }
+
         $product->update([
             'user_id' => Auth::id(),
             'title' => $request->title,
@@ -201,7 +200,6 @@ class ProductController extends Controller
             'short_description' => $request->short_description,
             'price' => $request->price,
             'compare_price' => $request->compare_price,
-            'image' => null,
             'category_id' => $request->category_id,
             'brand_id' => $request->brand_id,
             'qty' => $request->qty,
@@ -209,29 +207,30 @@ class ProductController extends Controller
             'status' => $request->status,
             'is_Featured' => $request->is_Featured,
         ]);
-        // if user remove any old img from db
+
 
         if ($request->old_image_ids) {
             ProductImg::where('product_id', $id)
                 ->whereNotIn('id', $request->old_image_ids)
                 ->get()
                 ->each(function ($img) {
-                    $path = storage_path('public/product/' . $img->name);
+                    $path = storage_path('app/public/product/' . $img->name);
                     if (file_exists($path)) unlink($path);
                     $img->delete();
                 });
         } else {
             ProductImg::where('product_id', $id)->get()->each(function ($img) {
-                $path = storage_path('public/product/' . $img->name);
+                $path = storage_path('app/public/product/' . $img->name);
                 if (file_exists($path)) unlink($path);
                 $img->delete();
             });
         }
 
+
         if ($request->hasFile('new_images')) {
             foreach ($request->file('new_images') as $file) {
-
-                $imageName = $this->tempImage($file, 'product');
+                $imageName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('product', $imageName, 'public');
 
                 ProductImg::create([
                     'product_id' => $product->id,
@@ -240,7 +239,14 @@ class ProductController extends Controller
             }
         }
 
-        // sizes array
+
+        $firstImage = ProductImg::where('product_id', $product->id)->first();
+        if ($firstImage) {
+            $product->image = $firstImage->name;
+            $product->save();
+        }
+
+
         if (!empty($request->sizes)) {
             ProductSize::where('product_id', $product->id)->delete();
             foreach ($request->sizes as $sizeId) {

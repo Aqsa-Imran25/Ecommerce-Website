@@ -28,10 +28,6 @@ function ProductEdit({ placeholder }) {
   const [sizes, setSizes] = useState([]);
 
 
-
-
-
-
   const config = useMemo(() => ({
     readonly: false,
     placeholder: placeholder || ''
@@ -455,7 +451,7 @@ function ProductEdit({ placeholder }) {
                       type="checkbox"
                       value={size.id}
                       className="md:w-5 md:h-5 w-3 h-3 mx-2"
-                      {...register("sizes", { required: "Please select a size." })}
+                      {...register("sizes")}
                     />
                     <span>{size.name}</span>
                   </label>
@@ -506,12 +502,7 @@ function ProductEdit({ placeholder }) {
                       <FontAwesomeIcon icon={faCircleXmark} className="text-red-500 text-lg" />
                     </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => defaultImage(img.name)}
-                    className="bg-[#007595] rounded-lg p-1 w-full mt-5 text-white shadow-md"
-                  >Set as Default
-                  </button>
+                
                 </div>
               ))}
             </div>
@@ -536,12 +527,7 @@ function ProductEdit({ placeholder }) {
                       </button>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => defaultImage(img.name)}
-                    className="bg-[#007595] rounded-lg p-1 w-full mt-7 text-white shadow-md"
-                  >Set as Default
-                  </button>
+                 
 
                 </div>
               ))}

@@ -49,7 +49,8 @@ Route::group([
     Route::resource('/order', OrderController::class);
 
     // profile
-    Route::resource('/myaccount', ProfileController::class);
+    Route::post('/myaccount', [ProfileController::class, 'store']);
+    Route::get('/myaccount', [ProfileController::class, 'show']);
 
 
     // shipping

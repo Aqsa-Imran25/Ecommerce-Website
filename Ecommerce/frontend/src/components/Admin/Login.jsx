@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { apiUrl } from "../common/Http";
 import { toast } from "react-toastify";
 import { AdminAuthContext } from "../context/AdminAuth";
+import { UserAuthContext } from "../context/UserAuth";
 
 function Login() {
   const {
@@ -12,7 +13,8 @@ function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { login } = useContext(AdminAuthContext);
+  const { login: adminLogin } = useContext(AdminAuthContext);
+  const { login: userLogin } = useContext(UserAuthContext);
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -35,7 +37,7 @@ function Login() {
       console.log("API Result:", result);
       // 
       if (result.status === 200) {
-
+        console.log("API Result:", result.role);
         const userData = {
           token: result.token,
           name: result.user.name,
@@ -50,7 +52,7 @@ function Login() {
             sessionStorage.setItem("adminInfo", JSON.stringify(userData));
           }
 
-          login(userData);
+          adminLogin(userData);
           navigate("/admin/dashboard");
           toast.success("Admin Login Successful!");
 
@@ -62,7 +64,7 @@ function Login() {
             sessionStorage.setItem("userInfo", JSON.stringify(userData));
           }
 
-          login(userData);
+          userLogin(userData);
           navigate("/user/dashboard");
           toast.success("User Login Successful!");
         }

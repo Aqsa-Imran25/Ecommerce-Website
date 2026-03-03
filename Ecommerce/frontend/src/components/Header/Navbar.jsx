@@ -5,12 +5,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { AdminAuthContext } from "../context/AdminAuth";
 import { UserAuthContext } from "../context/UserAuth";
+import { CartContext } from "../context/Cart";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
   const { user: adminLogin, logout: adminLogout } =
     useContext(AdminAuthContext);
   const { user: userLogin, logout: userLogout } = useContext(UserAuthContext);
+  const { cartData, totalItems, } = useContext(CartContext);
+
+
 
   const handleLogout = () => {
     if (adminLogin) adminLogout();
@@ -35,10 +39,6 @@ function Navbar() {
           <NavLink to="/">
             <img src={aura} alt="logo" className="w-20 rounded-full" />
           </NavLink>
-
-          {/* <NavLink to="/">
-            <img src={artisan} alt="logo" className="w-20 rounded-full" />
-          </NavLink> */}
 
           <div className="hidden sm:flex gap-8 items-center">
             <NavLink
@@ -73,16 +73,16 @@ function Navbar() {
             >
               Contact
             </NavLink>
-
             <NavLink
               to="/cart"
               className={({ isActive }) =>
-                isActive
-                  ? "text-[#007595] font-semibold border-b-2 border-[#007595]"
-                  : "text-gray-700 hover:text-[#007595]"
+                `relative ${isActive ? "text-[#007595] font-semibold border-b-2 border-[#007595]" : "text-gray-700 hover:text-[#007595]"}`
               }
             >
               <FontAwesomeIcon icon={faShoppingCart} />
+              <span className="absolute -top-2 -right-3 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-600 rounded-full">
+                {totalItems()}
+              </span>
             </NavLink>
 
             {!isLoggedIn ? (
@@ -118,8 +118,12 @@ function Navbar() {
             <NavLink className="block py-2" to="/contact">
               Contact
             </NavLink>
-            <NavLink className="block py-2" to="/cart">
-              <FontAwesomeIcon icon={faShoppingCart} />
+            <NavLink className="py-2 relative" to="/cart">
+              <FontAwesomeIcon icon={faShoppingCart} size="1x" />
+              <span className="absolute top-0 right-0 
+               px-1 py-0 text-sm leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-600 rounded-full">
+                {totalItems()}
+              </span>
             </NavLink>
 
             {!isLoggedIn ? (

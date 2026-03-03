@@ -13,10 +13,7 @@ class ProfileController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.
@@ -31,11 +28,11 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-          $validator = Validator::make($request->all(), [
-            'phone_num' => 'required',
-            'city' => 'required',
-            'state' => 'required',
-            'zip' => 'required',
+        $validator = Validator::make($request->all(), [
+            'phone_num' => 'required|string',
+            'city'      => 'required|string|max:255',
+            'state'     => 'required|string|max:255',
+            'zip'       => 'required|string|max:10',
         ]);
 
         if ($validator->fails()) {
@@ -45,27 +42,41 @@ class ProfileController extends Controller
             ], 400);
         }
 
-      Profile::create([
-            'user_id' => Auth::id(),
-            'phone_num' => $request->phone_num,
-            'city' => $request->city,
-            'state' => $request->state,
-            'zip' => $request->zip,
-        ]);
+        Profile::updateOrCreate(
+            ['user_id' => Auth::id()],
+            [
+                'phone_num' => $request->phone_num,
+                'city' => $request->city,
+                'state' => $request->state,
+                'zip' => $request->zip,
+            ]
+        );
 
         return response()->json([
             'status' => 200,
             'message' => "Profile Updated successfully",
-           
+
         ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show()
     {
-        
+        $profile = Profile::where('user_id', Auth::id())->first();
+
+        if (!$profile) {
+            return response()->json([
+                'status' => 404,
+                'message' => "Profile Not Found!",
+                'data' => []
+            ], 404);
+        }
+        return response()->json([
+            'status' => 200,
+            'data' => $profile,
+        ], 200);
     }
 
     /**

@@ -20,11 +20,13 @@ function Footer() {
         },
         {
             title: "Follow Us",
-            links: [<FontAwesomeIcon icon={faInstagram} className='text-red-400' size='2x' />, 
-            <FontAwesomeIcon icon={faFacebook} className='text-blue-500' size='2x' />, 
-            <FontAwesomeIcon icon={faYoutube} className='text-red-500' size='2x' />],
+            links: [<FontAwesomeIcon icon={faInstagram} className='text-red-400 text-sm md:text-3xl' />, 
+            <FontAwesomeIcon icon={faFacebook} className='text-blue-500 text-sm md:text-3xl'
+            //  size='2x'
+              />, 
+            <FontAwesomeIcon icon={faYoutube} className='text-red-500 text-sm md:text-3xl'/>],
             linkes: ["/", "/", "/"],
-            className: "flex space-x-3"
+            className: "flex space-x-1 md:space-x-2"
         }
     ];
     const year = new Date().getFullYear();

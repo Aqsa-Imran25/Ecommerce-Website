@@ -4,9 +4,9 @@ import { apiUrl, UserToken } from "../common/Http";
 
 export const CartContext = createContext({
   cartData: [],
-  addToCart: () => {},
-  updateCartqty: () => {},
-  removeItem: () => {},
+  addToCart: () => { },
+  updateCartqty: () => { },
+  removeItem: () => { },
   shipping: () => 0,
   subTotal: () => 0,
   grandTotal: () => 0,
@@ -54,7 +54,7 @@ export const CartProvider = ({ children }) => {
 
         const result = await res.json();
         if (result.status == 200) {
-          console.log("Shippiing", result);
+        
           setShippingCost(result.data.shipping_charge);
         }
       } catch (error) {
@@ -121,6 +121,14 @@ export const CartProvider = ({ children }) => {
     toast.success("Remove Item Successfully!");
   };
 
+  // totalItems
+  const totalItems = () => {
+    return cartData.reduce((total, item) =>
+      total + item.qty, 0
+    );
+  }
+
+
   return (
     <CartContext.Provider
       value={{
@@ -128,6 +136,7 @@ export const CartProvider = ({ children }) => {
         shippingCost,
         addToCart,
         shipping,
+        totalItems,
         updateCartqty,
         subTotal,
         grandTotal,

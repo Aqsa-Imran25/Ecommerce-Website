@@ -268,7 +268,7 @@ function Checkout() {
                                                     </h4>
 
                                                     <p className="text-sm text-gray-500">
-                                                        ${cart.price}
+                                                        RS {cart.price}
                                                     </p>
                                                 </div>
 
@@ -304,19 +304,19 @@ function Checkout() {
 
                             <div className="flex justify-between">
                                 <span>Subtotal</span>
-                                <span>${subTotal()}</span>
+                                <span>Rs {subTotal()}</span>
                             </div>
 
                             <div className="flex justify-between">
                                 <span>Shipping</span>
-                                <span>${shipping()}</span>
+                                <span>Rs {shipping()}</span>
                             </div>
 
                             <hr />
 
                             <div className="flex justify-between font-bold text-lg">
                                 <span>Total</span>
-                                <span>${grandTotal()}</span>
+                                <span>Rs {grandTotal()}</span>
                             </div>
 
                         </div>

@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { CartContext } from "../context/Cart";
-import { apiUrl, UserToken } from "../common/Http";
-import { toast } from "react-toastify";
+
 
 function Cart() {
   
@@ -107,17 +106,17 @@ function Cart() {
 
               <div className="flex justify-between mb-3">
                 <span>Subtotal</span>
-                <span>${subTotal()}</span>
+                <span>Rs {subTotal()}</span>
               </div>
 
               <div className="flex justify-between mb-3">
                 <span>Shipping</span>
-                <span>${shipping()}</span>
+                <span>Rs {shipping()}</span>
               </div>
 
               <div className="border-t pt-4 mt-4 flex justify-between font-bold text-lg">
                 <span>Total</span>
-                <span>${grandTotal()}</span>
+                <span>Rs {grandTotal()}</span>
               </div>
 
               <Link

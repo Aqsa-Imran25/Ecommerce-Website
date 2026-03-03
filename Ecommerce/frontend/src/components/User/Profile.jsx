@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from "react-hook-form"
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router';
-import Sample from '../common/Sample';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { apiUrl, UserToken } from '../common/Http';
+import Layout from '../common/Layout';
+import Sidebar from './Sidebar';
 
 function Profile() {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
     const [disable, setDisable] = useState(false)
     const navigate = useNavigate()
-
 
     const saveProfile = async (data) => {
         console.log(data)
@@ -30,67 +30,229 @@ function Profile() {
 
         console.log("API Show Result:", result.data);
 
-        if (result.status == 200) {
-
+        if (result && result.status === 200) {
+            console.log(result.data)
             toast.success(result.message)
-            navigate('/admin/categories')
+            navigate('/myaccount')
         } else {
             console.log("Something went wrong!")
         }
     }
-    return (
-        <>
-            <Sample title='My Account'>
+    // fetchuserInfo
+    const fetchUserData = async () => {
+        try {
+            const res = await fetch(`${apiUrl}/getUser`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Accept": "application/json",
+                    Authorization: `Bearer ${UserToken()}`
+                },
+            });
 
-                <form onSubmit={handleSubmit(saveProfile)}>
-                    <div className="flex flex-wrap -mx-3 mb-6">
-                        <div className="w-full px-3 mb-6 md:mb-0">
-                            <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="grid-first-name">
-                                Name
-                            </label>
-                            <input name='name'
-                                {
-                                ...register("name",
-                                    {
-                                        required: "The name field is required.",
-                                    })}
-                                className="appearance-none block w-full bg-gray-200 text-black border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text" placeholder="Jane" />
-                            {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
-                        </div>
+            const result = await res.json();
+
+            if (result.status === 200 && result.data) {
+                setValue("name", result.data.name)
+                setValue("email", result.data.email)
+            }
+
+        } catch (error) {
+            console.error("Fetch error:", error);
+            toast.error("Something Went Wrong!");
+        }
+    };
+
+    // fetchprofile data
+    const fetchProfileData = async () => {
+        try {
+            const res = await fetch(`${apiUrl}/myaccount`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Accept": "application/json",
+                    Authorization: `Bearer ${UserToken()}`
+                },
+            });
+
+            const result = await res.json();
+
+            if (result.status === 200 && result.data) {
+
+                setValue("phone_num", result.data.phone_num)
+                setValue("city", result.data.city)
+                setValue("state", result.data.state)
+                setValue("zip", result.data.zip)
+            }
+
+        } catch (error) {
+            console.error("Fetch error:", error);
+            toast.error("Something Went Wrong!");
+        }
+    };
+
+    useEffect(() => {
+        fetchUserData();
+        fetchProfileData();
+    }, []);
+
+
+    return (
+        <div >
+            <Layout>
+                <div className='md:container md:mx-auto px-6 py-5 my-5'>
+                    <div className="mb-6">
+                        <h5 className="text-sm md:text-2xl font-bold text-gray-800">
+                            My Account
+                        </h5>
+                        <p className="text-gray-500 text-sm mt-1">
+                            Manage your profile information
+                        </p>
                     </div>
 
-                    <div className="flex flex-wrap -mx-3 mb-2">
+                    <div className="flex flex-col md:flex-row gap-3">
+                        <div className="w-full md:w-1/4">
+                            <Sidebar />
+                        </div>
+                        <div className="w-full md:w-3/4">
+                            <div className="bg-white shadow-xl rounded-2xl p-6 md:p-8">
+                                <form
+                                    className="space-y-8"
+                                    onSubmit={handleSubmit(saveProfile)}
+                                >
 
-                        <div className="w-full px-3 mb-6 md:mb-0">
-                            <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2" htmlFor="grid-state">
-                                Status
-                            </label>
+                                    {/* Name & Email */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-sm font-semibold mb-2 text-gray-700">
+                                                Full Name
+                                            </label>
+                                            <input
+                                                {...register("name", { required: "Name required" })}
+                                                type="text"
+                                                placeholder="Enter your name"
+                                                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#007595] transition"
+                                            />
+                                            {errors.name && (
+                                                <p className="text-red-500 text-sm mt-1">
+                                                    {errors.name.message}
+                                                </p>
+                                            )}
+                                        </div>
 
-                            <div className="relative">
-                                <select
-                                    {
-                                    ...register("status",
-                                        {
-                                            required: "Please Choose Atleast One Option.",
-                                        })}
-                                    className="block appearance-none w-full bg-gray-200 border border-gray-200 text-black py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                    <option value="">Select Status</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">Block</option>
-                                </select>
-                                {errors.status && <p className="text-red-500 text-sm">{errors.status.message}</p>}
-                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-black">
-                                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
-                                </div>
+                                        <div>
+                                            <label className="block text-sm font-semibold mb-2 text-gray-700">
+                                                Email Address
+                                            </label>
+                                            <input
+                                                {...register("email", { required: "Email required" })}
+                                                type="email"
+                                                placeholder="Enter your email"
+                                                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#007595] transition"
+                                            />
+                                            {errors.email && (
+                                                <p className="text-red-500 text-sm mt-1">
+                                                    {errors.email.message}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Phone */}
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-2 text-gray-700">
+                                            Mobile Number
+                                        </label>
+                                        <input
+                                            {...register("phone_num", {
+                                                required: "Phone number required",
+                                            })}
+                                            type="text"
+                                            placeholder="03XXXXXXXXX"
+                                            className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#007595] transition"
+                                        />
+                                        {errors.phone_num && (
+                                            <p className="text-red-500 text-sm mt-1">
+                                                {errors.phone_num.message}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* Address Section */}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        <div>
+                                            <label className="block text-sm font-semibold mb-2 text-gray-700">
+                                                City
+                                            </label>
+                                            <input
+                                                {...register("city", { required: "City required" })}
+                                                type="text"
+                                                placeholder="Rawalpindi"
+                                                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#007595] transition"
+                                            />
+                                            {errors.city && (
+                                                <p className="text-red-500 text-sm mt-1">
+                                                    {errors.city.message}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-semibold mb-2 text-gray-700">
+                                                State
+                                            </label>
+                                            <input
+                                                {...register("state", { required: "State required" })}
+                                                type="text"
+                                                placeholder="Punjab"
+                                                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#007595] transition"
+                                            />
+                                            {errors.state && (
+                                                <p className="text-red-500 text-sm mt-1">
+                                                    {errors.state.message}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-semibold mb-2 text-gray-700">
+                                                Zip Code
+                                            </label>
+                                            <input
+                                                {...register("zip", { required: "Zip required" })}
+                                                type="text"
+                                                placeholder="46000"
+                                                className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#007595] transition"
+                                            />
+                                            {errors.zip && (
+                                                <p className="text-red-500 text-sm mt-1">
+                                                    {errors.zip.message}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Submit Button */}
+                                    <div className="pt-4">
+                                        <button
+                                            type="submit"
+                                            disabled={disable}
+                                            className={`w-full sm:w-auto px-8 py-3 rounded-xl text-white font-semibold transition duration-300 ${disable
+                                                ? "bg-gray-400 cursor-not-allowed"
+                                                : "bg-[#007595] hover:bg-gray-900"
+                                                }`}
+                                        >
+                                            {disable ? "Updating..." : "Update Profile"}
+                                        </button>
+                                    </div>
+
+                                </form>
                             </div>
                         </div>
                     </div>
-                    <button disable={false}
-                        className='rounded-md bg-[#007595] py-2 px-6 mt-2 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none'
-                    >Submit</button>
-                </form>
-            </Sample>
-        </>
+                </div>
+            </Layout>
+        </div>
     )
 }
 

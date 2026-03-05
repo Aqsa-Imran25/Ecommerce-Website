@@ -38,11 +38,9 @@ function Product() {
     const [ratings, setRatings] = useState([]);
     // LIKES
     const [likes, setLikes] = useState(() => {
-
-        const productLike = localStorage.gatItem("productLikes",);
-        return productLike ? JSON.parse(productLike) : false;
-    }
-    );
+        const storedLikes = JSON.parse(localStorage.getItem("productLikes")) || {};
+        return storedLikes[id] || false;
+    });
     // like count
     const [likesCount, setLikesCount] = useState(0);
 
@@ -209,7 +207,11 @@ function Product() {
                 toast.success(result.message);
                 setLikes(result.liked);
                 setLikesCount(result.totalLikes)
-                localStorage.setItem("productLikes",JSON.stringify(result.liked));
+                const storedLikes = JSON.parse(localStorage.getItem("productLikes")) || {};
+                storedLikes[id] = result.liked;
+
+                localStorage.setItem("productLikes", JSON.stringify(storedLikes));
+
 
             }
 

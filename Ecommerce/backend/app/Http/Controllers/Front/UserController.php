@@ -241,13 +241,15 @@ class UserController extends Controller
             ->latest()
             ->get();
         $avgRating = $reviews->avg('rate');
-        // dd($avgRating);
+        $totalReviews=$reviews->count();
+       
         return response()->json([
             'status' => 200,
             'data' =>
             [
                 'reviews' => $reviews,
                 'avgRating' => $avgRating,
+                'totalReviews'=>$totalReviews,
             ]
         ], 200);
     }

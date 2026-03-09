@@ -119,7 +119,7 @@ function ReviewSection() {
         {reviews.map((rev) => (
           <div key={rev.id} className="border-b py-4">
             <div className="flex items-center gap-2">
-              <strong>{rev.user.name}</strong>
+              <strong>{rev.user?.name}</strong>
 
               <StarRating rating={rev.rate} setRating={() => {}} />
             </div>

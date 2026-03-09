@@ -254,7 +254,7 @@ function Product() {
               </Link>
               <span className="pointer-events-none mx-2 text-black">/</span>
             </li>
-            <li className="flex items-center text-sm text-slate-500 hover:text-[#007595]">
+            <li className="flex items-center text-sm text-[#007595]">
               {product?.title}
             </li>
           </ol>
@@ -406,7 +406,7 @@ function Product() {
                   : "text-gray-600"
                   }`}
               >
-                Comments {comment.length}
+                Comments {comment && comment.length > 0 ? comment.length : ""}
               </button>
             </li>
           </ul>

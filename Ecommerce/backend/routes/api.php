@@ -18,7 +18,6 @@ use App\Http\Controllers\front\UserController as FrontUserController;
 use App\Http\Controllers\TempController;
 use Illuminate\Support\Facades\Route;
 
-// Route::post('/admin/login', [AuthenticatedSessionController::class, 'store']);
 
 // latest
 Route::get('/latestProduct', [ProducController::class, 'latestProduct']);

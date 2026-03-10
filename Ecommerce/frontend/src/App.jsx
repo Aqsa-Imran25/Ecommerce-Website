@@ -32,7 +32,6 @@ import CreateSize from "./components/Admin/Sizes/CreateSize";
 import ShowSize from "./components/Admin/Sizes/ShowSize";
 import EditSize from "./components/Admin/Sizes/EditSize";
 import ShowUser from "./components/Admin/User/ShowUser";
-import UserProduct from "./components/User/UserProduct";
 
 function App() {
   return (
@@ -43,7 +42,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/cart" element={<Cart />} />
-          {/* <Route path="/checkout" element={<Checkout />} /> */}
           <Route path="/product/:id" element={<Product />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/register" element={<Register />} />

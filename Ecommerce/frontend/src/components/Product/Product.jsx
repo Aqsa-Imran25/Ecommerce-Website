@@ -9,7 +9,6 @@ import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import StarRating from "../common/StarRating";
 import { apiUrl, UserToken } from "../common/Http";
 import { toast } from "react-toastify";
 import { CartContext } from "../context/Cart";

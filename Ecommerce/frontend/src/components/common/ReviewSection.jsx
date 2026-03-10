@@ -22,11 +22,11 @@ function ReviewSection() {
   // submit review
   const submitReview = async () => {
     if (!UserToken()) {
-      toast.error("Login required");
+      toast.error("Login required!");
       return;
     }
     if (rating === 0) {
-      toast.error("Please select rating");
+      toast.error("Please select rating!");
       return;
     }
 
@@ -84,7 +84,7 @@ function ReviewSection() {
       <div className="flex items-center gap-2">
         <h3 className="text-3xl font-bold">{avgRating?.toFixed(1)}</h3>
 
-        <StarRating rating={Math.round(avgRating)} setRating={() => {}} />
+        <StarRating rating={Math.round(avgRating)} setRating={() => { }} />
 
         <span className="text-gray-500">{reviews.length} Reviews</span>
       </div>
@@ -121,7 +121,7 @@ function ReviewSection() {
             <div className="flex items-center gap-2">
               <strong>{rev.user?.name}</strong>
 
-              <StarRating rating={rev.rate} setRating={() => {}} />
+              <StarRating rating={rev.rate} setRating={() => { }} />
             </div>
 
             <p className="text-gray-600 text-sm">

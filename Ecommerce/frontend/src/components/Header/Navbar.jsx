@@ -2,19 +2,23 @@ import React, { useContext, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import aura from "/assets/aura.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { AdminAuthContext } from "../context/AdminAuth";
 import { UserAuthContext } from "../context/UserAuth";
 import { CartContext } from "../context/Cart";
 
 function Navbar() {
+
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
   const { user: adminLogin, logout: adminLogout } =
     useContext(AdminAuthContext);
-  const { user: userLogin, logout: userLogout } = useContext(UserAuthContext);
-  const { cartData, totalItems, } = useContext(CartContext);
 
+  const { user: userLogin, logout: userLogout } =
+    useContext(UserAuthContext);
 
+  const { totalItems } = useContext(CartContext);
 
   const handleLogout = () => {
     if (adminLogin) adminLogout();
@@ -25,28 +29,34 @@ function Navbar() {
 
   return (
     <>
-      <div className="w-full bg-[#007595] h-14 sm:h-16 flex items-center justify-center">
-        <h1 className="text-xl sm:text-2xl font-bold text-white">
+      <div className="w-full bg-[#007595] h-14 flex items-center justify-center">
+        <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-wide">
           Handcrafted Jewelry
         </h1>
       </div>
 
-      <nav className="sticky top-0 z-50 bg-gray-50 shadow-md">
-        <div className="flex items-center justify-between px-6 md:px-16 py-4">
+      <nav className="sticky top-0 z-50 backdrop-blur-xl bg-gradient-to-b from-[#f7fbfc] to-[#e9f4f6] shadow-md">
 
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 md:px-10 py-3">
 
+          <Link to="/" className="flex items-center gap-2 group">
+            <img
+              src={aura}
+              alt="logo"
+              className="w-14 rounded-full transition duration-300 group-hover:scale-110"
+            />
+          </Link>
 
-          <NavLink to="/">
-            <img src={aura} alt="logo" className="w-20 rounded-full" />
-          </NavLink>
+          <div className="hidden md:flex items-center gap-10 font-medium text-gray-800">
 
-          <div className="hidden sm:flex gap-8 items-center">
             <NavLink
               to="/"
               className={({ isActive }) =>
-                isActive
-                  ? "text-[#007595] font-semibold border-b-2 border-[#007595]"
-                  : "text-gray-700 hover:text-[#007595]"
+                `transition duration-300 ${
+                  isActive
+                    ? "text-[#007595] border-b-2 border-[#007595]"
+                    : "hover:text-[#007595]"
+                }`
               }
             >
               Home
@@ -55,9 +65,11 @@ function Navbar() {
             <NavLink
               to="/shop"
               className={({ isActive }) =>
-                isActive
-                  ? "text-[#007595] font-semibold border-b-2 border-[#007595]"
-                  : "text-gray-700 hover:text-[#007595]"
+                `transition duration-300 ${
+                  isActive
+                    ? "text-[#007595] border-b-2 border-[#007595]"
+                    : "hover:text-[#007595]"
+                }`
               }
             >
               Shop
@@ -66,119 +78,133 @@ function Navbar() {
             <NavLink
               to="/contact"
               className={({ isActive }) =>
-                isActive
-                  ? "text-[#007595] font-semibold border-b-2 border-[#007595]"
-                  : "text-gray-700 hover:text-[#007595]"
+                `transition duration-300 ${
+                  isActive
+                    ? "text-[#007595] border-b-2 border-[#007595]"
+                    : "hover:text-[#007595]"
+                }`
               }
             >
               Contact
             </NavLink>
-            {/* dashboard */}
+
             <NavLink
               to={!adminLogin ? "/user/dashboard" : "/admin/dashboard"}
               className={({ isActive }) =>
-                `transition-all duration-300 ${isActive
-                  ? "text-[#007595] font-semibold border-b-2 border-[#007595]"
-                  : "text-gray-700 hover:text-[#007595]"
+                `transition duration-300 ${
+                  isActive
+                    ? "text-[#007595] border-b-2 border-[#007595]"
+                    : "hover:text-[#007595]"
                 }`
               }
             >
               Dashboard
             </NavLink>
-            <NavLink
-              to="/cart"
-              className={({ isActive }) =>
-                `relative flex items-center ${isActive
-                  ? "text-[#007595] font-semibold border-b-2 border-[#007595]"
-                  : "text-gray-700 hover:text-[#007595]"
-                }`
-              }
-            >
-              <FontAwesomeIcon icon={faShoppingCart} className="text-lg" />
+
+          </div>
+
+          <div className="hidden md:flex items-center gap-6">
+
+            <div className="relative flex items-center">
+
+              <input
+                type="text"
+                placeholder="Search jewelry..."
+                className={`border border-gray-200 bg-white rounded-full px-4 py-1 text-sm outline-none shadow-sm transition-all duration-500 ${
+                  searchOpen ? "w-56 opacity-100 mr-2" : "w-0 opacity-0"
+                }`}
+              />
+
+              <button
+                onClick={() => setSearchOpen(!searchOpen)}
+                className="text-gray-700 hover:text-[#007595] transition duration-300 hover:scale-110"
+              >
+                <FontAwesomeIcon icon={faSearch} />
+              </button>
+
+            </div>
+
+            <NavLink to="/cart" className="relative group">
+
+              <FontAwesomeIcon
+                icon={faShoppingCart}
+                className="text-xl text-gray-700 transition duration-300 group-hover:scale-110 group-hover:text-[#007595]"
+              />
 
               {totalItems() > 0 && (
-                <span className="absolute -top-2 -right-2 
-      sm:-right-3 
-      flex items-center justify-center 
-      min-w-[18px] h-[18px] 
-      text-[10px] sm:text-xs 
-      font-bold 
-      text-white 
-      bg-red-600 
-      rounded-full">
+                <span className="absolute -top-2 -right-3 bg-[#007595] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full animate-pulse">
                   {totalItems()}
                 </span>
               )}
+
             </NavLink>
 
-
-            {/*  */}
             {!isLoggedIn ? (
               <Link
                 to="/login"
-                className="px-4 py-2 rounded-full bg-[#007595] text-white hover:bg-slate-900 hover:scale-[1.02]"
+                className="px-5 py-2 rounded-full bg-[#007595] text-white shadow-md
+                hover:bg-[#004f64] hover:scale-105 transition duration-300"
               >
                 Login
               </Link>
             ) : (
               <button
                 onClick={handleLogout}
-                className="cursor-pointer px-6 py-2 rounded-full bg-[#007595] text-white hover:bg-slate-900 hover:scale-[1.02]"
+                className="px-5 py-2 rounded-full bg-[#007595] text-white shadow-md
+                hover:bg-[#004f64] hover:scale-105 transition duration-300"
               >
                 Logout
               </button>
             )}
+
           </div>
 
-          <button className="sm:hidden text-2xl" onClick={() => setOpen(!open)}>
+          <button
+            className="md:hidden text-3xl text-[#007595]"
+            onClick={() => setOpen(!open)}
+          >
             ☰
           </button>
+
         </div>
 
-        {open && (
-          <div className="sm:hidden bg-white shadow px-6 py-4">
-            <NavLink className="block py-2" to="/">
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-500 ${
+            open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+
+          <div className="px-6 py-6 bg-gradient-to-b from-[#f7fbfc] to-[#e9f4f6] space-y-4 text-gray-700">
+
+            <input
+              type="text"
+              placeholder="Search jewelry..."
+              className="w-full border border-gray-200 rounded-full px-4 py-2 text-sm outline-none"
+            />
+
+            <NavLink className="block hover:text-[#007595]" to="/">
               Home
             </NavLink>
-            <NavLink className="block py-2" to="/shop">
+
+            <NavLink className="block hover:text-[#007595]" to="/shop">
               Shop
             </NavLink>
-            <NavLink className="block py-2" to="/contact">
+
+            <NavLink className="block hover:text-[#007595]" to="/contact">
               Contact
             </NavLink>
+
             <NavLink
+              className="block hover:text-[#007595]"
               to={!adminLogin ? "/user/dashboard" : "/admin/dashboard"}
-              className="block py-2"
             >
               Dashboard
             </NavLink>
-            <NavLink className="py-2 relative" to="/cart">
-              <FontAwesomeIcon icon={faShoppingCart} size="1x" />
-              {totalItems() > 0 && (
-                <span className="absolute -top-1 -right-2 
-    flex items-center justify-center 
-    min-w-[16px] h-[16px] 
-    text-[9px] 
-    font-bold 
-    text-white 
-    bg-red-600 
-    rounded-full">
-                  {totalItems()}
-                </span>
-              )}
-            </NavLink>
 
-            {!isLoggedIn ? (
-              <NavLink className="block py-2" to="/login">
-                Login
-              </NavLink>
-            ) : (
-              <NavLink className="block py-2" onClick={handleLogout}>
-                Logout
-              </NavLink>
-            )}
           </div>
-        )}
+
+        </div>
+
       </nav>
     </>
   );

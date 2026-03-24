@@ -34,42 +34,47 @@ class AIController extends Controller
         );
     }
 
-    public function chat(Request $request)
-    {
-        $originalMessage = $request->message;
-        $message = strtolower($originalMessage);
+   public function chat(Request $request)
+{
+    $originalMessage = $request->message;
+    $message = trim($originalMessage);
 
-        $keywords = preg_split('/\s+/', $message, -1, PREG_SPLIT_NO_EMPTY);
+    // Prepare lowercase keywords
+    $keywords = preg_split('/\s+/', strtolower($message), -1, PREG_SPLIT_NO_EMPTY);
 
-        $products = Product::where(function ($q) use ($keywords) {
-            foreach ($keywords as $word) {
-                $q->orWhere('title', 'LIKE', "%{$word}%")
-                  ->orWhere('description', 'LIKE', "%{$word}%");
-            }
-        })->get();
-
-        if ($products->isEmpty()) {
-            $reply = "No products found matching your request.";
-
-            Chat_message::create([
-                'user_id' => auth()->id(),
-                'message' => $originalMessage,
-                'response' => $reply,
-            ]);
-
-            return response()->json(["response" => $reply]);
+    // Search products case-insensitively
+    $products = Product::where(function ($q) use ($keywords) {
+        foreach ($keywords as $word) {
+            $q->orWhereRaw('LOWER(title) LIKE ?', ["%{$word}%"])
+              ->orWhereRaw('LOWER(description) LIKE ?', ["%{$word}%"]);
         }
+    })->get();
 
-        $productText = "";
-        foreach ($products as $product) {
-            $productText .= "Id: {$product->id}\n";
-            $productText .= "Title: {$product->title}\n";
-            $productText .= "Price: {$product->price}\n";
-            $productText .= "Description: {$product->description}\n";
-            $productText .= "Image: {$product->image_url}\n\n";
-        }
+    // If no products matched
+    if ($products->isEmpty()) {
+        $reply = "No products found matching your request.";
 
-        $prompt = "
+        Chat_message::create([
+            'user_id' => auth()->id(),
+            'message' => $originalMessage,
+            'response' => $reply,
+        ]);
+
+        return response()->json(["response" => $reply]);
+    }
+
+    // Build product list string
+    $productText = "";
+    foreach ($products as $product) {
+        $productText .= "Id: {$product->id}\n";
+        $productText .= "Title: {$product->title}\n";
+        $productText .= "Price: {$product->price}\n";
+        $productText .= "Description: {$product->description}\n";
+        $productText .= "Image: {$product->image_url}\n\n";
+    }
+
+    // Prompt for AI
+    $prompt = "
 ### PRODUCTS LIST
 $productText
 
@@ -89,21 +94,23 @@ Image: <product image_url>
 Do NOT invent new products. Do NOT add any other text.
 List all matching products.";
 
-        $response = Http::timeout(300)->post('http://localhost:11434/api/generate', [
-            "model" => "phi3",
-            "prompt" => trim($prompt),
-            "stream" => false
-        ]);
+    // Call AI
+    $response = Http::timeout(300)->post('http://localhost:11434/api/generate', [
+        "model" => "phi3",
+        "prompt" => trim($prompt),
+        "stream" => false
+    ]);
 
-        $data = $response->json();
-        $reply = $data["response"] ?? "No response";
+    $data = $response->json();
+    $reply = $data["response"] ?? "No response";
 
-        Chat_message::create([
-            'user_id' => auth()->id(),
-            'message' => $originalMessage,
-            'response' => $reply,
-        ]);
+    // Save chat
+    Chat_message::create([
+        'user_id' => auth()->id(),
+        'message' => $originalMessage,
+        'response' => $reply,
+    ]);
 
-        return response()->json(["response" => $reply]);
-    }
+    return response()->json(["response" => $reply]);
+}
 }

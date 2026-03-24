@@ -95,4 +95,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Like::class);
     }
+    // chat_messages
+     public function chat_messages()
+    {
+        return $this->hasMany(Chat_message::class);
+    }
 }

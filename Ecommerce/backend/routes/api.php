@@ -19,9 +19,6 @@ use App\Http\Controllers\front\UserController as FrontUserController;
 use App\Http\Controllers\TempController;
 use Illuminate\Support\Facades\Route;
 
-// chatbot
-Route::post('/ai/ask', [AIController::class, 'askAI']);
-Route::post('/ai/chat', [AIController::class, 'chat']);
 
 // latest
 Route::get('/latestProduct', [ProducController::class, 'latestProduct']);
@@ -56,6 +53,9 @@ Route::group([
         'checkUserRole'
     ]
 ], function () {
+    // chatbot
+    Route::post('/ai/ask', [AIController::class, 'askAI']);
+    Route::post('/ai/chat', [AIController::class, 'chat']);
 
     // product purchase
     Route::get('/purchaseproduct', [ProducController::class, 'index']);

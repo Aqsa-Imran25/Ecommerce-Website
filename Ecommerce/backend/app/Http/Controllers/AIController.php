@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chat_message;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -34,55 +35,75 @@ class AIController extends Controller
     }
 
     public function chat(Request $request)
-{
-    $message = $request->message;
+    {
+        $originalMessage = $request->message;
+        $message = strtolower($originalMessage);
 
-    // Get products to recommend
-    $products = Product::select('title','price','description')->limit(10)->get();
+        $keywords = preg_split('/\s+/', $message, -1, PREG_SPLIT_NO_EMPTY);
 
-    $productText = "";
-    foreach ($products as $product) {
-        $productText .= "Title: {$product->title}\n";
-        $productText .= "Price: {$product->price}\n";
-        $productText .= "Description: {$product->description}\n\n";
-    }
+        $products = Product::where(function ($q) use ($keywords) {
+            foreach ($keywords as $word) {
+                $q->orWhere('title', 'LIKE', "%{$word}%")
+                  ->orWhere('description', 'LIKE', "%{$word}%");
+            }
+        })->get();
 
-    // Improved prompt
-    $prompt = "
-You are a helpful and friendly ecommerce AI shopping assistant.
+        if ($products->isEmpty()) {
+            $reply = "No products found matching your request.";
 
-Follow these rules:
-1. Always answer politely and professionally.
-2. If the user says greetings like 'Hi', 'Hello', etc., reply with something polite like 'Hi! How can I help with your shopping today?'
-3. If the user asks for product recommendations or info, respond with a list of products from the provided product list.
-4. Format all product recommendations using this structure:
+            Chat_message::create([
+                'user_id' => auth()->id(),
+                'message' => $originalMessage,
+                'response' => $reply,
+            ]);
 
+            return response()->json(["response" => $reply]);
+        }
+
+        $productText = "";
+        foreach ($products as $product) {
+            $productText .= "Id: {$product->id}\n";
+            $productText .= "Title: {$product->title}\n";
+            $productText .= "Price: {$product->price}\n";
+            $productText .= "Description: {$product->description}\n";
+            $productText .= "Image: {$product->image_url}\n\n";
+        }
+
+        $prompt = "
+### PRODUCTS LIST
+$productText
+
+### USER REQUEST
+$message
+
+### OUTPUT FORMAT
+You are a professional product recommender.
+From the products above, output only matching product cards in this exact format:
+
+Id: <product id>
 Title: <product title>
 Price: <product price>
 Description: <product description>
+Image: <product image_url>
 
-5. Do not repeat the product list back to the user.
-6. Only recommend products from the provided products list.
+Do NOT invent new products. Do NOT add any other text.
+List all matching products.";
 
-Products:
-$productText
-
-User question:
-$message
-";
-
-    // Call the AI model
-    $response = Http::timeout(300)
-        ->post('http://localhost:11434/api/generate', [
+        $response = Http::timeout(300)->post('http://localhost:11434/api/generate', [
             "model" => "phi3",
-            "prompt" => $prompt,
+            "prompt" => trim($prompt),
             "stream" => false
         ]);
 
-    $data = $response->json();
+        $data = $response->json();
+        $reply = $data["response"] ?? "No response";
 
-    return response()->json([
-        "response" => $data["response"] ?? "No response"
-    ]);
-}
+        Chat_message::create([
+            'user_id' => auth()->id(),
+            'message' => $originalMessage,
+            'response' => $reply,
+        ]);
+
+        return response()->json(["response" => $reply]);
+    }
 }

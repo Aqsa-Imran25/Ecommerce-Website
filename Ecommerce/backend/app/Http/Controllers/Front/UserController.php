@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Chat_message;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Product;
@@ -241,19 +242,20 @@ class UserController extends Controller
             ->latest()
             ->get();
         $avgRating = $reviews->avg('rate');
-        $totalReviews=$reviews->count();
-       
+        $totalReviews = $reviews->count();
+
         return response()->json([
             'status' => 200,
             'data' =>
             [
                 'reviews' => $reviews,
                 'avgRating' => $avgRating,
-                'totalReviews'=>$totalReviews,
+                'totalReviews' => $totalReviews,
             ]
         ], 200);
     }
 
     // 
+   
 }
 // 

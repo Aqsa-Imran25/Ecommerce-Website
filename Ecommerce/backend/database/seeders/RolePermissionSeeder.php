@@ -34,11 +34,20 @@ class RolePermissionSeeder extends Seeder
 
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $userRole  = Role::firstOrCreate(['name' => 'user']);
-                                                                                                                                                                                                        
+        $storeRole  = Role::firstOrCreate(['name' => 'store']);
+        //    admin                                                                                                                                                                                 
         $adminRole->givePermissionTo(Permission::all());
-
+        // user
         $userRole->givePermissionTo([
             'view products'
+        ]);
+        // store permission
+        $storeRole->givePermissionTo([
+            'view products',
+            'create products',
+            'edit products',
+            'delete products',
+            'view orders',
         ]);
 
 

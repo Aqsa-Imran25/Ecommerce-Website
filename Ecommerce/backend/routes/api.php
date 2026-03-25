@@ -47,6 +47,7 @@ Route::get('/product/{id}/reviews', [FrontUserController::class, 'getReviews']);
 Route::get('/products/search', [ProducController::class, 'search']);
 
 
+
 Route::group([
     'middleware' => [
         'auth:sanctum',

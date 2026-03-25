@@ -21,6 +21,7 @@ class Product extends Model
         'barcode',
         'user_id',
         'is_Featured',
+        'store_id',
     ];
 
     // user

@@ -231,19 +231,34 @@ function Profile() {
                                             )}
                                         </div>
                                     </div>
+                                    <div className='flex gap-3'>
 
-                                    {/* Submit Button */}
-                                    <div className="pt-4">
-                                        <button
-                                            type="submit"
-                                            disabled={disable}
-                                            className={`w-full sm:w-auto px-8 py-3 rounded-xl text-white font-semibold transition duration-300 ${disable
-                                                ? "bg-gray-400 cursor-not-allowed"
-                                                : "bg-[#007595] hover:bg-gray-900"
-                                                }`}
-                                        >
-                                            {disable ? "Updating..." : "Update Profile"}
-                                        </button>
+                                        {/* Submit Button */}
+                                        <div className="pt-1">
+                                            <button
+                                                type="submit"
+                                                disabled={disable}
+                                                className={`w-full sm:w-auto px-8 py-3 rounded-xl text-white font-semibold transition duration-300 ${disable
+                                                    ? "bg-gray-400 cursor-not-allowed"
+                                                    : "bg-[#007595] hover:bg-gray-900"
+                                                    }`}
+                                            >
+                                                {disable ? "Updating..." : "Update Profile"}
+                                            </button>
+                                        </div>
+
+                                        {/* seller Button */}
+                                        <div className="pt-4">
+                                            <Link to=""
+                                                className={`w-full sm:w-auto px-8 py-3 rounded-xl text-white font-semibold transition duration-300 ${disable
+                                                    ? "bg-gray-400 cursor-not-allowed"
+                                                    : "bg-[#007595] hover:bg-gray-900"
+                                                    }`}
+                                            >
+                                                {disable ? "Seller..." : "Become a Seller"}
+                                            </Link>
+
+                                        </div>
                                     </div>
 
                                 </form>

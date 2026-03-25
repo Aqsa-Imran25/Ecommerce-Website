@@ -133,23 +133,17 @@ function Navbar() {
                 className="..."
               />
               {searchResults.length > 0 && (
-                <div className="search-results bg-white shadow-md">
+                <div className="search-results text-gray-700 hover:text-[#007595] transition duration-300 hover:scale-110">
                   {searchResults.map((product) => (
                     <Link to={`/product/${product.id}`} key={product.id}>
-                      <div className="p-2 hover:bg-gray-100">
+                      <div className="p-2">
                         {product.name}
+                          <FontAwesomeIcon icon={faSearch} />
                       </div>
                     </Link>
                   ))}
                 </div>
               )}
-
-              <button
-                onClick={() => setSearchOpen(!searchOpen)}
-                className="text-gray-700 hover:text-[#007595] transition duration-300 hover:scale-110"
-              >
-                <FontAwesomeIcon icon={faSearch} />
-              </button>
 
             </div>
 

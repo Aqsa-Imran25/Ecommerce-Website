@@ -9,8 +9,8 @@ Browse jewelry collections
 User authentication (login/signup)
 Add products to cart
 Place orders
-Responsive (mobile + desktop)
-AI Chatbot powered by Ollama (local LLM integration)
+Responsive design for both mobile and desktop
+AI chatbot powered by Ollama (local LLM integration)
 
 ## 🛠 Tech Stack
 

@@ -15,7 +15,6 @@ function Navbar() {
 
 
   const [open, setOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
 
   const { user: adminLogin, logout: adminLogout } =
     useContext(AdminAuthContext);

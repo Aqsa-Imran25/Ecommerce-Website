@@ -4,13 +4,14 @@ A modern ecommerce platform for handcrafted jewelry — built with **React** and
 
 Beautiful UI. Clean code. Simple experience.
 
-🚀 Features
-Browse jewelry collections
-User authentication (login/signup)
-Add products to cart
-Place orders
-Responsive design for both mobile and desktop
-AI chatbot powered by Ollama (local LLM integration)
+## 🚀 Features
+
+- Browse jewelry collections
+- User authentication (login/signup)
+- Add products to cart
+- Place orders
+- Responsive design for both mobile and desktop
+- AI chatbot powered by Ollama (local LLM integration)
 
 ## 🛠 Tech Stack
 

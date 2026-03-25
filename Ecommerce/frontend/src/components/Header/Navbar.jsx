@@ -85,7 +85,7 @@ function Navbar() {
             <NavLink
               to="/shop"
               className={({ isActive }) =>
-                `transition duration-300${isActive
+                `transition duration-300 ${isActive
                   ? "text-[#007595] border-b-2 border-[#007595]"
                   : "hover:text-[#007595]"
                 }`

@@ -160,27 +160,27 @@ function Product() {
     }
   };
   // deletecomment
-  const deleteComment = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this comment?"))
-      return;
+  // const deleteComment = async (id) => {
+  //   if (!window.confirm("Are you sure you want to delete this comment?"))
+  //     return;
 
-    const res = await fetch(`${apiUrl}/comment/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${UserToken()}`,
-      },
-    });
-    const result = await res.json();
+  //   const res = await fetch(`${apiUrl}/comment/${id}`, {
+  //     method: "DELETE",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json",
+  //       Authorization: `Bearer ${UserToken()}`,
+  //     },
+  //   });
+  //   const result = await res.json();
 
-    if (result.status == 200) {
-      toast.success(result.message);
-      setComment((prev) => prev.filter((com) => com.id !== id));
-    } else {
-      console.log("Something went wrong!");
-    }
-  };
+  //   if (result.status == 200) {
+  //     toast.success(result.message);
+  //     setComment((prev) => prev.filter((com) => com.id !== id));
+  //   } else {
+  //     console.log("Something went wrong!");
+  //   }
+  // };
 
   // handleLikesproduct
   const handleLikes = async () => {
@@ -209,38 +209,38 @@ function Product() {
   };
 
   // handleLikesComment
-  const likeComment = async (commentId) => {
-    try {
-      const res = await fetch(`${apiUrl}/comment/${commentId}/like`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${UserToken()}`,
-        },
-      });
+  // const likeComment = async (commentId) => {
+  //   try {
+  //     const res = await fetch(`${apiUrl}/comment/${commentId}/like`, {
+  //       method: "POST",
+  //       headers: {
+  //         Accept: "application/json",
+  //         Authorization: `Bearer ${UserToken()}`,
+  //       },
+  //     });
 
-      const result = await res.json();
+  //     const result = await res.json();
 
-      if (result.status === 200) {
-        setComment((prev) =>
-          prev.map((c) =>
-            c.id === commentId
-              ? {
-                ...c,
-                likes_count: result.totalLikes,
-                liked: result.liked,
-              }
-              : c,
-          ),
-        );
+  //     if (result.status === 200) {
+  //       setComment((prev) =>
+  //         prev.map((c) =>
+  //           c.id === commentId
+  //             ? {
+  //               ...c,
+  //               likes_count: result.totalLikes,
+  //               liked: result.liked,
+  //             }
+  //             : c,
+  //         ),
+  //       );
 
-        toast.success(result.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong!");
-    }
-  };
+  //       toast.success(result.message);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error("Something went wrong!");
+  //   }
+  // };
 
   return (
     <Layout>
@@ -391,10 +391,11 @@ function Product() {
               >
                 Reviews
               </button>
+
             </li>
 
             {/* comments */}
-            <li className="mr-1">
+            {/* <li className="mr-1">
               <button
                 onClick={() => setActiveTab("comments")}
                 className={`inline-block py-2 px-4 font-semibold cursor-pointer ${activeTab === "comments"
@@ -404,7 +405,7 @@ function Product() {
               >
                 Comments {comment && comment.length > 0 ? comment.length : ""}
               </button>
-            </li>
+            </li> */}
           </ul>
 
           <div className="mt-4">
@@ -414,7 +415,7 @@ function Product() {
             {/* reviews */}
             {activeTab === "reviews" && <ReviewSection />}
 
-            {activeTab === "comments" && (
+            {/* {activeTab === "comments" && (
               <div>
                 <section className=" relative">
                   <div className="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto">
@@ -567,7 +568,7 @@ function Product() {
                   </div>
                 </section>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>

@@ -4,8 +4,12 @@ import Breadcrum from './common/Breadcrum';
 import { apiUrl } from './common/Http';
 import { Link, useSearchParams } from 'react-router';
 import striptags from "striptags";
+import ChatLauncher from '../chatbot/ChatLauncher';
+import ChatModal from '../chatbot/ChatModal';
 
 function Shop() {
+  const [chatOpen, setChatOpen] = useState(false);
+
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -195,6 +199,12 @@ function Shop() {
             </div>
 
           </div>
+
+          {/* Floating Chat Icon */}
+          <ChatLauncher onClick={() => setChatOpen(true)} />
+
+          {/* Modal with AI Chat */}
+          <ChatModal isOpen={chatOpen} onClose={() => setChatOpen(false)} />
 
           <div className='w-full md:w-4/5 rounded-2xl'>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

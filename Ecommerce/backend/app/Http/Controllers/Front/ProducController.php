@@ -173,6 +173,7 @@ class ProducController extends Controller
 
         $products = Product::where('title', 'LIKE', "%$query%")
             ->orWhere('description', 'LIKE', "%$query%")
+            ->orWhere('price', 'LIKE', "%$query%")
             ->get();
 
         return response()->json($products);

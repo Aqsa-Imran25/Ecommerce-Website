@@ -228,28 +228,6 @@ function ProductEdit({ placeholder }) {
   }
 
 
-
-  const defaultImage = async (name) => {
-    console.log(name)
-    try {
-      const res = await fetch(`${apiUrl}/defaultImage/product_id=${params.id}/&image=${name}`, {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json',
-          "Accept": "application/json",
-          "Authorization": `Bearer ${adminToken()}`
-        },
-      });
-      const result = await res.json();
-      if (result.status === 200)
-        toast.success(result.message);
-    } catch (error) {
-      console.error("Fetch error:", error);
-      toast.error("Something Went Wrong!");
-    }
-  };
-
-
   useEffect(() => {
     fetchCategory();
     fetchBrand();

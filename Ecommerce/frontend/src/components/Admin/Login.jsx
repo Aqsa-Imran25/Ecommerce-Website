@@ -38,6 +38,12 @@ function Login() {
     });
 
     const result = await response.json();
+    localStorage.removeItem("adminInfo");
+    localStorage.removeItem("userInfo");
+    localStorage.removeItem("vendorInfo");
+    sessionStorage.removeItem("adminInfo");
+    sessionStorage.removeItem("userInfo");
+    sessionStorage.removeItem("vendorInfo");
 
     if (result.status === 200) {
       const userData = {

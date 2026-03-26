@@ -8,8 +8,8 @@ import SidebarVendor from '../Vendor/SidebarVendor';
 
 
 function UserDashboard() {
-    const { login: vendorLogin } = useContext(VendorAuthContext);
-    const { login: userLogin } = useContext(UserAuthContext);
+    const { user: vendorUser } = useContext(VendorAuthContext);
+    const { user: userUser } = useContext(UserAuthContext);
     return (
 
         <div >
@@ -19,19 +19,22 @@ function UserDashboard() {
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="w-full md:w-1/4">
                             {
-                                            vendorLogin ? (
+                                           vendorUser ? (
 <SidebarVendor/>
-                                            ): (  userLogin && <Sidebar/>)
+                                            ): (  userUser && <Sidebar/>)
                             }
                         </div>
                         <div className="w-full md:w-3/4">
+                        {
+
+                        }
                             <div className="shadow-lg border-2 border-gray-200 p-4">
                                 <div className="flex flex-wrap -mx-3 mb-6">
                                     <div className="w-full px-3 mb-6 md:mb-0">
                                         {
-                                            vendorLogin ? (
-                                                  <h3>Welcome to the Vendor Dashboard</h3>
-                                            ): (  userLogin && <h3>Welcome to the User Dashboard</h3>)
+                                           vendorUser ? (
+                                                  <h3 className='text-center'>Welcome to the Vendor Dashboard</h3>
+                                            ): (  userUser && <h3 className='text-center'>Welcome to the User Dashboard</h3>)
                                         }
                                     </div>
                                 </div>

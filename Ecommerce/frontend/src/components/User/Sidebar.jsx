@@ -6,7 +6,9 @@ function Sidebar() {
     const { logout } = useContext(UserAuthContext);
 
     const sideBarLinks = [
+          { name: "Dashboard", path: "/user/dashboard" },
         { name: "My Account", path: "/myaccount" },
+        { name: "Become a Seller", path: "/vendor" },
         { name: "Order", path: "/myorder" },
     ]
     return (

@@ -10,3 +10,8 @@ export const UserToken=()=>{
     const data=JSON.parse(localStorage.getItem("userInfo"));
     return data?.token || null;
 }
+
+export const VendorToken=()=>{
+    const data=JSON.parse(localStorage.getItem("vendorInfo"));
+    return data?.token || null;
+}

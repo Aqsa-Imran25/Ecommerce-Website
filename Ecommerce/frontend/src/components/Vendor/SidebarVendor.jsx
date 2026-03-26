@@ -6,6 +6,7 @@ function SidebarVendor() {
     const { logout } = useContext(VendorAuthContext);
 
     const sideBarLinks = [
+        { name: "Dashboard", path: "/user/dashboard" },
         { name: "Products", path: "/myproducts" },
         { name: "My Account", path: "/myaccount" },
         { name: "Order", path: "/myorder" },

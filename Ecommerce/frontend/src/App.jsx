@@ -33,6 +33,7 @@ import ShowSize from "./components/Admin/Sizes/ShowSize";
 import EditSize from "./components/Admin/Sizes/EditSize";
 import ShowUser from "./components/Admin/User/ShowUser";
 import AIChat from "./chatbot/AIChat";
+import Store from "./components/Vendor/Store";
 
 function App() {
   return (
@@ -57,6 +58,16 @@ function App() {
               </Userrequireauth>
             }
           />
+          {/* vendor */}
+          <Route
+            path="/vendor"
+            element={
+              <Userrequireauth>
+                <Store />
+              </Userrequireauth>
+            }
+          />
+
           {/* profile */}
           <Route
             path="/myaccount"

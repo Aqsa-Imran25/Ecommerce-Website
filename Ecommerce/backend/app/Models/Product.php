@@ -19,15 +19,14 @@ class Product extends Model
         'sku',
         'status',
         'barcode',
-        'user_id',
         'is_Featured',
         'store_id',
     ];
 
-    // user
-    public function user()
+    // vendor
+    public function vendor()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Store::class);
     }
 
     protected $appends = ['image_url'];

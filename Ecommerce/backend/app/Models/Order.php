@@ -12,7 +12,6 @@ class Order extends Model
         'shipping',
         'grand_total',
         'discount',
-        'payment_status',
         'status',
         'phone_num',
         'city',

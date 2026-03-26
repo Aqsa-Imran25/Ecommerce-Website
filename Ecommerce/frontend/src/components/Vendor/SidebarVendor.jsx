@@ -1,16 +1,17 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
-import { UserAuthContext } from '../context/UserAuth';
+import { VendorAuthContext } from '../context/VendorAuth';
 
-function Sidebar() {
-    const { logout } = useContext(UserAuthContext);
+function SidebarVendor() {
+    const { logout } = useContext(VendorAuthContext);
 
     const sideBarLinks = [
+        { name: "Products", path: "/myproducts" },
         { name: "My Account", path: "/myaccount" },
         { name: "Order", path: "/myorder" },
     ]
     return (
-        
+
         <div className='shadow-lg p-4 rounded-lg border-2 border-gray-200'>
             <ul className='px-5'>
                 {
@@ -31,4 +32,4 @@ function Sidebar() {
     )
 }
 
-export default Sidebar
+export default SidebarVendor

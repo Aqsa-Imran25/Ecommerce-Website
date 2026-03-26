@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_summaries', function (Blueprint $table) {
+        Schema::create('vendor_earnings', function (Blueprint $table) {
             $table->id();
-            $table->string('total_orders');
-            $table->integer('total_price');
-            $table->integer('fees');
-            $table->integer('total_receiveable');
+            $table->foreignId('store_id')->constrained()->onDelete('cascade');
+            $table->foreignId('order_id')->constrained()->onDelete('cascade');
+            $table->integer('amount');
+            $table->integer('commission');
+            $table->integer('net_amount');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_summaries');
+        Schema::dropIfExists('vendor_earnings');
     }
 };

@@ -6,6 +6,7 @@ import { apiUrl } from "../common/Http";
 import { toast } from "react-toastify";
 import { AdminAuthContext } from "../context/AdminAuth";
 import { UserAuthContext } from "../context/UserAuth";
+import { VendorAuthContext } from "../context/VendorAuth";
 
 function Login() {
   const {
@@ -14,70 +15,77 @@ function Login() {
     formState: { errors },
   } = useForm();
   const { login: adminLogin } = useContext(AdminAuthContext);
+  const { login: vendorLogin } = useContext(VendorAuthContext);
   const { login: userLogin } = useContext(UserAuthContext);
+
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
 
+  
+
   const onHandleSubmit = async (data) => {
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const response = await fetch(`${apiUrl}/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+    const response = await fetch(`${apiUrl}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(data),
+    });
 
-      const result = await response.json();
+    const result = await response.json();
 
-      console.log("API Result:", result);
-      // 
-      if (result.status === 200) {
-        console.log("API Result:", result.role);
-        const userData = {
-          token: result.token,
-          name: result.user.name,
-          role: result.role,
-        };
+    if (result.status === 200) {
+      const userData = {
+        token: result.token,
+        name: result.user.name,
+        role: result.role,
+      };
 
-        if (result.role === "admin") {
+      if (result.role === "admin") {
+        data.remember
+          ? localStorage.setItem("adminInfo", JSON.stringify(userData))
+          : sessionStorage.setItem("adminInfo", JSON.stringify(userData));
 
-          if (data.remember) {
-            localStorage.setItem("adminInfo", JSON.stringify(userData));
-          } else {
-            sessionStorage.setItem("adminInfo", JSON.stringify(userData));
-          }
+        adminLogin(userData);
+        navigate("/admin/dashboard");
+        toast.success("Admin Login Successful!");
+      } else if (result.role === "vendor") {
+        data.remember
+          ? localStorage.setItem("vendorInfo", JSON.stringify(userData))
+          : sessionStorage.setItem("vendorInfo", JSON.stringify(userData));
 
-          adminLogin(userData);
-          navigate("/admin/dashboard");
-          toast.success("Admin Login Successful!");
+        vendorLogin(userData);
+        navigate("/vendor/dashboard");
+        toast.success("Vendor Login Successful!");
+      } else {
+        data.remember
+          ? localStorage.setItem("userInfo", JSON.stringify(userData))
+          : sessionStorage.setItem("userInfo", JSON.stringify(userData));
 
-        } else {
-
-          if (data.remember) {
-            localStorage.setItem("userInfo", JSON.stringify(userData));
-          } else {
-            sessionStorage.setItem("userInfo", JSON.stringify(userData));
-          }
-
-          userLogin(userData);
-          navigate("/user/dashboard");
-          toast.success("User Login Successful!");
-        }
-
+        userLogin(userData);
+        navigate("/user/dashboard");
+        toast.success("User Login Successful!");
       }
-
-    } catch (error) {
-      console.error("Login Error:", error);
-      toast.error("Something went wrong!");
-    } finally {
-      setLoading(false);
+    } else {
+      if (result.errors) {
+        Object.keys(result.errors).forEach((field) => {
+          toast.error(result.errors[field].join(" "));
+        });
+      } else {
+        toast.error(result.message || "Login failed");
+      }
     }
-  };
+  } catch (error) {
+    toast.error("Something went wrong!");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <Layout>
@@ -161,3 +169,4 @@ function Login() {
 }
 
 export default Login;
+

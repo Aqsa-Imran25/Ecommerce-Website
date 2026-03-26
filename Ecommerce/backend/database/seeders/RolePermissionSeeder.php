@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -34,7 +33,7 @@ class RolePermissionSeeder extends Seeder
 
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $userRole  = Role::firstOrCreate(['name' => 'user']);
-        $storeRole  = Role::firstOrCreate(['name' => 'store']);
+        $vendorRole  = Role::firstOrCreate(['name' => 'vendor']);
         //    admin                                                                                                                                                                                 
         $adminRole->givePermissionTo(Permission::all());
         // user
@@ -42,7 +41,7 @@ class RolePermissionSeeder extends Seeder
             'view products'
         ]);
         // store permission
-        $storeRole->givePermissionTo([
+        $vendorRole->givePermissionTo([
             'view products',
             'create products',
             'edit products',

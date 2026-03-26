@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('shipping', 10, 2);
             $table->decimal('grand_total', 10, 2);
             $table->decimal('discount', 10, 2);
-            $table->enum('payment_status', ['paid', 'not paid'])->default('not paid');
             $table->enum('status', ['pending', 'delivered', 'shipped', 'cancelled'])->default('pending');
             $table->string('phone_num');
             $table->string('city');

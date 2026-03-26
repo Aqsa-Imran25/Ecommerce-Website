@@ -47,7 +47,7 @@ class OrderController extends Controller
             'sub_total' => 'required|numeric|min:0',
             'shipping' => 'required|numeric|min:0',
             'grand_total' => 'required|numeric|min:0',
-            'payment_status' => ['required', Rule::in(['paid', 'not paid'])],
+            // 'payment_status' => ['required', Rule::in(['paid', 'not paid'])],
             'status' => ['required', Rule::in(['pending', 'delivered', 'shipped', 'cancelled'])],
 
         ]);
@@ -65,13 +65,13 @@ class OrderController extends Controller
             'shipping' => $request->shipping,
             'grand_total' => $request->grand_total,
             'discount' => $request->discount,
-            'payment_status' => $request->payment_status,
             'status' => $request->status,
 
         ]);
 
         foreach ($request->cart as $item) {
             OrderItem::create([
+                'store_id' => $item['store_id'],
                 'product_id' => $item['product_id'],
                 'order_id'   => $order->id,
                 'size'       => $item['size'] ?? null,

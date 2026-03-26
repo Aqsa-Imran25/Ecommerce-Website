@@ -82,7 +82,6 @@ class OrderController extends Controller
                 'data' => []
             ], 404);
         }
-        $order->payment_status = $request->payment_status;
         $order->status = $request->status;
         $order->save();
         return response()->json([

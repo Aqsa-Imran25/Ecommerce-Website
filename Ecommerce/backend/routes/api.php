@@ -34,7 +34,6 @@ Route::get('/getProducts', [ProducController::class, 'getProducts']);
 // register
 Route::post('/register', [RegisteredUserController::class, 'store']);
 // login
-// Route::post('/login', [RegisteredUserController::class, 'login']);
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 // comment
 Route::get('/comment/{productId}', [FrontUserController::class, 'index']);

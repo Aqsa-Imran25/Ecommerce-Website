@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('payment_settings', function (Blueprint $table) {
             $table->id();
-            $table->integer('website_fee')->nullable();
-            $table->integer('total_price');
-            $table->enum('methods_cod', ['1', '0'])->default('1');
-            $table->string('currency');
+            $table->boolean('cod_enabled')->default(false);
+            $table->decimal('commission', 8, 2)->default(0);
+            $table->string('currency', 3);
             $table->foreignId('store_id')->nullable()->constrained()->after('id');
 
             $table->timestamps();

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
-use App\Models\Chat_message;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Product;

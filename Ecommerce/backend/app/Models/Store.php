@@ -8,26 +8,26 @@ class Store extends Model
 {
     protected $fillable = ['user_id', 'name', 'status', 'logo', 'slug'];
 
-     public function user()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
     // product
-      public function product()
+    public function product()
     {
         return $this->hasMany(Product::class);
     }
 
-     // product
-      public function items()
+    // product
+    public function items()
     {
         return $this->hasMany(OrderItem::class);
     }
 
     // vendor-earnings
-     public function vendorEarning()
+    public function earnings()
     {
-        return $this->belongsTo(Vendor_earnings::class);
+        return $this->hasMany(Vendor_earnings::class);
     }
 }

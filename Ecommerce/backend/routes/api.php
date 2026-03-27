@@ -17,6 +17,7 @@ use App\Http\Controllers\Front\ProducController;
 use App\Http\Controllers\Front\ShippingController;
 use App\Http\Controllers\front\UserController as FrontUserController;
 use App\Http\Controllers\TempController;
+use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -57,6 +58,8 @@ Route::group([
     Route::post('/ai/ask', [AIController::class, 'askAI']);
     Route::post('/ai/chat', [AIController::class, 'chat']);
 
+    Route::post('/vendors', [VendorController::class, 'store'])
+        ->middleware(['auth:sanctum', 'checkProfile', 'role:vendor']);
     // product purchase
     Route::get('/purchaseproduct', [ProducController::class, 'index']);
 

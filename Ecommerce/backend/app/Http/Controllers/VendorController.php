@@ -34,11 +34,10 @@ class VendorController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
+            'name' => 'required|string|max:255',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'status' => 'required',
-            'slug' => 'required',
-
+            'status' => 'required|in:active,inactive',
+            'slug' => 'required|string|unique:stores,slug',
         ]);
 
         if ($validator->fails()) {
@@ -49,7 +48,7 @@ class VendorController extends Controller
         }
         $logoImage = null;
         if ($request->hasFile('logo')) {
-            $logoImage = $this->tempImage($request->image, 'logo');
+            $logoImage = $this->tempImage($request->file('logo'), 'logo-image');
         }
         $vendor = Store::create(
             [

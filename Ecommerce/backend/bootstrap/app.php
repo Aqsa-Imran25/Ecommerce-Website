@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Middleware\HandleCors;
 use App\Http\Middleware\CheckAdmin;
+use App\Http\Middleware\CheckProfileComplete;
 use App\Http\Middleware\CheckUser;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -26,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'checkAdminRole' => CheckAdmin::class,
             'checkUserRole' => CheckUser::class,
+            'checkProfile' => CheckProfileComplete::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

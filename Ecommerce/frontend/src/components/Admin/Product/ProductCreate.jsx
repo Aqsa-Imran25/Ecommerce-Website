@@ -15,6 +15,8 @@ function ProductCreate({ placeholder }) {
     const { register, handleSubmit, setValue, formState: { errors } } = useForm();
     const [categories, setCategories] = useState([]);
     const [brands, setBrands] = useState([]);
+    const [stores, setStore] = useState([]);
+
     const navigate = useNavigate();
 
 
@@ -108,7 +110,7 @@ function ProductCreate({ placeholder }) {
     // fetchcategory
     const fetchCategory = async () => {
         try {
-              const token = getAuthToken();
+            const token = getAuthToken();
             const res = await fetch(`${apiUrl}/admin/categories`, {
                 method: "GET",
                 headers: {
@@ -128,7 +130,7 @@ function ProductCreate({ placeholder }) {
     // fetchbrand
     const fetchBrand = async () => {
         try {
-              const token = getAuthToken();
+            const token = getAuthToken();
             const res = await fetch(`${apiUrl}/admin/brands`, {
                 method: "GET",
                 headers: {
@@ -145,10 +147,31 @@ function ProductCreate({ placeholder }) {
         }
     };
 
+    // stores fetch
+    const fetchStore = async () => {
+        try {
+            const token = getAuthToken();
+            const res = await fetch(`${apiUrl}/admin/stores`, {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Accept": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+            });
+            const result = await res.json();
+            if (result.status === 200) setStore(result.data);
+        } catch (error) {
+            console.error("Fetch error:", error);
+            toast.error("Something Went Wrong!");
+        }
+    };
+
+
     // fetchsizes
     const fetchSizes = async () => {
         try {
-              const token = getAuthToken();
+            const token = getAuthToken();
             const res = await fetch(`${apiUrl}/sizes`, {
                 method: "GET",
                 headers: {
@@ -178,7 +201,7 @@ function ProductCreate({ placeholder }) {
         });
 
         try {
-              const token = getAuthToken();
+            const token = getAuthToken();
             const res = await axios.post(`${apiUrl}/temp-image`, formData, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -216,6 +239,7 @@ function ProductCreate({ placeholder }) {
         fetchCategory();
         fetchBrand();
         fetchSizes();
+        fetchStore();
 
     }, []);
 
@@ -280,6 +304,33 @@ function ProductCreate({ placeholder }) {
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    {/* store-id */}
+                    <div className="flex flex-wrap -mx-3 mb-6">
+                        <div className="w-full md:w-1/2 px-3 mb-6">
+                            <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">Stores</label>
+
+                            <div className='relative'>
+                                <select {...register("store_id", { required: "Please select a store." })}
+                                    className="block appearance-none w-full border border-gray-200 text-black py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                    <option value="">Select a Store</option>
+                                    {stores.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                                </select>
+                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg
+                                        className="fill-current h-4 w-4"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            {errors.store_id && <p className="text-red-500 text-sm">{errors.store_id.message}</p>}
+                        </div>
+
+
                     </div>
 
                     {/* Short Description */}

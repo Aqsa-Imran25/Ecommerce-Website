@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Store;
 use App\Traits\ImageUpload;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -17,7 +18,19 @@ class VendorController extends Controller
      */
     public function index()
     {
-        //
+        if (auth()->user()->role === "admin") {
+            $stores = Store::orderBy('created_at', 'ASC')->get();
+            return response()->json([
+                'status' => 200,
+                'data' => $stores,
+            ]);
+        } else {
+            $stores = Store::orderBy('created_at', 'ASC')->where("user_id", Auth::id())->get();
+            return response()->json([
+                'status' => 200,
+                'data' => $stores,
+            ]);
+        }
     }
 
     /**
@@ -72,7 +85,19 @@ class VendorController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $store = Store::findOrFail($id);
+
+        if ($store == null) {
+            return response()->json([
+                'status' => 404,
+                'message' => "Store Not Found!",
+                'data' => []
+            ], 404);
+        }
+        return response()->json([
+            'status' => 200,
+            'data' => $store,
+        ], 200);
     }
 
     /**
@@ -80,7 +105,10 @@ class VendorController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $store = Store::findOrFail($id);
+        return response()->json([
+            'data' => $store,
+        ], 200);
     }
 
     /**
@@ -88,7 +116,47 @@ class VendorController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $store = Store::findOrFail($id);
+
+        if ($store == null) {
+            return response()->json([
+                'status' => 404,
+                'message' => "Store Not Found!",
+                'data' => []
+            ], 404);
+        }
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'logo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'status' => 'required|in:active,inactive',
+            'slug' => 'required|string|unique:stores,slug' . $id,
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400,
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $logoImage = null;
+        if ($request->hasFile('logo')) {
+            $logoImage = $this->tempImage($request->file('logo'), 'logo-image');
+        }
+
+        $store->update([
+            'name' => $request->name,
+            'user_id' => auth()->id(),
+            'status' => $request->status,
+            'slug' => Str::slug($request->name),
+            'logo' => $logoImage,
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => "Store Updated Successfully!",
+            'data' => $store,
+        ], 200);
     }
 
     /**
@@ -96,6 +164,20 @@ class VendorController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $store = Store::findOrFail($id);
+
+        if ($store == null) {
+            return response()->json([
+                'status' => 404,
+                'message' => "Store Not Found!",
+                'data' => []
+            ], 404);
+        }
+        $store->delete();
+        return response()->json([
+            'status' => 200,
+            'message' => "Store Deleted Successfully!",
+
+        ], 200);
     }
 }

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import Layout from '../common/Layout'
 import Sidebar from '../common/Sidebar';
-import { adminToken, apiUrl } from '../common/Http';
+import { getUserRole, apiUrl, getAuthToken } from '../common/Http';
 
 function Dashboard() {
+    const role = getUserRole();
+
     const [counts, setCounts] = useState({
         users: 0,
         products: 0,
@@ -17,7 +19,7 @@ function Dashboard() {
             method: "GET",
             headers: {
 
-                "Authorization": `Bearer ${adminToken()}`
+                "Authorization": `Bearer ${getAuthToken()}`
             },
         })
         const result = await res.json();
@@ -44,42 +46,57 @@ function Dashboard() {
                     <h2 className='my-2 text-base md:text-2xl'>Dashboard</h2>
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="w-full md:w-1/4">
-                            <Sidebar />
+                            <Sidebar role={role} />
                         </div>
                         <div className="w-full md:w-3/4">
-                            <div className="grid md:grid-cols-3 gap-5">
-                                <div className='shadow-lg rounded-lg border-2 border-gray-200'>
-                                    <div className='p-4 text-sm md:text-2xl'>
-                                        <span >{counts.users}</span>
-                                        <h2 >Users</h2>
+                            {
+                                role === "admin" && (
+                                    <div className="grid md:grid-cols-3 gap-5">
+                                        <div className='shadow-lg rounded-lg border-2 border-gray-200'>
+                                            <div className='p-4 text-sm md:text-2xl'>
+                                                <span >{counts.users}</span>
+                                                <h2 >Users</h2>
+
+                                            </div>
+                                            <div className='bg-gray-100 text-center py-2 border-t border-gray-300'>
+                                                <Link to="/admin/users">View Users</Link>
+                                            </div>
+                                        </div>
+                                        <div className='shadow-lg rounded-lg border-2 border-gray-200'>
+                                            <div className='p-4 text-sm md:text-2xl'>
+                                                <span >{counts.products}</span>
+                                                <h2 >Products</h2>
+
+                                            </div>
+                                            <div className='bg-gray-100 py-2 text-center border-t border-gray-300'>
+                                                <Link to="/products">View Products</Link>
+                                            </div>
+                                        </div>
+                                        <div className='shadow-lg rounded-lg border-2 border-gray-200'>
+                                            <div className='p-4 text-sm md:text-2xl'>
+                                                <span >{counts.orders}</span>
+                                                <h2 >Orders</h2>
+
+                                            </div>
+                                            <div className='bg-gray-100 text-center py-2 border-t border-gray-300'>
+                                                <Link to="/admin/orders">View Orders</Link>
+                                            </div>
+                                        </div>
 
                                     </div>
-                                    <div className='bg-gray-100 text-center py-2 border-t border-gray-300'>
-                                        <Link to="/admin/users">View Users</Link>
+                                )
+                            }
+                            {
+                                role === "vendor" && (
+                                    <div className='shadow-lg rounded-lg border-2 border-gray-200'>
+                                        <div className="flex flex-wrap -mx-3 mb-6">
+                                            <div className="w-full px-3 mb-6 md:mb-0">
+                                                <h3 className='text-center'>Welcome to the Vendor Dashboard</h3>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className='shadow-lg rounded-lg border-2 border-gray-200'>
-                                    <div className='p-4 text-sm md:text-2xl'>
-                                        <span >{counts.products}</span>
-                                        <h2 >Products</h2>
-
-                                    </div>
-                                    <div className='bg-gray-100 py-2 text-center border-t border-gray-300'>
-                                        <Link to="/products">View Products</Link>
-                                    </div>
-                                </div>
-                                <div className='shadow-lg rounded-lg border-2 border-gray-200'>
-                                    <div className='p-4 text-sm md:text-2xl'>
-                                        <span >{counts.orders}</span>
-                                        <h2 >Orders</h2>
-
-                                    </div>
-                                    <div className='bg-gray-100 text-center py-2 border-t border-gray-300'>
-                                        <Link to="/admin/orders">View Orders</Link>
-                                    </div>
-                                </div>
-
-                            </div>
+                                )
+                            }
                         </div>
                     </div>
                 </div>

@@ -104,7 +104,20 @@ Route::group([
     });
 });
 
+// vendor
+Route::group(
+    [
+        'middleware' => [
+            'auth:sanctum',
+            'checkVendorRole'
+        ]
+    ],
+    function () {
 
+        Route::resource('/admin/stores', VendorController::class);
+    }
+
+);
 
 
 

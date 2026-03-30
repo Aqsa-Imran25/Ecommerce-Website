@@ -15,15 +15,15 @@ function Sidebar({ role }) {
             { name: "Sizes", path: "/admin/sizes" },
             { name: "Products", path: "/products" },
             { name: "Shipping", path: "/admin/shipping" },
+            { name: "Stores", path: "/admin/stores" },
             { name: "Orders", path: "/admin/orders" },
             { name: "Users", path: "/admin/users" },
         ];
-    } 
-    else if (role === "vendor") 
-        {   
+    }
+    else if (role === "vendor") {
         sideBarLinks = [
             { name: "Dashboard", path: "/vendor/dashboard" },
-            { name: "Products", path: "/products/create" },
+            { name: "Products", path: "/vendor/products/create" },
             { name: "My Account", path: "/myaccount" },
             { name: "Orders", path: "/myorder" },
             { name: "Create Product", path: "/products/create" },
@@ -33,7 +33,7 @@ function Sidebar({ role }) {
     return (
         <div className='shadow-lg p-4 rounded-lg border-2 border-gray-200'>
             <ul className='px-5'>
-                
+
                 {sideBarLinks.map((links) => (
                     <li
                         key={links.path}

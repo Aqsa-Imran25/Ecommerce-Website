@@ -6,13 +6,13 @@ function Sidebar() {
     const { logout } = useContext(UserAuthContext);
 
     const sideBarLinks = [
-          { name: "Dashboard", path: "/user/dashboard" },
+        { name: "Dashboard", path: "/user/dashboard" },
         { name: "My Account", path: "/myaccount" },
         { name: "Become a Seller", path: "/vendor" },
         { name: "Order", path: "/myorder" },
     ]
     return (
-        
+
         <div className='shadow-lg p-4 rounded-lg border-2 border-gray-200'>
             <ul className='px-5'>
                 {

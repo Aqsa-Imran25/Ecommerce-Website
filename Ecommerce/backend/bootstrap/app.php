@@ -4,6 +4,7 @@ use Illuminate\Http\Middleware\HandleCors;
 use App\Http\Middleware\CheckAdmin;
 use App\Http\Middleware\CheckProfileComplete;
 use App\Http\Middleware\CheckUser;
+use App\Http\Middleware\CheckVendor;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -27,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'checkAdminRole' => CheckAdmin::class,
             'checkUserRole' => CheckUser::class,
+            'checkVendorRole' => CheckVendor::class,
             'checkProfile' => CheckProfileComplete::class,
         ]);
     })

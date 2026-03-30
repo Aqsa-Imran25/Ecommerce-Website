@@ -192,11 +192,11 @@ function ProductShow() {
                             {product.sku}
                           </td>
                           <td className="px-6 py-4">
-                          <img
-  src={product.image_url || (product.product_images.length > 0 && `http://backend.test/storage/product/${product.product_images[0].name}`)}
-  width={50}
-  alt="Product"
-/>
+                            <img
+                              src={product.image_url || (product.product_images.length > 0 && `http://backend.test/storage/product/${product.product_images[0].name}`)}
+                              width={50}
+                              alt="Product"
+                            />
                           </td>
 
                           <td className="px-6 py-4">

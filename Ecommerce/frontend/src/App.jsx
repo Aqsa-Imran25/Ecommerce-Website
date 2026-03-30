@@ -35,6 +35,8 @@ import ShowUser from "./components/Admin/User/ShowUser";
 import AIChat from "./chatbot/AIChat";
 import Store from "./components/Vendor/Store";
 import { Vendorrequireauth } from "./components/Vendor/Vendorrequireauth";
+import ShowStore from "./components/Admin/Store/ShowStore";
+import EditStore from "./components/Admin/Store/EditStore";
 
 
 function App() {
@@ -61,7 +63,7 @@ function App() {
             }
           />
           {/* vendor */}
- <Route
+          <Route
             path="/vendor/dashboard"
             element={
               <Vendorrequireauth>
@@ -69,13 +71,23 @@ function App() {
               </Vendorrequireauth>
             }
           />
-
+          {/* store-create */}
           <Route
             path="/vendor"
             element={
               <Userrequireauth>
                 <Store />
               </Userrequireauth>
+            }
+          />
+
+          {/* vendor */}
+          <Route
+            path="/vendor/products/create"
+            element={
+              <Vendorrequireauth>
+                <ProductCreate />
+              </Vendorrequireauth>
             }
           />
 
@@ -189,6 +201,25 @@ function App() {
               </Adminrequireauth>
             }
           />
+          {/* store */}
+          <Route
+            path="/admin/stores"
+            element={
+              <Adminrequireauth>
+                <ShowStore />
+              </Adminrequireauth>
+            }
+          />
+           <Route
+            path="/admin/stores/:id/edit"
+            element={
+              <Adminrequireauth>
+                <EditStore />
+              </Adminrequireauth>
+            }
+          />
+
+
           {/* product-size-create
            */}
           <Route

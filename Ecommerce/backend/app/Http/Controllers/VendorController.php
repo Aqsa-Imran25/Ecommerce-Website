@@ -6,6 +6,7 @@ use App\Models\Store;
 use App\Traits\ImageUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class VendorController extends Controller
 {
@@ -32,7 +33,6 @@ class VendorController extends Controller
      */
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
@@ -42,9 +42,9 @@ class VendorController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 400,
+                'status' => 422,
                 'errors' => $validator->errors()
-            ], 400);
+            ], 422);
         }
         $logoImage = null;
         if ($request->hasFile('logo')) {
@@ -55,7 +55,7 @@ class VendorController extends Controller
                 'name' => $request->name,
                 'user_id' => auth()->id(),
                 'status' => $request->status,
-                'slug' => $request->slug,
+                'slug' => Str::slug($request->name),
                 'logo' => $logoImage,
 
             ]

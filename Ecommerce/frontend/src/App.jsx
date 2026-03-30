@@ -34,6 +34,8 @@ import EditSize from "./components/Admin/Sizes/EditSize";
 import ShowUser from "./components/Admin/User/ShowUser";
 import AIChat from "./chatbot/AIChat";
 import Store from "./components/Vendor/Store";
+import { Vendorrequireauth } from "./components/Vendor/Vendorrequireauth";
+
 
 function App() {
   return (
@@ -59,6 +61,15 @@ function App() {
             }
           />
           {/* vendor */}
+ <Route
+            path="/vendor/dashboard"
+            element={
+              <Vendorrequireauth>
+                <Dashboard />
+              </Vendorrequireauth>
+            }
+          />
+
           <Route
             path="/vendor"
             element={

@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { AdminAuthContext } from "../context/AdminAuth";
 import { UserAuthContext } from "../context/UserAuth";
+import { VendorAuthContext } from "../context/VendorAuth";
+
 import { CartContext } from "../context/Cart";
 import { apiUrl } from "../common/Http";
 
@@ -22,14 +24,31 @@ function Navbar() {
   const { user: userLogin, logout: userLogout } =
     useContext(UserAuthContext);
 
+      const { user:vendorLogin, logout: vendorLogout } =
+    useContext(VendorAuthContext);
+
   const { totalItems } = useContext(CartContext);
+// dashboard-page
+const dashboard=()=>{
+  if(adminLogin){
+    return "/admin/dashboard";
+  }
+  else if(vendorLogin)
+  {
+     return "/vendor/dashboard";
+  }
+  else{
+     return "/user/dashboard";
+  }
+}
 
   const handleLogout = () => {
     if (adminLogin) adminLogout();
-    else if (userLogin) userLogout();
+    else if (vendorLogin) vendorLogout();
+    else userLogout();
   };
 
-  const isLoggedIn = adminLogin || userLogin;
+  const isLoggedIn = adminLogin || userLogin || vendorLogin;
 
   // search
   const handleSearch = async (e) => {
@@ -107,7 +126,7 @@ function Navbar() {
             </NavLink>
 
             <NavLink
-              to={!adminLogin ? "/user/dashboard" : "/admin/dashboard"}
+              to={dashboard()}
               className={({ isActive }) =>
                 `transition duration-300 ${isActive
                   ? "text-[#007595] border-b-2 border-[#007595]"
@@ -217,7 +236,7 @@ function Navbar() {
 
             <NavLink
               className="block hover:text-[#007595]"
-              to={!adminLogin ? "/user/dashboard" : "/admin/dashboard"}
+              to={dashboard}
             >
               Dashboard
             </NavLink>

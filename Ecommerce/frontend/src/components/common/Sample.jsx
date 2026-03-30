@@ -2,9 +2,11 @@ import React from 'react';
 import Layout from './Layout.jsx';
 import { Link } from 'react-router-dom';
 import Sidebar from './Sidebar.jsx';
+import { getUserRole } from '../common/Http';
 
 
 function Sample({title="Ecommerce",btnText="Button",to="#",children}) {
+    const role=getUserRole();
     return (
         <div >
             <Layout>
@@ -18,7 +20,7 @@ function Sample({title="Ecommerce",btnText="Button",to="#",children}) {
                     </div>
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="w-full md:w-1/4">
-                            <Sidebar />
+                            <Sidebar role={role} />
                         </div>
                         <div className="w-full md:w-3/4">
                             <div className="shadow-lg border-2 border-gray-200 p-4">

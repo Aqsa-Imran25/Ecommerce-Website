@@ -1,31 +1,37 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Layout from "../common/Layout";
 import Sidebar from "../User/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons"; // Specific icon import
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
 import { apiUrl, UserToken } from "../common/Http";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { VendorAuthContext } from "../context/VendorAuth";
+
 
 function Store() {
+  const { login: vendorLogin } = useContext(VendorAuthContext);
+
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const [previewImages, setPreviewImages] = useState([]);
   const navigate = useNavigate();
-  // saveStore
+
   const saveStore = async (data) => {
     try {
+      console.log("FULL DATA:", data);
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("status", data.status);
       formData.append("slug", data.slug || "");
-
       if (data.logo && data.logo.length > 0) {
-        formData.append("logo", data.logo[0]); // correctly append file
+        console.log("Image", data.logo[0])
+        formData.append("logo", data.logo[0]);
       }
 
       const res = await fetch(`${apiUrl}/vendors`, {
@@ -37,43 +43,42 @@ function Store() {
         body: formData,
       });
 
-      // parse response JSON
       const result = await res.json();
 
-      // ❗ If profile incomplete (middleware response)
-      if (res.status === 403) {
-        toast.error(result.message || "Please complete your profile first!");
-        return;
-      }
-
-      // ❗ If user not authenticated
       if (res.status === 401) {
         toast.error("You must login first before creating a store!");
         return;
       }
-
-      // ✅ On success
       if (res.status === 200) {
         toast.success(result.message || "Store created successfully!");
 
-        // Save vendor info
-        localStorage.setItem("vendorInfo", JSON.stringify(result.vendor));
-        localStorage.removeItem("userInfo");
-        sessionStorage.removeItem("userInfo");
+        console.log("Vendor", result.data);
 
-        navigate("/vendor"); // redirect user
+        const existingVendor = JSON.parse(localStorage.getItem("vendorInfo")) || {
+          token: UserToken(),
+          role: "vendor",
+          stores: []
+        };
+
+        const updatedVendor = {
+          ...existingVendor,
+          stores: [...existingVendor.stores, result.data.name]
+        };
+        vendorLogin(updatedVendor);
+        localStorage.setItem("vendorInfo", JSON.stringify(updatedVendor));
+
+        navigate("/vendor");
       }
 
-      // ❗ Validation errors (422)
       else if (res.status === 422 && result.errors) {
         Object.values(result.errors).forEach((errorArr) => {
           errorArr.forEach((msg) => {
-            toast.error(msg); // show each error as toast
+            toast.error(msg);
           });
         });
       }
 
-      // ❗ Other error statuses
+
       else {
         toast.error(result.message || "Something went wrong!");
       }
@@ -91,11 +96,18 @@ function Store() {
     }
   };
 
+  // slug
+  const generateSlug = (name) => {
+    return name
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9\-]/g, "");
+  };
+
   // delete-images
   const deleteImage = (index) => {
     // setPreviewImages
-    setPreviewImages((prev) => prev.filter((_, i) => i !== index));
-    // gallery id delete
     setPreviewImages((prev) => prev.filter((_, i) => i !== index));
   };
   return (
@@ -121,20 +133,22 @@ function Store() {
                   onSubmit={handleSubmit(saveStore)}
                   encType="multipart/form-data"
                 >
-                  {/* name */}
+
                   <div className="flex flex-wrap -mx-3 mb-6">
                     <div className="w-1/2 px-3 mb-6 md:mb-0">
                       <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">
                         Name
                       </label>
                       <input
-                        {...register("name", {
-                          required: "The name field is required.",
-                        })}
+                        {...register("name", { required: "The name field is required." })}
+                        onChange={(e) => {
+                          setValue("slug", generateSlug(e.target.value));
+                        }}
                         className="appearance-none block w-full text-black border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                        type="text"
                         placeholder="Store name"
                       />
+
+
                       {errors.name && (
                         <p className="text-red-500 text-sm">
                           {errors.name.message}
@@ -146,9 +160,7 @@ function Store() {
                         Slug
                       </label>
                       <input
-                        {...register("slug", {
-                          required: "The slug field is required.",
-                        })}
+                        {...register("slug")}
                         className="appearance-none block w-full text-black border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                         type="text"
                         placeholder="Slug"
@@ -161,7 +173,7 @@ function Store() {
                     </div>
                   </div>
 
-                  {/* status */}
+
                   <div className="flex flex-wrap -mx-3 mb-6">
                     <div className="w-full px-3 mb-6">
                       <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">
@@ -211,12 +223,27 @@ function Store() {
                           or drag and drop images here
                         </span>
 
-                        <input
+                        {/* <input
                           type="file"
                           name="logo"
-                          {...register("logo", { required: false })}
-                          onChange={uploadTempImages}
+                          {...register("logo")}
+                          onChange={(e) => {
+
+                            uploadTempImages(e)
+                          }
+                          }
                           className="hidden"
+                        /> */}
+                        <input
+                          type="file"
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+
+                            // 👇 VERY IMPORTANT
+                            setValue("logo", e.target.files);
+
+                            uploadTempImages(e);
+                          }}
                         />
                       </label>
 

@@ -22,76 +22,89 @@ function Login() {
 
   const [loading, setLoading] = useState(false);
 
-  
+
 
   const onHandleSubmit = async (data) => {
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const response = await fetch(`${apiUrl}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+      const response = await fetch(`${apiUrl}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    const result = await response.json();
-    localStorage.removeItem("adminInfo");
-    localStorage.removeItem("userInfo");
-    localStorage.removeItem("vendorInfo");
-    sessionStorage.removeItem("adminInfo");
-    sessionStorage.removeItem("userInfo");
-    sessionStorage.removeItem("vendorInfo");
-
-    if (result.status === 200) {
-      const userData = {
-        token: result.token,
-        name: result.user.name,
-        role: result.role,
-      };
+      const result = await response.json();
 
       if (result.role === "admin") {
-        data.remember
-          ? localStorage.setItem("adminInfo", JSON.stringify(userData))
-          : sessionStorage.setItem("adminInfo", JSON.stringify(userData));
-
-        adminLogin(userData);
-        navigate("/admin/dashboard");
-        toast.success("Admin Login Successful!");
-      } else if (result.role === "vendor") {
-        data.remember
-          ? localStorage.setItem("vendorInfo", JSON.stringify(userData))
-          : sessionStorage.setItem("vendorInfo", JSON.stringify(userData));
-
-        vendorLogin(userData);
-        navigate("/vendor/dashboard");
-        toast.success("Vendor Login Successful!");
-      } else {
-        data.remember
-          ? localStorage.setItem("userInfo", JSON.stringify(userData))
-          : sessionStorage.setItem("userInfo", JSON.stringify(userData));
-
-        userLogin(userData);
-        navigate("/user/dashboard");
-        toast.success("User Login Successful!");
+        localStorage.removeItem("userInfo");
+        localStorage.removeItem("vendorInfo");
       }
-    } else {
-      if (result.errors) {
-        Object.keys(result.errors).forEach((field) => {
-          toast.error(result.errors[field].join(" "));
-        });
-      } else {
-        toast.error(result.message || "Login failed");
+
+      if (result.role === "user") {
+        localStorage.removeItem("adminInfo");
+        localStorage.removeItem("vendorInfo");
       }
+
+      if (result.role === "vendor") {
+        localStorage.removeItem("userInfo");
+        localStorage.removeItem("adminInfo");
+      }
+
+      if (result.status === 200) {
+        const userData = {
+          token: result.token,
+          name: result.user.name,
+          role: result.role,
+        };
+
+        if (result.role === "admin") {
+          data.remember
+            ? localStorage.setItem("adminInfo", JSON.stringify(userData))
+            : sessionStorage.setItem("adminInfo", JSON.stringify(userData));
+
+          adminLogin(userData);
+          navigate("/admin/dashboard");
+          toast.success("Admin Login Successful!");
+        } else if (result.role === "vendor") {
+          if (!result.token && result.user) {
+            toast.success("Invalid Vendor Data!");
+            return;
+          }
+          data.remember
+            ? localStorage.setItem("vendorInfo", JSON.stringify(userData))
+            : sessionStorage.setItem("vendorInfo", JSON.stringify(userData));
+
+          vendorLogin(userData);
+          navigate("/vendor/dashboard");
+          toast.success("Vendor Login Successful!");
+        } else {
+          data.remember
+            ? localStorage.setItem("userInfo", JSON.stringify(userData))
+            : sessionStorage.setItem("userInfo", JSON.stringify(userData));
+
+          userLogin(userData);
+          navigate("/user/dashboard");
+          toast.success("User Login Successful!");
+        }
+      } else {
+        if (result.errors) {
+          Object.keys(result.errors).forEach((field) => {
+            toast.error(result.errors[field].join(" "));
+          });
+        } else {
+          toast.error(result.message || "Login failed");
+        }
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    toast.error("Something went wrong!");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <Layout>

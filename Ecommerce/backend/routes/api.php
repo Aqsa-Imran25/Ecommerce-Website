@@ -57,9 +57,9 @@ Route::group([
     // chatbot
     Route::post('/ai/ask', [AIController::class, 'askAI']);
     Route::post('/ai/chat', [AIController::class, 'chat']);
-
+    // vendor store
     Route::post('/vendors', [VendorController::class, 'store'])
-        ->middleware(['auth:sanctum', 'checkProfile', 'role:vendor']);
+        ->middleware(['auth:sanctum', 'checkProfile']);
     // product purchase
     Route::get('/purchaseproduct', [ProducController::class, 'index']);
 

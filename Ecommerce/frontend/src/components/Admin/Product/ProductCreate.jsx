@@ -3,14 +3,11 @@ import JoditEditor from 'jodit-react';
 import Sample from '../../common/Sample';
 import { useForm } from "react-hook-form";
 import { toast } from 'react-toastify';
-import { adminToken, apiUrl } from '../../common/Http';
+import { apiUrl, getAuthToken } from '../../common/Http';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'; // Specific icon import
-
-
-
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 
 function ProductCreate({ placeholder }) {
     const editor = useRef(null);
@@ -19,14 +16,14 @@ function ProductCreate({ placeholder }) {
     const [categories, setCategories] = useState([]);
     const [brands, setBrands] = useState([]);
     const navigate = useNavigate();
+
+
     const [previewImages, setPreviewImages] = useState([]);
     // id from backend
     const [gallery, setGalleryIds] = useState([]);
 
     // sizes
     const [sizes, setSizes] = useState([]);
-
-
 
     const config = useMemo(() => ({
         readonly: false,
@@ -60,11 +57,12 @@ function ProductCreate({ placeholder }) {
                     formData.append(`gallery[${index}]`, id);
                 });
             }
+            const token = getAuthToken();
 
             const res = await fetch(`${apiUrl}/products`, {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${adminToken()}`,
+                    "Authorization": `Bearer ${token}`,
                     "Accept": "application/json",
 
                 },
@@ -110,12 +108,13 @@ function ProductCreate({ placeholder }) {
     // fetchcategory
     const fetchCategory = async () => {
         try {
+              const token = getAuthToken();
             const res = await fetch(`${apiUrl}/admin/categories`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
                     "Accept": "application/json",
-                    "Authorization": `Bearer ${adminToken()}`
+                    "Authorization": `Bearer ${token}`
                 },
             });
             const result = await res.json();
@@ -129,12 +128,13 @@ function ProductCreate({ placeholder }) {
     // fetchbrand
     const fetchBrand = async () => {
         try {
+              const token = getAuthToken();
             const res = await fetch(`${apiUrl}/admin/brands`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
                     "Accept": "application/json",
-                    "Authorization": `Bearer ${adminToken()}`
+                    "Authorization": `Bearer ${token}`
                 },
             });
             const result = await res.json();
@@ -148,12 +148,13 @@ function ProductCreate({ placeholder }) {
     // fetchsizes
     const fetchSizes = async () => {
         try {
+              const token = getAuthToken();
             const res = await fetch(`${apiUrl}/sizes`, {
                 method: "GET",
                 headers: {
                     'Content-Type': 'application/json',
                     "Accept": "application/json",
-                    "Authorization": `Bearer ${adminToken()}`
+                    "Authorization": `Bearer ${token}`
                 },
             });
             const result = await res.json();
@@ -177,9 +178,10 @@ function ProductCreate({ placeholder }) {
         });
 
         try {
+              const token = getAuthToken();
             const res = await axios.post(`${apiUrl}/temp-image`, formData, {
                 headers: {
-                    "Authorization": `Bearer ${adminToken()}`,
+                    "Authorization": `Bearer ${token}`,
                     "Content-Type": "multipart/form-data"
                 }
             });
@@ -234,7 +236,7 @@ function ProductCreate({ placeholder }) {
                             {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
                         </div>
                     </div>
-                 
+
                     {/* Category & Brand */}
                     <div className="flex flex-wrap -mx-3 mb-6">
                         <div className="w-full md:w-1/2 px-3 mb-6">
@@ -407,7 +409,7 @@ function ProductCreate({ placeholder }) {
                                             value={size.id}
                                             className="md:w-5 md:h-5 w-3 h-3 mr-2"
                                             {...register("sizes"
-                                                )}
+                                            )}
                                         />
                                         <span>{size.name}</span>
                                     </label>

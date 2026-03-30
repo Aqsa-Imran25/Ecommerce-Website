@@ -13,20 +13,15 @@ class CheckProfileComplete
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
-        if (! auth()->check()) {
-            return response()->json([
-                'message' => "Unauthenticated",
-            ], 401);
-        }
 
-        if (! auth()->user()->profile) {
+        if (auth()->user()->profile) {
+            return $next($request);
+        } else {
             return response()->json([
                 'message' => "Please fill your profile details first!",
             ], 403);
         }
-
-        return $next($request);
     }
 }

@@ -10,6 +10,7 @@ function SidebarVendor() {
         { name: "Products", path: "/myproducts" },
         { name: "My Account", path: "/myaccount" },
         { name: "Order", path: "/myorder" },
+        { name: "Products", path: "/products/create" },
     ]
     return (
 

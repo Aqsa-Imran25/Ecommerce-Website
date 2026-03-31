@@ -14,6 +14,8 @@ class SizeController extends Controller
      */
     public function index()
     {
+
+
         $sizes = Size::orderBy('created_at', 'ASC')->get();
         return response()->json([
             'status' => 200,
@@ -34,7 +36,7 @@ class SizeController extends Controller
      */
     public function store(Request $request)
     {
-          $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required|unique:sizes',
         ]);
 
@@ -44,7 +46,7 @@ class SizeController extends Controller
                 'errors' => $validator->errors()
             ], 400);
         }
-        $size= Size::create(
+        $size = Size::create(
             [
                 'name' => $request->name,
             ]
@@ -61,7 +63,7 @@ class SizeController extends Controller
      */
     public function show(string $id)
     {
-     $size = Size::findOrFail($id);
+        $size = Size::findOrFail($id);
 
         if ($size == null) {
             return response()->json([
@@ -90,7 +92,7 @@ class SizeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-          $size = Size::findOrFail($id);
+        $size = Size::findOrFail($id);
 
         if ($size == null) {
             return response()->json([
@@ -101,7 +103,7 @@ class SizeController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3|unique:sizes,name,' . $id,
-        
+
         ]);
 
         if ($validator->fails()) {
@@ -126,7 +128,7 @@ class SizeController extends Controller
      */
     public function destroy(string $id)
     {
-         $size = Size::findOrFail($id);
+        $size = Size::findOrFail($id);
 
         if ($size == null) {
             return response()->json([

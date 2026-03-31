@@ -15,6 +15,7 @@ class Product extends Model
         'image',
         'category_id',
         'brand_id',
+        'size_id',
         'qty',
         'sku',
         'status',

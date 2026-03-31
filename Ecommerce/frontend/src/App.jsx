@@ -91,6 +91,15 @@ function App() {
             }
           />
 
+           <Route
+            path="/vendor/sizes/create"
+            element={
+              <Vendorrequireauth>
+                <CreateSize />
+              </Vendorrequireauth>
+            }
+          />
+
           {/* profile */}
           <Route
             path="/myaccount"
@@ -210,7 +219,7 @@ function App() {
               </Adminrequireauth>
             }
           />
-           <Route
+          <Route
             path="/admin/stores/:id/edit"
             element={
               <Adminrequireauth>

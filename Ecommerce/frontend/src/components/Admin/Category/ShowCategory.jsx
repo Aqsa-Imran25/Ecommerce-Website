@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons'; // The solid style icon
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { adminToken, apiUrl } from '../../common/Http';
+import { adminToken, apiUrl, getAdminVendorToken, getAuthToken, getUserRole } from '../../common/Http';
 import Loader from '../../common/Loader';
 import Empty from '../../common/Empty';
 
@@ -14,6 +14,7 @@ import Empty from '../../common/Empty';
 function ShowCategory() {
     const [categories, setCategories] = useState([])
     const [loader, setLoader] = useState(false)
+    const role=getUserRole();
 
     // deleteCategory
 
@@ -25,7 +26,7 @@ function ShowCategory() {
             headers: {
                 'Content-Type': 'application/json',
                 "Accept": "application/json",
-                "Authorization": `Bearer ${adminToken()}`
+                "Authorization": `Bearer ${getAdminVendorToken()}`
             },
         })
         const result = await res.json();
@@ -46,7 +47,7 @@ function ShowCategory() {
             headers: {
                 'Content-Type': 'application/json',
                 "Accept": "application/json",
-                "Authorization": `Bearer ${adminToken()}`
+                "Authorization": `Bearer ${getAdminVendorToken()}`
 
             },
         })
@@ -83,7 +84,7 @@ function ShowCategory() {
                     </div>
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="w-full md:w-1/4">
-                            <Sidebar />
+                            <Sidebar role={role} />
                         </div>
                         <div className="w-full md:w-3/4">
                             <div className="shadow-lg border-2 border-gray-200 p-4">

@@ -4,14 +4,10 @@ export const VendorAuthContext = createContext();
 
 export const VendorAuthProvider = ({ children }) => {
 
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
+  const [user, setUser] = useState(() => {
     const stored = localStorage.getItem("vendorInfo");
-    if (stored) {
-      setUser(JSON.parse(stored));
-    }
-  }, []);
+    return stored ? JSON.parse(stored) : null;
+  });
 
   const login = (userData) => {
     localStorage.setItem("vendorInfo", JSON.stringify(userData));

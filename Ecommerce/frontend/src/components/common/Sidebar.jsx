@@ -22,7 +22,10 @@ function Sidebar({ role }) {
     }
     else if (role === "vendor") {
         sideBarLinks = [
+
             { name: "Dashboard", path: "/vendor/dashboard" },
+            { name: "Stores", path: "/vendor" },
+            { name: "Sizes", path: "/vendor/sizes/create" },
             { name: "Products", path: "/vendor/products/create" },
             { name: "My Account", path: "/myaccount" },
             { name: "Orders", path: "/myorder" },

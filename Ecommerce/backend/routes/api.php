@@ -18,6 +18,7 @@ use App\Http\Controllers\Front\ShippingController;
 use App\Http\Controllers\front\UserController as FrontUserController;
 use App\Http\Controllers\TempController;
 use App\Http\Controllers\VendorController;
+use App\Models\Size;
 use Illuminate\Support\Facades\Route;
 
 
@@ -115,6 +116,15 @@ Route::group(
     function () {
 
         Route::resource('/admin/stores', VendorController::class);
+        Route::get('/admin/categories', [CategoryController::class, 'index']);
+        Route::get('/admin/brands', [BrandController::class, 'index']);
+        // sizes
+        Route::get('/sizes', [SizeController::class, 'index']);
+        Route::get('/sizes/{id}', [SizeController::class, 'show']);
+        Route::post('/sizes', [SizeController::class, 'store']);
+        Route::get('/sizes/edit/{id}', [SizeController::class, 'edit']);
+        Route::put('/sizes/{id}', [SizeController::class, 'update']);
+        Route::delete('/sizes/{id}', [SizeController::class, 'destroy']);
     }
 
 );
@@ -124,13 +134,14 @@ Route::group(
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
+
 Route::group(
     ['middleware' => [
         'auth:sanctum',
         'checkAdminRole'
     ]],
     function () {
-        Route::get('/admin/categories', [CategoryController::class, 'index']);
         Route::get('/admin/categories/{id}', [CategoryController::class, 'show']);
         Route::post('/admin/categories', [CategoryController::class, 'store']);
         Route::get('/admin/categories/edit/{id}', [CategoryController::class, 'edit']);
@@ -138,10 +149,16 @@ Route::group(
         Route::delete('/admin/categories/{id}', [CategoryController::class, 'destroy']);
 
         // brands
-        Route::resource('/admin/brands', BrandController::class);
+        // Route::resource('/admin/brands', BrandController::class);
+        Route::get('/admin/brands/{id}', [BrandController::class, 'show']);
+        Route::post('/admin/brands', [BrandController::class, 'store']);
+        Route::get('/admin/brands/edit/{id}', [BrandController::class, 'edit']);
+        Route::put('/admin/brands{id}', [BrandController::class, 'update']);
+        Route::delete('/admin/brands/{id}', [BrandController::class, 'destroy']);
 
         // sizes
-        Route::resource('/sizes', SizeController::class);
+        // Route::resource('/sizes', SizeController::class);
+
 
         // product
         Route::resource('/products', ProductController::class);

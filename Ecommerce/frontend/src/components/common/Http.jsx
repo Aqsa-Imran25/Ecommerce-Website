@@ -28,8 +28,23 @@ export const vendorToken = () => {
 };
 
 export const getAuthToken = () => {
-    return adminToken() || vendorToken() || UserToken() || null;
+    const admin = adminToken();
+    const vendor = vendorToken();
+    const user = UserToken();
+
+    if (admin) return admin;
+    if (vendor) return vendor;
+    if (user) return user;
+
+    return null;
 };
+
+
+// store
+export const getAdminVendorToken = () => {
+    return adminToken() || vendorToken()|| null;
+};
+
 
 export const getUserRole = () => {
     if (adminToken()) return "admin";

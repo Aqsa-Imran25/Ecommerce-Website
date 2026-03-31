@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons'; // The solid style icon
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { adminToken, apiUrl } from '../../common/Http';
+import Sample2 from '../../common/Sample2';
 
 function ShowStore() {
     const [stores, setStores] = useState([])
@@ -52,10 +53,12 @@ function ShowStore() {
         const result = await res.json();
 
         console.log("API Show Result:", result.data);
+
         console.log("Token-Show:", adminToken());
         if (result.status == 200) {
 
             setStores(result.data)
+            console.log("name:", result.data.name);
 
         } else {
             console.log("Something went wrong!")
@@ -69,7 +72,7 @@ function ShowStore() {
     }, [])
     return (
         <>
-            <Sample title='stores' btnText='Create' to='/admin/stores/create'>
+            <Sample2 title='Stores'>
 
                 <div className="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base">
                     {
@@ -119,15 +122,18 @@ function ShowStore() {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <img
-                                                    src={store.logo
+                                                    src={
+                                                        store.logo
+                                                            ? `http://backend.test/storage/logo-image/${store.logo}`
+                                                            : "https://via.placeholder.com/50"
                                                     }
                                                     width={50}
-                                                    alt="Product"
+                                                    alt="logo"
                                                 />
 
                                             </td>
                                             <td className="px-6 py-4">
-                                                {store.status == 1 ?
+                                                {store.status == "active" ?
                                                     <span className='text-white bg-green-700 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>Active</span>
                                                     :
                                                     <span className='text-white bg-red-500 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>Block</span>
@@ -136,9 +142,9 @@ function ShowStore() {
 
                                             <td className="px-6 py-4">
                                                 <div className="flex justify-around">
-                                                    <Link to={`/admin/stores/${store.id}/edit`} className="font-medium text-fg-store hover:underline text-blue-600">
+                                                    {/* <Link to={`/admin/stores/${store.id}/edit`} className="font-medium text-fg-store hover:underline text-blue-600">
                                                         <FontAwesomeIcon icon={faPencil} />
-                                                    </Link>
+                                                    </Link> */}
                                                     <Link
                                                         onClick={() => deleteStore(store.id)}
                                                         to="#" className="font-medium text-fg-store hover:underline text-red-600">
@@ -154,7 +160,7 @@ function ShowStore() {
                         </table>
                     }
                 </div>
-            </Sample>
+            </Sample2>
         </>
     )
 }

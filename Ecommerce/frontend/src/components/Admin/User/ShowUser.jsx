@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import Sidebar from '../../common/Sidebar'
 import Loader from '../../common/Loader'
 import Empty from '../../common/Empty'
-import { adminToken, apiUrl } from '../../common/Http'
+import { adminToken, apiUrl, getUserRole } from '../../common/Http'
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -12,6 +12,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 function ShowUser() {
   const [users, setUsers] = useState([])
   const [loader, setLoader] = useState(false)
+  const role = getUserRole();
   const fetachUsers = async () => {
     setLoader(true)
     const res = await fetch(`${apiUrl}/admin/users`, {
@@ -72,14 +73,11 @@ function ShowUser() {
         <div className='md:container md:mx-auto px-6 py-5 my-5'>
           <div className='flex justify-between my-4'>
             <h2 className='my-2 text-base md:text-2xl'>users</h2>
-            <Link to="/admin/users/create" className="bg-white text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow
-                    hover:bg-[#007595] hover:text-white">
-              Create
-            </Link>
+           
           </div>
           <div className="flex flex-col md:flex-row gap-3">
             <div className="w-full md:w-1/4">
-              <Sidebar />
+              <Sidebar role={role} />
             </div>
             <div className="w-full md:w-3/4">
               <div className="shadow-lg border-2 border-gray-200 p-4">

@@ -46,6 +46,7 @@ function Dashboard() {
                     <h2 className='my-2 text-base md:text-2xl'>Dashboard</h2>
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="w-full md:w-1/4">
+                        {/* Role={role} */}
                             <Sidebar role={role} />
                         </div>
                         <div className="w-full md:w-3/4">

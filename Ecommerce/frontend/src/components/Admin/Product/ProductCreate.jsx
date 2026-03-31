@@ -3,7 +3,7 @@ import JoditEditor from 'jodit-react';
 import Sample from '../../common/Sample';
 import { useForm } from "react-hook-form";
 import { toast } from 'react-toastify';
-import { apiUrl, getAuthToken } from '../../common/Http';
+import { apiUrl, getAuthToken, getUserRole } from '../../common/Http';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -107,10 +107,13 @@ function ProductCreate({ placeholder }) {
         }
     }
 
+    
     // fetchcategory
     const fetchCategory = async () => {
         try {
             const token = getAuthToken();
+            console.log("ROLE:", getUserRole());
+            console.log("TOKEN:", getAuthToken());
             const res = await fetch(`${apiUrl}/admin/categories`, {
                 method: "GET",
                 headers: {
@@ -120,7 +123,10 @@ function ProductCreate({ placeholder }) {
                 },
             });
             const result = await res.json();
-            if (result.status === 200) setCategories(result.data);
+            console.log("Categories", result)
+            if (result.status === 200)
+                console.log("categories", result.data)
+            setCategories(result.data);
         } catch (error) {
             console.error("Fetch error:", error);
             toast.error("Something Went Wrong!");
@@ -140,7 +146,11 @@ function ProductCreate({ placeholder }) {
                 },
             });
             const result = await res.json();
-            if (result.status === 200) setBrands(result.data);
+            console.log("Brands", result)
+            if (result.status === 200)
+                console.log("Brand", result)
+
+            setBrands(result.data);
         } catch (error) {
             console.error("Fetch error:", error);
             toast.error("Something Went Wrong!");
@@ -160,6 +170,7 @@ function ProductCreate({ placeholder }) {
                 },
             });
             const result = await res.json();
+            console.log("Stores", result)
             if (result.status === 200) setStore(result.data);
         } catch (error) {
             console.error("Fetch error:", error);
@@ -181,8 +192,11 @@ function ProductCreate({ placeholder }) {
                 },
             });
             const result = await res.json();
-            console.log(result)
-            if (result.status === 200) setSizes(result.data);
+            console.log("Sizes", result)
+            if (result.status === 200) {
+                console.log("Size", result.data)
+                setSizes(result.data);
+            }
         } catch (error) {
             console.error("Fetch error:", error);
             toast.error("Something Went Wrong!");

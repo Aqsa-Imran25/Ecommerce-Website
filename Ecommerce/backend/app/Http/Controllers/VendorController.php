@@ -18,7 +18,7 @@ class VendorController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->role === "admin") {
+        if (auth()->user()->hasRole('admin')) {
             $stores = Store::orderBy('created_at', 'ASC')->get();
             return response()->json([
                 'status' => 200,
@@ -46,11 +46,18 @@ class VendorController extends Controller
      */
     public function store(Request $request)
     {
+        $user = auth()->user();
+        if ($user->store()->exists()) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'You already have a store'
+            ], 200);
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'status' => 'required|in:active,inactive',
-            'slug' => 'required|string|unique:stores,slug',
         ]);
 
         if ($validator->fails()) {
@@ -73,6 +80,10 @@ class VendorController extends Controller
 
             ]
         );
+        if (!$user->hasRole('vendor')) {
+            $user->syncRoles(['vendor']);
+        }
+
         return response()->json([
             'status' => 200,
             'message' => "Store Created Successfully!",
@@ -129,7 +140,7 @@ class VendorController extends Controller
             'name' => 'required|string|max:255',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'status' => 'required|in:active,inactive',
-            'slug' => 'required|string|unique:stores,slug' . $id,
+            'slug' => 'required|string|unique:stores,slug,' . $id,
         ]);
 
         if ($validator->fails()) {
@@ -165,14 +176,6 @@ class VendorController extends Controller
     public function destroy(string $id)
     {
         $store = Store::findOrFail($id);
-
-        if ($store == null) {
-            return response()->json([
-                'status' => 404,
-                'message' => "Store Not Found!",
-                'data' => []
-            ], 404);
-        }
         $store->delete();
         return response()->json([
             'status' => 200,

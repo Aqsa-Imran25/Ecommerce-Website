@@ -24,23 +24,22 @@ function Navbar() {
   const { user: userLogin, logout: userLogout } =
     useContext(UserAuthContext);
 
-      const { user:vendorLogin, logout: vendorLogout } =
+  const { user: vendorLogin, logout: vendorLogout } =
     useContext(VendorAuthContext);
 
   const { totalItems } = useContext(CartContext);
-// dashboard-page
-const dashboard=()=>{
-  if(adminLogin){
-    return "/admin/dashboard";
+  // dashboard-page
+  const dashboard = () => {
+    if (adminLogin) {
+      return "/admin/dashboard";
+    }
+    else if (vendorLogin) {
+      return "/vendor/dashboard";
+    }
+    else {
+      return "/user/dashboard";
+    }
   }
-  else if(vendorLogin)
-  {
-     return "/vendor/dashboard";
-  }
-  else{
-     return "/user/dashboard";
-  }
-}
 
   const handleLogout = () => {
     if (adminLogin) adminLogout();
@@ -124,18 +123,21 @@ const dashboard=()=>{
             >
               Contact
             </NavLink>
+            {
+              isLoggedIn &&
+              <NavLink
+                to={dashboard()}
+                className={({ isActive }) =>
+                  `transition duration-300 ${isActive
+                    ? "text-[#007595] border-b-2 border-[#007595]"
+                    : "hover:text-[#007595]"
+                  }`
+                }
+              >
+                Dashboard
+              </NavLink>
 
-            <NavLink
-              to={dashboard()}
-              className={({ isActive }) =>
-                `transition duration-300 ${isActive
-                  ? "text-[#007595] border-b-2 border-[#007595]"
-                  : "hover:text-[#007595]"
-                }`
-              }
-            >
-              Dashboard
-            </NavLink>
+            }
 
           </div>
 
@@ -156,7 +158,7 @@ const dashboard=()=>{
                     <Link to={`/product/${product.id}`} key={product.id}>
                       <div className="p-2">
                         {product.name}
-                          <FontAwesomeIcon icon={faSearch} />
+                        <FontAwesomeIcon icon={faSearch} />
                       </div>
                     </Link>
                   ))}
@@ -234,12 +236,17 @@ const dashboard=()=>{
               Contact
             </NavLink>
 
-            <NavLink
-              className="block hover:text-[#007595]"
-              to={dashboard}
-            >
-              Dashboard
-            </NavLink>
+            {
+              isLoggedIn &&
+              <NavLink
+                className="block hover:text-[#007595]"
+                to={dashboard}
+              >
+                Dashboard
+              </NavLink>
+
+            }
+
 
           </div>
 

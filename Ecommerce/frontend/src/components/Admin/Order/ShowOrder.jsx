@@ -3,7 +3,7 @@ import Layout from '../../common/Layout'
 import Sidebar from '../../common/Sidebar'
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { adminToken, apiUrl } from '../../common/Http';
+import { adminToken, apiUrl, getUserRole } from '../../common/Http';
 import Loader from '../../common/Loader';
 import Empty from '../../common/Empty';
 import Pagination from '../../Pagination';
@@ -12,6 +12,7 @@ function ShowOrder() {
     const [orders, setOrders] = useState([])
     const [loader, setLoader] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
+    const role=getUserRole();
     const fetchOrders = async (page = 1) => {
         setLoader(true)
         const res = await fetch(`${apiUrl}/orders?page=${page}`, {
@@ -54,7 +55,7 @@ function ShowOrder() {
                     </div>
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="w-full md:w-1/4">
-                            <Sidebar />
+                            <Sidebar role={role} />
                         </div>
                         <div className="w-full md:w-3/4">
                             <div className="shadow-lg border-2 border-gray-200 p-4 rounded-lg">

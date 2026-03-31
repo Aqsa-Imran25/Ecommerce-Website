@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { adminToken, apiUrl } from '../../common/Http';
+import Sample2 from '../../common/Sample2';
 
 
 function Shipping() {
@@ -77,7 +78,7 @@ function Shipping() {
 
     return (
         <>
-            <Sample title='Shipping-Cost'>
+            <Sample2 title='Shipping-Cost'>
 
                 <form onSubmit={handleSubmit(saveShipping)}>
                     <div className="flex flex-wrap -mx-3 mb-6">
@@ -99,7 +100,7 @@ function Shipping() {
                         className='rounded-md bg-[#007595] py-2 px-6 mt-2 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none'
                     >Submit</button>
                 </form>
-            </Sample>
+            </Sample2>
         </>
     )
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { adminToken, apiUrl } from '../../common/Http';
+import { adminToken, apiUrl, getAdminVendorToken } from '../../common/Http';
 import { useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import Sample from '../../common/Sample';
@@ -18,12 +18,13 @@ function CreateSize() {
             headers: {
                 'Content-Type': 'application/json',
                 "Accept": "application/json",
-                "Authorization": `Bearer ${adminToken()}`
+                "Authorization": `Bearer ${getAdminVendorToken()}`
 
             },
             body: JSON.stringify(data)
         })
         setDisable(false)
+        console.log("token",getAdminVendorToken());
         const result = await res.json();
         console.log("API Show Result:", result.data);
         if (result.status == 200) {

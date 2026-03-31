@@ -16,7 +16,7 @@ class CheckAdmin
     public function handle(Request $request, Closure $next): Response
     {
         $user = auth()->user();
-        if ($user->hasRole('admin')) {
+        if ($user->hasRole('admin') ) {
             return $next($request);
         } else {
             return response()->json([

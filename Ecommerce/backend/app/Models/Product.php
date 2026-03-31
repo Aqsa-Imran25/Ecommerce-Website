@@ -21,6 +21,7 @@ class Product extends Model
         'status',
         'barcode',
         'is_Featured',
+        'is_approved',
         'store_id',
     ];
 
@@ -52,7 +53,7 @@ class Product extends Model
 
     public function order_items()
     {
-       return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderItem::class);
     }
 
     // comments

@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons'; // The solid style icon
 import { faXmark } from '@fortawesome/free-solid-svg-icons'; // 'xmark' is the icon name
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { adminToken, apiUrl } from '../../common/Http';
+import { apiUrl, getAuthToken, } from '../../common/Http';
 
 function ProductShow() {
   const [products, setproducts] = useState([])
@@ -28,7 +28,7 @@ function ProductShow() {
       headers: {
         'Content-Type': 'application/json',
         "Accept": "application/json",
-        "Authorization": `Bearer ${adminToken()}`
+        "Authorization": `Bearer ${getAuthToken()}`
       },
     })
     const result = await res.json();
@@ -49,7 +49,7 @@ function ProductShow() {
       headers: {
         'Content-Type': 'application/json',
         "Accept": "application/json",
-        "Authorization": `Bearer ${adminToken()}`
+        "Authorization": `Bearer ${getAuthToken()}`
 
       },
     })
@@ -57,7 +57,7 @@ function ProductShow() {
     const result = await res.json();
 
     console.log("API Show Result:", result.data);
-    console.log("Token-Show:", adminToken());
+    console.log("Token-Show:", getAuthToken());
     if (result.status == 200) {
 
       setproducts(result.data)
@@ -194,7 +194,7 @@ function ProductShow() {
                           <td className="px-6 py-4">
                             <img
                               src={product.image_url || (product.product_images.length > 0 &&
-                                 `http://backend.test/storage/product/${product.product_images[0].name}`)}
+                                `http://backend.test/storage/product/${product.product_images[0].name}`)}
                               width={50}
                               alt="Product"
                             />

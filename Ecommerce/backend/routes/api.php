@@ -120,11 +120,13 @@ Route::group(
         Route::get('/admin/brands', [BrandController::class, 'index']);
         // sizes
         Route::get('/sizes', [SizeController::class, 'index']);
-        Route::get('/sizes/{id}', [SizeController::class, 'show']);
-        Route::post('/sizes', [SizeController::class, 'store']);
-        Route::get('/sizes/edit/{id}', [SizeController::class, 'edit']);
-        Route::put('/sizes/{id}', [SizeController::class, 'update']);
-        Route::delete('/sizes/{id}', [SizeController::class, 'destroy']);
+        // PRODUCTS
+        Route::get('/products', [ProductController::class, 'index']);
+        Route::get('/products/{id}', [ProductController::class, 'show']);
+        Route::post('/products', [ProductController::class, 'store']);
+        Route::put('/products/{id}', [ProductController::class, 'update']);
+        Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+        Route::get('/products/{id}/edit', [ProductController::class, 'edit']);
     }
 
 );
@@ -158,10 +160,18 @@ Route::group(
 
         // sizes
         // Route::resource('/sizes', SizeController::class);
+        Route::get('/sizes/{id}', [SizeController::class, 'show']);
+        Route::post('/sizes', [SizeController::class, 'store']);
+        Route::get('/sizes/edit/{id}', [SizeController::class, 'edit']);
+        Route::put('/sizes/{id}', [SizeController::class, 'update']);
+        Route::delete('/sizes/{id}', [SizeController::class, 'destroy']);
 
 
         // product
-        Route::resource('/products', ProductController::class);
+        // Route::resource('/products', ProductController::class);
+        // Get all products
+
+        // 
 
         // temp-img
         Route::post('/temp-image', [TempController::class, 'store']);

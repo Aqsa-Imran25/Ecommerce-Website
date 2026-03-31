@@ -99,6 +99,6 @@ class User extends Authenticatable
     // store
      public function store()
     {
-        return $this->hasMany(Store::class);
+        return $this->hasOne(Store::class);
     }
 }

@@ -39,10 +39,9 @@ export const getAuthToken = () => {
     return null;
 };
 
-
 // store
 export const getAdminVendorToken = () => {
-    return adminToken() || vendorToken()|| null;
+    return adminToken() || vendorToken() || UserToken();
 };
 
 

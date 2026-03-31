@@ -96,10 +96,13 @@ function ShowStore() {
                                         Slug
                                     </th>
                                     <th scope="col" className="px-6 py-3 font-medium">
-                                        Image
+                                        Logo
                                     </th>
                                     <th scope="col" className="px-6 py-3 font-medium">
                                         Status
+                                    </th>
+                                    <th scope="col" className="px-6 py-3 font-medium">
+                                        is_Approved
                                     </th>
                                     <th scope="col" className="px-6 py-3 font-medium text-center">
                                         Action
@@ -137,6 +140,21 @@ function ShowStore() {
                                                     <span className='text-white bg-green-700 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>Active</span>
                                                     :
                                                     <span className='text-white bg-red-500 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>Block</span>
+                                                }
+                                            </td>
+
+                                            <td className="px-6 py-4">
+                                                {store.is_Approved === "pending" &&
+                                                    <span className='text-white bg-yellow-700 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>Active</span>
+
+                                                }
+                                                {store.is_Approved === "reject" &&
+                                                    <span className='text-white bg-red-700 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>Active</span>
+
+                                                }
+                                                {store.is_Approved === "approved" &&
+                                                    <span className='text-white bg-green-700 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>Active</span>
+
                                                 }
                                             </td>
 

@@ -4,9 +4,9 @@ import { apiUrl, UserToken } from "../common/Http";
 
 export const CartContext = createContext({
   cartData: [],
-  addToCart: () => {},
-  updateCartqty: () => {},
-  removeItem: () => {},
+  addToCart: () => { },
+  updateCartqty: () => { },
+  removeItem: () => { },
   shipping: () => 0,
   subTotal: () => 0,
   grandTotal: () => 0,
@@ -33,35 +33,32 @@ export const CartProvider = ({ children }) => {
   }, [cartData]);
   // shipping cost fetch
   useEffect(() => {
+    const token = UserToken();
+
+    if (!token) return; 
+
     const fetchApi = async () => {
       try {
-        const token = UserToken();
-        if (!token) {
-          setShippingCost(0);
-          return;
-        }
         const res = await fetch(`${apiUrl}/customer-shipping`, {
-          method: "GET",
           headers: {
-            "Content-Type": "application/json",
             Accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
         });
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
+
+        if (!res.ok) return;
 
         const result = await res.json();
-        if (result.status == 200) {
+
+        if (result.status === 200) {
           setShippingCost(result.data?.shipping_charge || 0);
         }
+
       } catch (error) {
-        setShippingCost(0);
-        console.error("Fetch error:", error);
-        toast.error("Something Went Wrong!");
+        console.log("Error:", error);
       }
     };
+
     fetchApi();
   }, []);
 

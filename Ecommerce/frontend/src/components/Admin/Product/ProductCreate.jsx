@@ -107,7 +107,7 @@ function ProductCreate({ placeholder }) {
         }
     }
 
-    
+
     // fetchcategory
     const fetchCategory = async () => {
         try {
@@ -226,7 +226,7 @@ function ProductCreate({ placeholder }) {
             const newIds = res.data.ids;
 
             setGalleryIds(prev => {
-                const updated = [...prev, ...newIds];
+                const updated = [...prev, ...(Array.isArray(newIds) ? newIds : [newIds])];
                 setValue('gallery', updated);
                 return updated;
             });

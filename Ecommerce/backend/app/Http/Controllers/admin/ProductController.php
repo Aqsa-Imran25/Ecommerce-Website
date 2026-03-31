@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductImg;
 use App\Models\ProductSize;
+use App\Models\Store;
 use App\Models\TempImg;
 use App\Traits\ImageUpload;
 
@@ -23,7 +24,25 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['product_images', 'product_sizes'])->orderBy('created_at', 'ASC')->get();
+        $user = auth()->user();
+
+        $query = Product::with(['product_images', 'product_sizes'])
+            ->orderBy('created_at', 'ASC');
+
+        if ($user->hasRole('admin')) {
+            $products = $query->get();
+        } else if ($user->hasRole('vendor')) {
+            $storeId = Store::where('user_id', $user->id)->value('id');
+
+            if (!$storeId) {
+                return response()->json([
+                    'status' => 200,
+                    'data' => []
+                ]);
+            }
+
+            $products = $query->where('store_id', $storeId)->get();
+        }
 
         return response()->json([
             'status' => 200,

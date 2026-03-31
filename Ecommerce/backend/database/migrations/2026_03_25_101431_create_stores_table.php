@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->string('logo')->nullable();
             $table->string('slug')->unique();
+            $table->enum('is_approved', ['pending', 'approved', 'reject'])->default('pending');
             $table->timestamps();
         });
     }

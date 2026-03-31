@@ -5,11 +5,14 @@ import Loader from "../common/Loader";
 
 export const Vendorrequireauth = ({ children }) => {
     const { user } = useContext(VendorAuthContext);
+
     if (user === null) {
-        <p><Loader /></p>
+        return <Loader />;
     }
-    if (!user) {
-        return <Navigate to='/login' />
+
+    if (!user || user.role !== "vendor") {
+        return <Navigate to="/login" />;
     }
+
     return children;
-}
+};

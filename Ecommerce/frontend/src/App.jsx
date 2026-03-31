@@ -37,6 +37,7 @@ import Store from "./components/Vendor/Store";
 import { Vendorrequireauth } from "./components/Vendor/Vendorrequireauth";
 import ShowStore from "./components/Admin/Store/ShowStore";
 import EditStore from "./components/Admin/Store/EditStore";
+import RoleBasedRoute from "./components/common/RoleBaseRoute";
 
 
 function App() {
@@ -91,14 +92,7 @@ function App() {
             }
           />
 
-           <Route
-            path="/vendor/sizes/create"
-            element={
-              <Vendorrequireauth>
-                <CreateSize />
-              </Vendorrequireauth>
-            }
-          />
+
 
           {/* profile */}
           <Route
@@ -258,23 +252,32 @@ function App() {
             }
           />
 
-          {/* product-Routes */}
           <Route
             path="/products"
             element={
-              <Adminrequireauth>
+              <RoleBasedRoute allowedRoles={["admin", "vendor"]}>
                 <ProductShow />
-              </Adminrequireauth>
+              </RoleBasedRoute>
             }
           />
+          {/* product - create */}
           <Route
+            path="/products/create"
+            element={
+              <RoleBasedRoute allowedRoles={["admin", "vendor"]}>
+                <ProductCreate />
+              </RoleBasedRoute>
+            }
+          />
+
+          {/* <Route
             path="/products/create"
             element={
               <Adminrequireauth>
                 <ProductCreate />
               </Adminrequireauth>
             }
-          />
+          /> */}
           <Route
             path="/products/:id/edit"
             element={

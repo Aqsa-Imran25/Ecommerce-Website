@@ -25,11 +25,9 @@ function Sidebar({ role }) {
 
             { name: "Dashboard", path: "/vendor/dashboard" },
             { name: "Stores", path: "/vendor" },
-            { name: "Sizes", path: "/vendor/sizes/create" },
-            { name: "Products", path: "/vendor/products/create" },
+            { name: "Products", path: "/products" },
             { name: "My Account", path: "/myaccount" },
             { name: "Orders", path: "/myorder" },
-            { name: "Create Product", path: "/products/create" },
         ];
     }
 

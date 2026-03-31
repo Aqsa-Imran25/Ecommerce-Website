@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { VendorAuthContext } from "../context/VendorAuth";
 
-
 function Store() {
   const { login: vendorLogin } = useContext(VendorAuthContext);
 
@@ -28,9 +27,8 @@ function Store() {
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("status", data.status);
-      formData.append("slug", data.slug || "");
       if (data.logo && data.logo.length > 0) {
-        console.log("Image", data.logo[0])
+        console.log("Image", data.logo[0]);
         formData.append("logo", data.logo[0]);
       }
 
@@ -54,32 +52,29 @@ function Store() {
 
         console.log("Vendor", result.data);
 
-        const existingVendor = JSON.parse(localStorage.getItem("vendorInfo")) || {
+        const existingVendor = JSON.parse(
+          localStorage.getItem("vendorInfo"),
+        ) || {
           token: UserToken(),
           role: "vendor",
-          stores: []
+          stores: [],
         };
 
         const updatedVendor = {
           ...existingVendor,
-          stores: [...existingVendor.stores, result.data.name]
+          stores: [...existingVendor.stores, result.data.name],
         };
         vendorLogin(updatedVendor);
         localStorage.setItem("vendorInfo", JSON.stringify(updatedVendor));
 
         navigate("/vendor");
-      }
-
-      else if (res.status === 422 && result.errors) {
+      } else if (res.status === 422 && result.errors) {
         Object.values(result.errors).forEach((errorArr) => {
           errorArr.forEach((msg) => {
             toast.error(msg);
           });
         });
-      }
-
-
-      else {
+      } else {
         toast.error(result.message || "Something went wrong!");
       }
     } catch (error) {
@@ -133,21 +128,21 @@ function Store() {
                   onSubmit={handleSubmit(saveStore)}
                   encType="multipart/form-data"
                 >
-
                   <div className="flex flex-wrap -mx-3 mb-6">
                     <div className="w-1/2 px-3 mb-6 md:mb-0">
                       <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">
                         Name
                       </label>
                       <input
-                        {...register("name", { required: "The name field is required." })}
+                        {...register("name", {
+                          required: "The name field is required.",
+                        })}
                         onChange={(e) => {
                           setValue("slug", generateSlug(e.target.value));
                         }}
                         className="appearance-none block w-full text-black border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                         placeholder="Store name"
                       />
-
 
                       {errors.name && (
                         <p className="text-red-500 text-sm">
@@ -172,7 +167,6 @@ function Store() {
                       )}
                     </div>
                   </div>
-
 
                   <div className="flex flex-wrap -mx-3 mb-6">
                     <div className="w-full px-3 mb-6">
@@ -238,8 +232,6 @@ function Store() {
                           type="file"
                           onChange={(e) => {
                             const file = e.target.files[0];
-
-                            // 👇 VERY IMPORTANT
                             setValue("logo", e.target.files);
 
                             uploadTempImages(e);

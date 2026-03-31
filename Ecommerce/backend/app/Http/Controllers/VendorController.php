@@ -58,6 +58,7 @@ class VendorController extends Controller
             'name' => 'required|string|max:255',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'status' => 'required|in:active,inactive',
+
         ]);
 
         if ($validator->fails()) {
@@ -77,6 +78,7 @@ class VendorController extends Controller
                 'status' => $request->status,
                 'slug' => Str::slug($request->name),
                 'logo' => $logoImage,
+                'is_approved' => 'pending',
 
             ]
         );
@@ -86,7 +88,7 @@ class VendorController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => "Store Created Successfully!",
+            'message' => 'Store created, waiting for admin approval',
             'data' => $vendor,
         ], 200);
     }

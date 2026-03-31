@@ -101,6 +101,7 @@ class ProductController extends Controller
             'sku' => $request->sku,
             'status' => $request->status,
             'is_Featured' => $request->is_Featured,
+            'is_approved' => 'pending',
         ]);
         // sizes array
         if (!empty($request->sizes)) {
@@ -144,7 +145,7 @@ class ProductController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Product created successfully',
+            'message' => 'Product submitted for approval',
             'data' => $product
         ]);
     }

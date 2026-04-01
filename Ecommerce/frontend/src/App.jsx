@@ -38,6 +38,9 @@ import { Vendorrequireauth } from "./components/Vendor/Vendorrequireauth";
 import ShowStore from "./components/Admin/Store/ShowStore";
 import EditStore from "./components/Admin/Store/EditStore";
 import RoleBasedRoute from "./components/common/RoleBaseRoute";
+import Payment from "./components/Admin/Payment/Payment";
+import ShowPayment from "./components/Admin/Payment/ShowPayment";
+import EditPayment from "./components/Admin/Payment/EditPayment";
 
 
 function App() {
@@ -333,6 +336,36 @@ function App() {
               </Adminrequireauth>
             }
           />
+          {/* payment-admin */}
+          <Route
+            path="/admin/payments/create"
+            element={
+              <Adminrequireauth>
+                <Payment />
+              </Adminrequireauth>
+            }
+          />
+
+            {/* payment-admin */}
+          <Route
+            path="/admin/payments"
+            element={
+              <Adminrequireauth>
+                <ShowPayment />
+              </Adminrequireauth>
+            }
+          />
+
+              {/* payment-admin-edit */}
+          <Route
+            path="/admin/payments/:id/edit"
+            element={
+              <Adminrequireauth>
+                <EditPayment />
+              </Adminrequireauth>
+            }
+          />
+
 
         </Routes>
       </BrowserRouter>

@@ -17,7 +17,9 @@ function Sidebar({ role }) {
             { name: "Shipping", path: "/admin/shipping" },
             { name: "Stores", path: "/admin/stores" },
             { name: "Orders", path: "/admin/orders" },
+            { name: "Payments", path: "/admin/payments" },
             { name: "Users", path: "/admin/users" },
+
         ];
     }
     else if (role === "vendor") {

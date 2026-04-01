@@ -13,4 +13,8 @@ class Payment_setting extends Model
     'currency',
     'store_id',
 ];
+  public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
 }

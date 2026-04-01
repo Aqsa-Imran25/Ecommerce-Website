@@ -30,4 +30,10 @@ class Store extends Model
     {
         return $this->hasMany(Vendor_earnings::class);
     }
+
+    // payment-setting
+    public function paymentSettings()
+    {
+        return $this->hasOne(Payment_setting::class);
+    }
 }

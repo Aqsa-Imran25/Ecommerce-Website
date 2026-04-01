@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\OrderController as AdminOrderController;
+use App\Http\Controllers\admin\PaymentController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\admin\ShippingChargeController;
@@ -219,6 +220,11 @@ Route::group(
                 'orders' => $orders,
             ]);
         });
+
+        // payment
+         Route::resource('/admin/payment-settings', PaymentController::class);
+
+
     }
 
 

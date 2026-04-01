@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { CartContext } from '../../context/Cart'
 import { useForm } from 'react-hook-form'
-import { apiUrl, UserToken } from '../../common/Http'
+import { apiUrl, getAuthToken, UserToken } from '../../common/Http'
 import { toast } from 'react-toastify'
 import { useNavigate, useParams } from 'react-router'
 
@@ -51,7 +51,6 @@ function Checkout() {
         }
     };
     // fetchprofile
-    // fetch user
     const fetchProfileData = async () => {
         try {
             const res = await fetch(`${apiUrl}/myaccount`, {
@@ -79,8 +78,6 @@ function Checkout() {
         }
     };
 
-
-
     const handleCheckout = async (data) => {
 
         console.log("Form Data:", data);
@@ -91,18 +88,17 @@ function Checkout() {
             return;
         }
         if (paymentMethod) {
-            saveOrder(data, 'not paid')
+            saveOrder(data)
         }
 
     }
-    const saveOrder = async (formData, paymentStaus) => {
+    const saveOrder = async (formData) => {
         console.log(cartData)
         const newFormData = {
             ...formData, sub_total: subTotal(),
             shipping: shipping(),
             grand_total: grandTotal(),
             discount: 0,
-            payment_status: paymentStaus,
             status: 'pending',
             cart: cartData
         }
@@ -111,7 +107,7 @@ function Checkout() {
             headers: {
                 'Content-Type': 'application/json',
                 "Accept": "application/json",
-                "Authorization": `Bearer ${UserToken()}`
+                "Authorization": `Bearer ${getAuthToken()}`
 
             },
             body: JSON.stringify(newFormData)

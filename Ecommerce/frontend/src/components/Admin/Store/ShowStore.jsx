@@ -56,18 +56,18 @@ function ShowStore() {
     console.log("Token-Show:", adminToken());
     if (result.status == 200) {
       setStores(result.data);
-      console.log("name:", result.data.name);
     } else {
       console.log("Something went wrong!");
     }
   };
-
-  const approveStore = async (id, status) => {
-    const res = await fetch(`${apiUrl}/admin/stores/${id}/approve/${status}`, {
-      method: "PUT",
+  // approve
+  const approveStore = async (id) => {
+    const res = await fetch(`${apiUrl}/admin/approvedStore/${id}`, {
+      method: "POST",
       headers: {
-        Authorization: `Bearer ${adminToken()}`,
+        "Content-Type": "application/json",
         Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
       },
     });
 
@@ -76,11 +76,33 @@ function ShowStore() {
     if (result.status === 200) {
       toast.success(result.message);
 
-      // UI update
       setStores((prev) =>
         prev.map((store) =>
-          store.id === id ? { ...store, is_approved: status } : store,
-        ),
+          store.id === id ? { ...store, status: "active" } : store
+        )
+      );
+    }
+  };
+  // rejected
+  const rejectStore = async (id) => {
+    const res = await fetch(`${apiUrl}/admin/rejectedStore/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${adminToken()}`,
+      },
+    });
+
+    const result = await res.json();
+
+    if (result.status === 200) {
+      toast.success(result.message);
+
+      setStores((prev) =>
+        prev.map((store) =>
+          store.id === id ? { ...store, status: "rejected" } : store
+        )
       );
     }
   };
@@ -115,9 +137,6 @@ function ShowStore() {
                   <th scope="col" className="px-6 py-3 font-medium">
                     Status
                   </th>
-                  <th scope="col" className="px-6 py-3 font-medium">
-                    is_Approved
-                  </th>
                   <th scope="col" className="px-6 py-3 font-medium text-center">
                     Action
                   </th>
@@ -149,40 +168,50 @@ function ShowStore() {
                       />
                     </td>
                     <td className="px-6 py-4">
-                      {store.status == "active" ? (
-                        <span className="text-white bg-green-700 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5">
-                          Active
-                        </span>
-                      ) : (
-                        <span className="text-white bg-red-500 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5">
-                          Inactive
-                        </span>
-                      )}
+                      {
+                        store.status === "active" ? (
+                          <span className="bg-green-600 text-white px-3 py-1 rounded">
+                            Active
+                          </span>
+                        ) : store.status === "pending" ? (
+                          <span className="bg-yellow-500 text-white px-3 py-1 rounded">
+                            Pending
+                          </span>
+                        ) : (
+                          <span className="bg-red-500 text-white px-3 py-1 rounded">
+                            Rejected
+                          </span>
+                        )
+                      }
                     </td>
 
-                    <td className="px-6 py-4">
-                      {store.is_approved === "pending" && (
-                        <span className="bg-yellow-500 text-white px-3 py-1 rounded">
-                          Pending
-                        </span>
-                      )}
-                      {store.is_approved === "approved" && (
-                        <span className="bg-green-500 text-white px-3 py-1 rounded">
-                          Approved
-                        </span>
-                      )}
-                      {store.is_approved === "reject" && (
-                        <span className="bg-red-500 text-white px-3 py-1 rounded">
-                          Rejected
-                        </span>
-                      )}
+                    <td className="px-6 py-4 text-center">
+                      <div className="flex gap-2 justify-center">
+
+                        {/* Approve / Reject */}
+                        {store.status === "pending" && (
+                          <>
+                            <button
+                              onClick={() => approveStore(store.id)}
+                              className="bg-green-600 text-white px-2 py-1 rounded"
+                            >
+                              Approve
+                            </button>
+
+                            <button
+                              onClick={() => rejectStore(store.id)}
+                              className="bg-red-600 text-white px-2 py-1 rounded"
+                            >
+                              Reject
+                            </button>
+                          </>
+                        )}
+
+                      </div>
                     </td>
 
                     <td className="px-6 py-4">
                       <div className="flex justify-around">
-                        {/* <Link to={`/admin/stores/${store.id}/edit`} className="font-medium text-fg-store hover:underline text-blue-600">
-                                                        <FontAwesomeIcon icon={faPencil} />
-                                                    </Link> */}
                         <Link
                           onClick={() => deleteStore(store.id)}
                           to="#"
@@ -191,32 +220,6 @@ function ShowStore() {
                           <FontAwesomeIcon icon={faTrash} />
                         </Link>
                       </div>
-                    </td>
-
-                    <td className="px-6 py-4 text-center">
-                      {store.is_approved === "pending" && (
-                        <div className="flex gap-2 justify-center">
-                          <button
-                            onClick={() => approveStore(store.id, "approved")}
-                            className="bg-green-600 text-white px-2 py-1 rounded"
-                          >
-                            Approve
-                          </button>
-                          <button
-                            onClick={() => approveStore(store.id, "reject")}
-                            className="bg-red-600 text-white px-2 py-1 rounded"
-                          >
-                            Reject
-                          </button>
-                        </div>
-                      )}
-
-                      <button
-                        onClick={() => deleteStore(store.id)}
-                        className="text-red-600"
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
                     </td>
                   </tr>
                 ))}

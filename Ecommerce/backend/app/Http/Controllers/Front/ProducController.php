@@ -143,7 +143,7 @@ class ProducController extends Controller
     // SINGLEPRODUCT
     public function getProduct($id)
     {
-        $product = Product::with(['product_images', 'product_sizes', 'user'])
+        $product = Product::with(['product_images', 'product_sizes', 'vendor'])
             ->withCount('likes')
             ->findOrFail($id);
 

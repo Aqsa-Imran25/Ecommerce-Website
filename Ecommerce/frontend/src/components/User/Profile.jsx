@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from "react-hook-form"
 import { toast } from 'react-toastify';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { apiUrl, UserToken } from '../common/Http';
+import { useNavigate } from 'react-router-dom';
+import { apiUrl, getAuthToken, getUserRole, UserToken } from '../common/Http';
 import Layout from '../common/Layout';
-import Sidebar from './Sidebar';
+import Sidebar from '../common/Sidebar';
 
 function Profile() {
     const { register, handleSubmit, setValue, formState: { errors } } = useForm();
     const [disable, setDisable] = useState(false)
     const navigate = useNavigate()
+    // role
+    const role = getUserRole();
 
     const saveProfile = async (data) => {
         console.log(data)
@@ -71,7 +73,7 @@ function Profile() {
                 headers: {
                     'Content-Type': 'application/json',
                     "Accept": "application/json",
-                    Authorization: `Bearer ${UserToken()}`
+                    Authorization: `Bearer ${getAuthToken()}`
                 },
             });
 
@@ -112,7 +114,7 @@ function Profile() {
 
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="w-full md:w-1/4">
-                            <Sidebar />
+                            <Sidebar role={role} />
                         </div>
                         <div className="w-full md:w-3/4">
                             <div className="bg-white shadow-xl rounded-2xl p-6 md:p-8">

@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 
 class OrderController extends Controller
@@ -47,9 +47,10 @@ class OrderController extends Controller
             'sub_total' => 'required|numeric|min:0',
             'shipping' => 'required|numeric|min:0',
             'grand_total' => 'required|numeric|min:0',
-            // 'payment_status' => ['required', Rule::in(['paid', 'not paid'])],
-            'status' => ['required', Rule::in(['pending', 'delivered', 'shipped', 'cancelled'])],
-
+            'phone_num' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -65,7 +66,11 @@ class OrderController extends Controller
             'shipping' => $request->shipping,
             'grand_total' => $request->grand_total,
             'discount' => $request->discount,
-            'status' => $request->status,
+            'status' => 'pending',
+            'phone_num' => $request->phone_num,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zip' => $request->zip,
 
         ]);
 
@@ -81,11 +86,21 @@ class OrderController extends Controller
             ]);
         }
 
+        $payment = Payment::create([
+            'order_id' => $order->id,
+            'method' => $request->payment,
+            'status' => 'pending',
+            'amount' => $request->grand_total,
+
+        ]);
+
         return response()->json([
             'status' => 200,
-            'message' => "Order placed successfully",
+            'message' => "Your Order Placed Successfully",
             'id' => $order->id,
-            'data' => $order
+            'data' => $order,
+            'payment' => $payment
+
         ]);
     }
 

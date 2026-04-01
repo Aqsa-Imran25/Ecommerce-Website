@@ -1,17 +1,16 @@
 import React, { useContext, useState } from "react";
 import Layout from "../common/Layout";
-import Sidebar from "../User/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
-import { apiUrl, UserToken } from "../common/Http";
+import { apiUrl, getUserRole, UserToken } from "../common/Http";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { VendorAuthContext } from "../context/VendorAuth";
+import Sidebar from "../common/Sidebar";
 
 function Store() {
   const { login: vendorLogin } = useContext(VendorAuthContext);
-
   const {
     register,
     setValue,
@@ -20,13 +19,15 @@ function Store() {
   } = useForm();
   const [previewImages, setPreviewImages] = useState([]);
   const navigate = useNavigate();
+  // role
+  const role = getUserRole();
 
   const saveStore = async (data) => {
     try {
       console.log("FULL DATA:", data);
       const formData = new FormData();
       formData.append("name", data.name);
-      formData.append("status", data.status);
+
       if (data.logo && data.logo.length > 0) {
         console.log("Image", data.logo[0]);
         formData.append("logo", data.logo[0]);
@@ -120,7 +121,9 @@ function Store() {
 
           <div className="flex flex-col md:flex-row gap-3">
             <div className="w-full md:w-1/4">
-              <Sidebar />
+              <h3>Role:{role}</h3>
+              <Sidebar role={role} />
+
             </div>
             <div className="w-full md:w-3/4">
               <div className="bg-white shadow-xl rounded-2xl p-6 md:p-8">
@@ -169,40 +172,6 @@ function Store() {
                   </div>
 
                   <div className="flex flex-wrap -mx-3 mb-6">
-                    <div className="w-full px-3 mb-6">
-                      <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">
-                        Status
-                      </label>
-                      <div className="relative">
-                        <select
-                          {...register("status", {
-                            required: "Please select a status.",
-                          })}
-                          className="block appearance-none w-full border border-gray-200 text-black py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                        >
-                          <option value="">Select a Status</option>
-                          <option value="active">Active</option>
-                          <option value="inactive">Inactive</option>
-                        </select>
-
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                          <svg
-                            className="fill-current h-4 w-4"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                          </svg>
-                        </div>
-                      </div>
-                      {errors.status && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {errors.status.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap -mx-3 mb-6">
                     <div className="w-full px-3 mb-6 md:mb-0">
                       <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                         Logo
@@ -216,18 +185,6 @@ function Store() {
                         <span className="text-gray-500 text-xs mt-1">
                           or drag and drop images here
                         </span>
-
-                        {/* <input
-                          type="file"
-                          name="logo"
-                          {...register("logo")}
-                          onChange={(e) => {
-
-                            uploadTempImages(e)
-                          }
-                          }
-                          className="hidden"
-                        /> */}
                         <input
                           type="file"
                           onChange={(e) => {
@@ -238,7 +195,6 @@ function Store() {
                           }}
                         />
                       </label>
-
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-4">
                         {previewImages.map((img, index) => (
                           <div

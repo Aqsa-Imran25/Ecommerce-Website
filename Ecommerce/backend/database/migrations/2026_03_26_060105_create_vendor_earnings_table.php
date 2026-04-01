@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('store_id')->constrained()->onDelete('cascade');
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->integer('amount');
-            $table->integer('commission');
-            $table->integer('net_amount');
+            $table->decimal('amount', 10, 2);
+            $table->decimal('commission', 10, 2);
+            $table->decimal('net_amount', 10, 2);
             $table->timestamps();
         });
     }

@@ -98,9 +98,9 @@ function App() {
           <Route
             path="/myaccount"
             element={
-              <Userrequireauth>
+              <RoleBasedRoute allowedRoles={["user", "vendor"]}>
                 <Profile />
-              </Userrequireauth>
+              </RoleBasedRoute>
             }
           />
 
@@ -108,9 +108,9 @@ function App() {
           <Route
             path="/checkout"
             element={
-              <Userrequireauth>
+              <RoleBasedRoute allowedRoles={["user", "vendor","admin"]}>
                 <Checkout />
-              </Userrequireauth>
+              </RoleBasedRoute>
             }
           />
           {/* confirmation */}

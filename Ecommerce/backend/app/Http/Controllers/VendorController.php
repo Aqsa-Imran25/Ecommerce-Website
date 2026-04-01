@@ -51,13 +51,12 @@ class VendorController extends Controller
             return response()->json([
                 'status' => 400,
                 'message' => 'You already have a store'
-            ], 200);
+            ], 400);
         }
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'status' => 'required|in:active,inactive',
 
         ]);
 
@@ -75,10 +74,9 @@ class VendorController extends Controller
             [
                 'name' => $request->name,
                 'user_id' => auth()->id(),
-                'status' => $request->status,
-                'slug' => Str::slug($request->name),
+                'status' => 'pending',
+                'slug' => Str::slug($request->name . '-' . time()),
                 'logo' => $logoImage,
-                'is_approved' => 'pending',
 
             ]
         );
@@ -91,6 +89,35 @@ class VendorController extends Controller
             'message' => 'Store created, waiting for admin approval',
             'data' => $vendor,
         ], 200);
+    }
+
+    // method
+    private function updateStatus($id, $status, $message)
+    {
+        $store = Store::findOrFail($id);
+        $store->status = $status;
+        $store->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' => $message,
+        ], 200);
+    }
+
+
+    public function approvedStore($id)
+    {
+        return $this->updateStatus($id, 'active', 'Store approved successfully!');
+    }
+
+    public function rejectedStore($id)
+    {
+        return $this->updateStatus($id, 'rejected', 'Store rejected successfully!');
+    }
+
+    public function pendingStore($id)
+    {
+        return $this->updateStatus($id, 'pending', 'Store set to pending!');
     }
 
     /**

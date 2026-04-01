@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import ReviewSection from "../common/ReviewSection";
+import Loader from "../common/Loader";
 
 dayjs.extend(relativeTime);
 
@@ -28,14 +29,8 @@ function Product() {
   const [sizeSelected, setSizeSelected] = useState(null);
   const [activeTab, setActiveTab] = useState("");
   const { addToCart } = useContext(CartContext);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const navigate = useNavigate();
+
   // fetchComments from db
-  const [comment, setComment] = useState([]);
   const { id } = useParams();
 
   // LIKES
@@ -80,31 +75,31 @@ function Product() {
   };
 
   // getComment
-  const fetchComment = async () => {
-    try {
-      const res = await fetch(`${apiUrl}/comment/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
-      const result = await res.json();
-      if (result.status === 200) {
-        setComment(result.data);
-      } else {
-        console.error("Something Went Wrong!");
-      }
-    } catch (error) {
-      console.error("Fetch error:", error);
-      toast.error("Something Went Wrong!");
-    }
-  };
+  // const fetchComment = async () => {
+  //   try {
+  //     const res = await fetch(`${apiUrl}/comment/${id}`, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //       },
+  //     });
+  //     const result = await res.json();
+  //     if (result.status === 200) {
+  //       setComment(result.data);
+  //     } else {
+  //       console.error("Something Went Wrong!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Fetch error:", error);
+  //     toast.error("Something Went Wrong!");
+  //   }
+  // };
 
   useEffect(() => {
     if (id) {
       fetchProduct();
-      fetchComment();
+      // fetchComment();
     }
   }, [id]);
 
@@ -113,7 +108,7 @@ function Product() {
     return (
       <Layout>
         <div className="text-center py-20 text-xl font-semibold">
-          Loading Product...
+          <Loader/>
         </div>
       </Layout>
     );
@@ -131,34 +126,34 @@ function Product() {
   };
 
   // handlecomment
-  const submitComment = async (data) => {
-    console.log(data);
-    try {
-      const res = await fetch(`${apiUrl}/comment/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${UserToken()}`,
-        },
-        body: JSON.stringify(data),
-      });
+  // const submitComment = async (data) => {
+  //   console.log(data);
+  //   try {
+  //     const res = await fetch(`${apiUrl}/comment/${id}`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //         Authorization: `Bearer ${UserToken()}`,
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
 
-      const result = await res.json();
+  //     const result = await res.json();
 
-      console.log("API Show Result:", result);
+  //     console.log("API Show Result:", result);
 
-      if (result.status === 200) {
-        toast.success(result.message);
-        navigate(`/product/${id}`);
-      } else {
-        console.log("Something went wrong!");
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(result.message);
-    }
-  };
+  //     if (result.status === 200) {
+  //       toast.success(result.message);
+  //       navigate(`/product/${id}`);
+  //     } else {
+  //       console.log("Something went wrong!");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error(result.message);
+  //   }
+  // };
   // deletecomment
   // const deleteComment = async (id) => {
   //   if (!window.confirm("Are you sure you want to delete this comment?"))
@@ -346,7 +341,7 @@ function Product() {
                 </div>
               </div>
             )}
-            {/* addtocrat */}
+            {/* addtocart */}
             <button
               onClick={() => handleCart()}
               className="bg-[#007595] mt-3 hover:bg-gray-900 text-white font-bold py-4 px-6 rounded inline-flex items-center"

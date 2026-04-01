@@ -30,6 +30,15 @@ function Sidebar({ role }) {
             { name: "Orders", path: "/myorder" },
         ];
     }
+    else {
+
+        sideBarLinks = [
+            { name: "Dashboard", path: "/user/dashboard" },
+            { name: "My Account", path: "/myaccount" },
+            { name: "Become a Seller", path: "/vendor" },
+            { name: "Order", path: "/myorder" },
+        ];
+    }
 
     return (
         <div className='shadow-lg p-4 rounded-lg border-2 border-gray-200'>

@@ -35,7 +35,7 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     const token = UserToken();
 
-    if (!token) return; 
+    if (!token) return;
 
     const fetchApi = async () => {
       try {
@@ -83,6 +83,7 @@ export const CartProvider = ({ children }) => {
         qty: 1,
         size: size || "",
         price: product.price,
+        store_id: product.store_id,
       };
       setCartData([...cartData, newItem]);
     }

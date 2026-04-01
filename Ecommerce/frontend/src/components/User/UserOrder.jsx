@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../common/Layout'
-import Sidebar from './Sidebar'
 import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Empty from '../common/Empty';
 import Loader from '../common/Loader';
-import { apiUrl, UserToken } from '../common/Http';
+import { apiUrl, getUserRole, UserToken } from '../common/Http';
+import Sidebar from '../common/Sidebar';
 
 function UserOrder() {
     const [order, setOrder] = useState([])
     const [loader, setLoader] = useState(false)
-    const { id } = useParams();
+    // roles
+    const role = getUserRole();
+
     const fetchorder = async () => {
         setLoader(true)
         const res = await fetch(`${apiUrl}/order`, {
@@ -51,13 +53,13 @@ function UserOrder() {
                             My Order
                         </h5>
                         <p className="text-gray-500 text-sm mt-1">
-                           Check the status of your recent purchases.
+                            Check the status of your recent purchases.
                         </p>
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="w-full md:w-1/4">
-                            <Sidebar />
+                            <Sidebar role={role} />
                         </div>
                         <div className="w-full md:w-3/4">
                             <div className="shadow-lg border-2 border-gray-200 p-4 rounded-lg">
@@ -165,9 +167,9 @@ function UserOrder() {
                                                                 <td className="px-6 py-4">
                                                                     <span className='text-red-500 text-sm'>
 
-                                                                        <Link 
-                                                                        className='text-sm'
-                                                                        to={`/order/confirmation/${order.id}`}>
+                                                                        <Link
+                                                                            className='text-sm'
+                                                                            to={`/order/confirmation/${order.id}`}>
                                                                             Confirm Order
                                                                         </Link>
 

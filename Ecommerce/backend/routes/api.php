@@ -18,7 +18,6 @@ use App\Http\Controllers\Front\ShippingController;
 use App\Http\Controllers\front\UserController as FrontUserController;
 use App\Http\Controllers\TempController;
 use App\Http\Controllers\VendorController;
-use App\Models\Size;
 use Illuminate\Support\Facades\Route;
 
 
@@ -55,6 +54,7 @@ Route::group([
         'checkUserRole'
     ]
 ], function () {
+
     // chatbot
     Route::post('/ai/ask', [AIController::class, 'askAI']);
     Route::post('/ai/chat', [AIController::class, 'chat']);
@@ -66,7 +66,6 @@ Route::group([
 
 
 
-    Route::resource('/order', OrderController::class);
     // productlike
     Route::post('/product/{id}/like', [FrontUserController::class, 'toggleProductLike']);
 
@@ -75,12 +74,6 @@ Route::group([
 
     // ratings
     Route::post('/product/{id}/reviews', [FrontUserController::class, 'storeReviews']);
-
-
-    // profile
-    Route::post('/myaccount', [ProfileController::class, 'store']);
-    Route::get('/myaccount', [ProfileController::class, 'show']);
-
 
     // shipping
     Route::get('/customer-shipping', [ShippingController::class, 'getShippedUser']);
@@ -92,20 +85,9 @@ Route::group([
 
 
     Route::delete('/comment/{productId}', [FrontUserController::class, 'destroy']);
-
-
-
-    // user
-    Route::get('/getUser', function (Request $request) {
-
-        return response()->json([
-            'status' => 200,
-            'data' => $request->user()
-        ]);
-    });
 });
 
-// vendor
+// vendor AND ADMIN ROLE
 Route::group(
     [
         'middleware' => [
@@ -131,6 +113,33 @@ Route::group(
 
 );
 
+// USER AND VENDOR
+// vendor
+Route::group(
+    [
+        'middleware' => [
+            'auth:sanctum',
+            'CheckUserVendor'
+        ]
+    ],
+    function () {
+        // profile
+        Route::post('/myaccount', [ProfileController::class, 'store']);
+        Route::get('/myaccount', [ProfileController::class, 'show']);
+        // user
+        Route::get('/getUser', function (Request $request) {
+
+            return response()->json([
+                'status' => 200,
+                'data' => $request->user()
+            ]);
+        });
+        // order
+        Route::resource('/order', OrderController::class);
+    }
+
+);
+
 
 
 // Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
@@ -144,6 +153,12 @@ Route::group(
         'checkAdminRole'
     ]],
     function () {
+        // store-status-update
+        Route::post('/admin/approvedStore/{id}', [VendorController::class, 'approvedStore']);
+        Route::post('/admin/rejectedStore/{id}', [VendorController::class, 'rejectedStore']);
+        Route::post('/admin/pendingStore/{id}', [VendorController::class, 'pendingStore']);
+
+        // categories
         Route::get('/admin/categories/{id}', [CategoryController::class, 'show']);
         Route::post('/admin/categories', [CategoryController::class, 'store']);
         Route::get('/admin/categories/edit/{id}', [CategoryController::class, 'edit']);
@@ -165,14 +180,6 @@ Route::group(
         Route::get('/sizes/edit/{id}', [SizeController::class, 'edit']);
         Route::put('/sizes/{id}', [SizeController::class, 'update']);
         Route::delete('/sizes/{id}', [SizeController::class, 'destroy']);
-
-
-        // product
-        // Route::resource('/products', ProductController::class);
-        // Get all products
-
-        // 
-
         // temp-img
         Route::post('/temp-image', [TempController::class, 'store']);
 

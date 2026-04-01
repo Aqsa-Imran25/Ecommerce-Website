@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Sample from '../../common/Sample'
+import AdminSample from '../../common/AdminSample'
 import Loader from '../../common/Loader';
 import Empty from '../../common/Empty';
 import { Link } from 'react-router-dom';
@@ -68,7 +68,7 @@ function ShowSize() {
         }, [])
   return (
      <>
-            <Sample title='Product-Sizes' btnText='Create' to='/admin/sizes/create'>
+            <AdminSample title='Product-Sizes' btnText='Create' to='/admin/sizes/create'>
 
                 <div className="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base">
                     {
@@ -127,7 +127,7 @@ function ShowSize() {
                         </table>
                     }
                 </div>
-            </Sample>
+            </AdminSample>
         </>
   )
 }

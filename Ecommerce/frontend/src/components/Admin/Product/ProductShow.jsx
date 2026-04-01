@@ -10,6 +10,7 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons'; // The solid style
 import { faXmark } from '@fortawesome/free-solid-svg-icons'; // 'xmark' is the icon name
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { apiUrl, getAuthToken, } from '../../common/Http';
+import AdminSample from '../../common/AdminSample';
 
 function ProductShow() {
   const [products, setproducts] = useState([])
@@ -82,7 +83,7 @@ function ProductShow() {
   }, [])
   return (
     <>
-      <Sample title='Products' btnText='Create' to='/products/create'>
+      <AdminSample title='Products' btnText='Create' to='/products/create'>
 
         <div className="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base">
           {
@@ -230,7 +231,7 @@ function ProductShow() {
             )
           }
         </div>
-      </Sample>
+      </AdminSample>
     </>
   )
 }

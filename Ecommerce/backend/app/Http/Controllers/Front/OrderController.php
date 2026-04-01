@@ -9,6 +9,8 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
 
 
 class OrderController extends Controller
@@ -60,9 +62,12 @@ class OrderController extends Controller
             ], 400);
         }
 
+        $orderNumber = 'ORD-' . now()->format('Ymd') . '-' . strtoupper(Str::random(5));
+
         $order = Order::create([
             'user_id' => Auth::id(),
             'sub_total' => $request->sub_total,
+            'order_number' => $orderNumber,
             'shipping' => $request->shipping,
             'grand_total' => $request->grand_total,
             'discount' => $request->discount,

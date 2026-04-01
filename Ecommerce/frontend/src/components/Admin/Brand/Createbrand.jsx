@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { toast } from 'react-toastify';
 import { adminToken, apiUrl } from '../../common/Http';
 import { useNavigate } from 'react-router';
+import AdminSample from '../../common/AdminSample';
 
 function Createbrand() {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -38,7 +39,7 @@ function Createbrand() {
     }
     return (
         <>
-            <Sample title='Brand/Create' btnText='Back' to='/admin/brands'>
+            <AdminSample title='Brand/Create' btnText='Back' to='/admin/brands'>
 
                 <form onSubmit={handleSubmit(saveBrand)}>
                     <div className="flex flex-wrap -mx-3 mb-6">
@@ -87,7 +88,7 @@ function Createbrand() {
                         className='rounded-md bg-[#007595] py-2 px-6 mt-2 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none'
                     >Submit</button>
                 </form>
-            </Sample>
+            </AdminSample>
         </>
     )
 }

@@ -24,7 +24,7 @@ function Sidebar({ role }) {
         sideBarLinks = [
 
             { name: "Dashboard", path: "/vendor/dashboard" },
-            { name: "Stores", path: "/vendor" },
+            { name: "Stores", path: "/vendor/stores" },
             { name: "Products", path: "/products" },
             { name: "My Account", path: "/myaccount" },
             { name: "Orders", path: "/myorder" },

@@ -108,7 +108,7 @@ function App() {
           <Route
             path="/checkout"
             element={
-              <RoleBasedRoute allowedRoles={["user", "vendor","admin"]}>
+              <RoleBasedRoute allowedRoles={["user", "vendor", "admin"]}>
                 <Checkout />
               </RoleBasedRoute>
             }
@@ -208,11 +208,21 @@ function App() {
           <Route
             path="/admin/stores"
             element={
-              <Adminrequireauth>
-                <ShowStore />
-              </Adminrequireauth>
+              <RoleBasedRoute allowedRoles={["admin"]}>
+                <ShowStore mode="admin" />
+              </RoleBasedRoute>
             }
           />
+          {/* vendor */}
+          <Route
+            path="/vendor/stores"
+            element={
+              <RoleBasedRoute allowedRoles={["vendor"]}>
+                <ShowStore mode="vendor" />
+              </RoleBasedRoute>
+            }
+          />
+
           <Route
             path="/admin/stores/:id/edit"
             element={

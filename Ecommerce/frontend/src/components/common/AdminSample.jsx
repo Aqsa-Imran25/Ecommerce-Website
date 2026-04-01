@@ -1,37 +1,30 @@
 import React from 'react';
 import Layout from './Layout.jsx';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import Sidebar from './Sidebar.jsx';
-import { getUserRole } from '../common/Http';
+import { getUserRole } from './Http.jsx';
 
-function Sample({
-    title = "Ecommerce",
-    btnText = "Button",
-    to = "#",
-    children
-}) {
-    const role = getUserRole();
 
-    // ONLY vendor can see create button
-    const showCreateButton = role === "vendor";
-
+function AdminSample({ title = "Ecommerce", children, btnText = "Button",
+    to = "#", }) {
+        const role=getUserRole();
     return (
         <div>
             <Layout>
                 <div className='md:container md:mx-auto px-6 py-5 my-5'>
-                    
+
                     <div className='flex justify-between my-4'>
                         <h2 className='my-2 text-base md:text-2xl'>{title}</h2>
 
-                        {showCreateButton && (
-                            <Link
-                                to={to}
-                                className="bg-white text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow
+
+                        <Link
+                            to={to}
+                            className="bg-white text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow
                                            hover:bg-[#007595] hover:text-white"
-                            >
-                                {btnText}
-                            </Link>
-                        )}
+                        >
+                            {btnText}
+                        </Link>
+
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-3">
@@ -52,4 +45,4 @@ function Sample({
     );
 }
 
-export default Sample;
+export default AdminSample

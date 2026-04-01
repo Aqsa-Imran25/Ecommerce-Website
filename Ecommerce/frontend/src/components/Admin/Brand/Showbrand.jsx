@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState } from 'react';
-import Sample from '../../common/Sample'
 import Loader from '../../common/Loader';
 import Empty from '../../common/Empty';
 import { Link } from 'react-router-dom';
@@ -9,6 +8,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons'; // The solid style icon
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { adminToken, apiUrl } from '../../common/Http';
+import Sample from '../../common/Sample';
+import AdminSample from '../../common/AdminSample';
 
 function Showbrand() {
     const [brands, setBrands] = useState([])
@@ -69,7 +70,7 @@ function Showbrand() {
     }, [])
     return (
         <>
-            <Sample title='Brands' btnText='Create' to='/admin/brands/create'>
+            <AdminSample title='Brands' btnText='Create' to='/admin/brands/create'>
 
                 <div className="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base">
                     {
@@ -136,7 +137,7 @@ function Showbrand() {
                         </table>
                     }
                 </div>
-            </Sample>
+            </AdminSample>
         </>
     )
 }

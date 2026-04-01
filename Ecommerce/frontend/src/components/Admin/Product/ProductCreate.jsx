@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import AdminSample from '../../common/AdminSample';
 
 function ProductCreate({ placeholder }) {
     const editor = useRef(null);
@@ -16,6 +17,8 @@ function ProductCreate({ placeholder }) {
     const [categories, setCategories] = useState([]);
     const [brands, setBrands] = useState([]);
     const [stores, setStore] = useState([]);
+    // roles
+    const role = getUserRole();
 
     const navigate = useNavigate();
 
@@ -259,7 +262,7 @@ function ProductCreate({ placeholder }) {
 
     return (
         <>
-            <Sample title='Product/Create' btnText='Back' to='/products'>
+            <AdminSample title='Product/Create' btnText='Back' to='/products'>
                 <form onSubmit={handleSubmit(saveProduct)}>
                     {/* Title */}
                     <div className="flex flex-wrap -mx-3 mb-6">
@@ -401,61 +404,67 @@ function ProductCreate({ placeholder }) {
                         </div>
                     </div>
                     {/* status */}
-                    <div className="flex flex-wrap -mx-3 mb-6">
+                    {
+                        role === "admin" && (<div className="flex flex-wrap -mx-3 mb-6">
 
-                        <div className="w-full px-3 mb-6">
-                            <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">Status</label>
-                            <div className="relative">
-                                <select
-                                    {...register("status", { required: "Please select a status." })}
-                                    className="block appearance-none w-full border border-gray-200 text-black py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                >
-                                    <option value="">Select a Status</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">Block</option>
-                                </select>
-
-                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg
-                                        className="fill-current h-4 w-4"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20"
+                            <div className="w-full px-3 mb-6">
+                                <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">Status</label>
+                                <div className="relative">
+                                    <select
+                                        {...register("status", { required: "Please select a status." })}
+                                        className="block appearance-none w-full border border-gray-200 text-black py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     >
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
+                                        <option value="">Select a Status</option>
+                                        <option value="1">Active</option>
+                                        <option value="0">Block</option>
+                                    </select>
+
+                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                        <svg
+                                            className="fill-current h-4 w-4"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                        </svg>
+                                    </div>
                                 </div>
+                                {errors.status && <p className="text-red-500 text-sm mt-1">{errors.status.message}</p>}
                             </div>
-                            {errors.status && <p className="text-red-500 text-sm mt-1">{errors.status.message}</p>}
-                        </div>
-                    </div>
-                    {/* featured */}
-                    <div className="flex flex-wrap -mx-3 mb-6">
+                        </div>)
+                    }
+                    {
+                        role === "admin" &&
+                        <div className="flex flex-wrap -mx-3 mb-6">
 
-                        <div className="w-full px-3 mb-6">
-                            <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">Featured</label>
-                            <div className="relative">
-                                <select
-                                    {...register("is_Featured", { required: "Please select at least one." })}
-                                    className="block appearance-none w-full border border-gray-200 text-black py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                >
-                                    <option value="">Select</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                </select>
-
-                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                    <svg
-                                        className="fill-current h-4 w-4"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20"
+                            <div className="w-full px-3 mb-6">
+                                <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">Featured</label>
+                                <div className="relative">
+                                    <select
+                                        {...register("is_Featured", { required: "Please select at least one." })}
+                                        className="block appearance-none w-full border border-gray-200 text-black py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     >
-                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                    </svg>
+                                        <option value="">Select</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+
+                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                        <svg
+                                            className="fill-current h-4 w-4"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                        </svg>
+                                    </div>
                                 </div>
+                                {errors.is_Featured && <p className="text-red-500 text-sm mt-1">{errors.is_Featured.message}</p>}
                             </div>
-                            {errors.is_Featured && <p className="text-red-500 text-sm mt-1">{errors.is_Featured.message}</p>}
                         </div>
-                    </div>
+                    }
+
+
                     {/* CHECKBOX */}
                     <div className="flex flex-wrap -mx-3 mb-6">
                         <div className="px-3 mb-6 w-full">
@@ -538,7 +547,7 @@ function ProductCreate({ placeholder }) {
                         Submit
                     </button>
                 </form >
-            </Sample >
+            </AdminSample >
         </>
     );
 }

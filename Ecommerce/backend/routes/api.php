@@ -96,6 +96,7 @@ Route::group(
         ]
     ],
     function () {
+        Route::get('/vendor/stores', [VendorController::class, 'index']);
 
         Route::resource('/admin/stores', VendorController::class);
         Route::get('/admin/categories', [CategoryController::class, 'index']);
@@ -153,6 +154,9 @@ Route::group(
         'checkAdminRole'
     ]],
     function () {
+        // admin-store
+        Route::get('/admin/stores', [VendorController::class, 'index']);
+
         // store-status-update
         Route::post('/admin/approvedStore/{id}', [VendorController::class, 'approvedStore']);
         Route::post('/admin/rejectedStore/{id}', [VendorController::class, 'rejectedStore']);

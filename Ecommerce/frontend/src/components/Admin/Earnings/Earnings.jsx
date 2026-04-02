@@ -9,17 +9,17 @@ import Sample from "../../common/Sample";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons'; // The solid style icon
 
-function ShowStore({ mode }) {
-  const [stores, setStores] = useState([]);
+function Earnings({ mode }) {
+  const [earnings, setEarnings] = useState([]);
   const [loader, setLoader] = useState(false);
 
-  const fetchStoreApi = async () => {
+  const fetchEarningsApi = async () => {
     setLoader(true);
 
     const url =
       mode === "admin"
-        ? `${apiUrl}/admin/stores`
-        : `${apiUrl}/vendor/stores`;
+        ? `${apiUrl}/admin/earnings`
+        : `${apiUrl}/vendor/earnings`;
 
     const res = await fetch(url, {
       method: "GET",
@@ -35,9 +35,9 @@ function ShowStore({ mode }) {
     setLoader(false);
 
     if (result.status === 200) {
-      setStores(result.data);
+      setEarnings(result.data);
     } else {
-      toast.error("Failed to load stores");
+      toast.error("Failed to load earnings");
     }
   };
 
@@ -46,8 +46,8 @@ function ShowStore({ mode }) {
 
     const url =
       mode === "admin"
-        ? `${apiUrl}/admin/stores/${id}`
-        : `${apiUrl}/vendor/stores/${id}`;
+        ? `${apiUrl}/admin/earnings/${id}`
+        : `${apiUrl}/vendor/earnings/${id}`;
 
     const res = await fetch(url, {
       method: "DELETE",
@@ -63,7 +63,7 @@ function ShowStore({ mode }) {
 
     if (result.status === 200) {
       toast.success(result.message);
-      setStores((prev) => prev.filter((store) => store.id !== id));
+      setEarnings((prev) => prev.filter((store) => store.id !== id));
     } else {
       toast.error(result.message || "Delete failed");
     }
@@ -85,7 +85,7 @@ function ShowStore({ mode }) {
     if (result.status === 200) {
       toast.success(result.message);
 
-      setStores((prev) =>
+      setEarnings((prev) =>
         prev.map((store) =>
           store.id === id ? { ...store, status: "active" } : store
         )
@@ -111,7 +111,7 @@ function ShowStore({ mode }) {
     if (result.status === 200) {
       toast.success(result.message);
 
-      setStores((prev) =>
+      setEarnings((prev) =>
         prev.map((store) =>
           store.id === id ? { ...store, status: "rejected" } : store
         )
@@ -122,12 +122,12 @@ function ShowStore({ mode }) {
   };
 
   useEffect(() => {
-    fetchStoreApi();
+    fetchEarningsApi();
   }, [mode]);
 
   return (
     <Sample
-      title="Stores"
+      title="earnings"
       btnText="Create"
       to="/vendor"
     >
@@ -135,11 +135,11 @@ function ShowStore({ mode }) {
 
         {loader && <Loader />}
 
-        {!loader && stores.length === 0 && (
-          <Empty text="stores Are Empty!" />
+        {!loader && earnings.length === 0 && (
+          <Empty text="earnings Are Empty!" />
         )}
 
-        {stores.length > 0 && (
+        {earnings.length > 0 && (
           <table className="w-full text-sm text-left text-body">
             <thead className="bg-neutral-secondary-soft border-b border-gray-300">
               <tr>
@@ -152,14 +152,12 @@ function ShowStore({ mode }) {
                   <th className="px-6 py-3">is_Approved</th>
 
                 }
-                {mode === "vendor" && stores.status !== "rejected" && (
-                  <th className="px-6 py-3">Action</th>
-                )}
+                <th className="px-6 py-3">Action</th>
               </tr>
             </thead>
 
             <tbody>
-              {stores.map((store) => (
+              {earnings.map((store) => (
                 <tr
                   key={store.id}
                   className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-gray-300"
@@ -225,21 +223,16 @@ function ShowStore({ mode }) {
                   <td className="px-6 py-4">
                     <div className="flex">
                       {
-                        mode === "vendor" && store.status !== "rejected" &&
-                        <Link to={`/vendor/store/${store.id}/edit`}
-                          className="font-medium text-fg-brand hover:underline text-blue-600">
+                        mode === "vendor" &&
+                        <Link to={`/vendor/store/${store.id}/edit`} className="font-medium text-fg-brand hover:underline text-blue-600">
                           <FontAwesomeIcon icon={faPencil} />
                         </Link>
                       }
-                      {
-                        mode === "vendor" && store.status !== "rejected" &&
-
-                        <Link
-                          onClick={() => deleteStore(store.id)}
-                          to="#" className="font-medium text-fg-brand hover:underline text-red-600">
-                          <FontAwesomeIcon icon={faTrash} />
-                        </Link>
-                      }
+                      <Link
+                        onClick={() => deleteStore(store.id)}
+                        to="#" className="font-medium text-fg-brand hover:underline text-red-600">
+                        <FontAwesomeIcon icon={faTrash} />
+                      </Link>
                     </div>
                   </td>
 
@@ -253,4 +246,4 @@ function ShowStore({ mode }) {
   );
 }
 
-export default ShowStore;
+export default Earnings;

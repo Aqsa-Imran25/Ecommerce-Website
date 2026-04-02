@@ -24,7 +24,7 @@ class VendorController extends Controller
                 'status' => 200,
                 'data' => $stores,
             ]);
-        } else {
+        } else if(auth()->user()->hasRole('vendor')) {
             $stores = Store::orderBy('created_at', 'ASC')->where("user_id", Auth::id())->get();
             return response()->json([
                 'status' => 200,
@@ -70,13 +70,19 @@ class VendorController extends Controller
         if ($request->hasFile('logo')) {
             $logoImage = $this->tempImage($request->file('logo'), 'logo-image');
         }
+        // dd([
+        //     'name' => $request->name,
+        //     'logo' => $logoImage,
+        //     'slug' => Str::slug($request->name),
+        //     'status' => 'pending',
+        // ]);
         $vendor = Store::create(
             [
-                'name' => $request->name,
                 'user_id' => auth()->id(),
+                'name' => $request->name,
                 'status' => 'pending',
-                'slug' => Str::slug($request->name . '-' . time()),
                 'logo' => $logoImage,
+                'slug' => Str::slug($request->name),
 
             ]
         );
@@ -147,6 +153,7 @@ class VendorController extends Controller
     {
         $store = Store::findOrFail($id);
         return response()->json([
+            'status' => 200,
             'data' => $store,
         ], 200);
     }
@@ -168,8 +175,6 @@ class VendorController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'logo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'status' => 'required|in:active,inactive',
-            'slug' => 'required|string|unique:stores,slug,' . $id,
         ]);
 
         if ($validator->fails()) {
@@ -179,15 +184,20 @@ class VendorController extends Controller
             ], 400);
         }
 
-        $logoImage = null;
+        $logoImage = $store->logo;
+
         if ($request->hasFile('logo')) {
+            if ($store->logo) {
+                $this->deleteImage($store->logo, 'logo-image');
+            }
+
             $logoImage = $this->tempImage($request->file('logo'), 'logo-image');
         }
 
         $store->update([
             'name' => $request->name,
             'user_id' => auth()->id(),
-            'status' => $request->status,
+            'status' => 'pending',
             'slug' => Str::slug($request->name),
             'logo' => $logoImage,
         ]);
@@ -211,5 +221,31 @@ class VendorController extends Controller
             'message' => "Store Deleted Successfully!",
 
         ], 200);
+    }
+
+    // productimagedelete
+    public function imageDelete($id)
+    {
+        $store = Store::findOrFail($id);
+
+        if (!$store) {
+            return response()->json([
+                'status' => 404,
+                'message' => "Store Not Found!",
+            ], 404);
+        }
+
+        if ($store->logo) {
+            $this->deleteImage($store->logo, 'logo-image');
+        }
+
+        $store->update([
+            'logo' => null
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => "Logo Deleted Successfully!",
+        ]);
     }
 }

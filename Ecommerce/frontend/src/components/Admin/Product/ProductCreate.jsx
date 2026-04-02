@@ -43,6 +43,7 @@ function ProductCreate({ placeholder }) {
             formData.append("title", data.title);
             formData.append("category_id", data.category_id);
             formData.append("brand_id", data.brand_id);
+             formData.append("store_id", data.store_id);
             formData.append("short_description", data.short_description || "");
             formData.append("description", description || "");
             formData.append("price", data.price);
@@ -74,7 +75,8 @@ function ProductCreate({ placeholder }) {
                 body: formData
             });
             const text = await res.text();
-            console.log(text);
+            console.log("result",text);
+             console.log("Gallery",text.gallery);
 
             let result;
             try {
@@ -115,8 +117,7 @@ function ProductCreate({ placeholder }) {
     const fetchCategory = async () => {
         try {
             const token = getAuthToken();
-            console.log("ROLE:", getUserRole());
-            console.log("TOKEN:", getAuthToken());
+        
             const res = await fetch(`${apiUrl}/admin/categories`, {
                 method: "GET",
                 headers: {
@@ -126,9 +127,8 @@ function ProductCreate({ placeholder }) {
                 },
             });
             const result = await res.json();
-            console.log("Categories", result)
             if (result.status === 200)
-                console.log("categories", result.data)
+               
             setCategories(result.data);
         } catch (error) {
             console.error("Fetch error:", error);
@@ -149,9 +149,8 @@ function ProductCreate({ placeholder }) {
                 },
             });
             const result = await res.json();
-            console.log("Brands", result)
             if (result.status === 200)
-                console.log("Brand", result)
+               
 
             setBrands(result.data);
         } catch (error) {
@@ -173,7 +172,7 @@ function ProductCreate({ placeholder }) {
                 },
             });
             const result = await res.json();
-            console.log("Stores", result)
+         
             if (result.status === 200) setStore(result.data);
         } catch (error) {
             console.error("Fetch error:", error);
@@ -195,9 +194,7 @@ function ProductCreate({ placeholder }) {
                 },
             });
             const result = await res.json();
-            console.log("Sizes", result)
             if (result.status === 200) {
-                console.log("Size", result.data)
                 setSizes(result.data);
             }
         } catch (error) {

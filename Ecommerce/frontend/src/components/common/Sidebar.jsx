@@ -16,6 +16,7 @@ function Sidebar({ role }) {
             { name: "Products", path: "/products" },
             { name: "Shipping", path: "/admin/shipping" },
             { name: "Stores", path: "/admin/stores" },
+            { name: "Earnings", path: "/admin/earnings/dashboard" },
             { name: "Orders", path: "/admin/orders" },
             { name: "Payments", path: "/admin/payments" },
             { name: "Users", path: "/admin/users" },
@@ -26,10 +27,11 @@ function Sidebar({ role }) {
         sideBarLinks = [
 
             { name: "Dashboard", path: "/vendor/dashboard" },
+            { name: "My Account", path: "/myaccount" },
             { name: "Stores", path: "/vendor/stores" },
             { name: "Products", path: "/products" },
-            { name: "My Account", path: "/myaccount" },
             { name: "Orders", path: "/myorder" },
+            { name: "Earning", path: "/vendor/earnings/dashboard" },
         ];
     }
     else {

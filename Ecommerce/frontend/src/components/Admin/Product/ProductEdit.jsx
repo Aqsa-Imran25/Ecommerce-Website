@@ -3,7 +3,7 @@ import JoditEditor from 'jodit-react';
 import Sample from '../../common/Sample';
 import { useForm } from "react-hook-form";
 import { toast } from 'react-toastify';
-import { adminToken, apiUrl } from '../../common/Http';
+import { adminToken, apiUrl, getAuthToken, getUserRole } from '../../common/Http';
 import { useNavigate, useParams } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'; // Specific icon import
@@ -26,6 +26,9 @@ function ProductEdit({ placeholder }) {
   const [newImages, setNewImages] = useState([]);
   // sizes
   const [sizes, setSizes] = useState([]);
+  const token = getAuthToken();
+  const role = getUserRole();
+
 
 
   const config = useMemo(() => ({
@@ -69,11 +72,14 @@ function ProductEdit({ placeholder }) {
 
       // backend update
       formData.append('_method', "PUT");
+
+      // const token = getAuthToken();
+
       const res = await fetch(`${apiUrl}/products/${params.id}`, {
         method: "POST",
         headers: {
 
-          "Authorization": `Bearer ${adminToken()}`,
+          "Authorization": `Bearer ${token}`,
         },
         body: formData
       });
@@ -100,15 +106,15 @@ function ProductEdit({ placeholder }) {
   };
 
 
-  // fetchSingleCategory for edit page
-  const fetchSingleCategory = async () => {
+  // fetchSinglePRODUCT for edit page
+  const fetchSingleProduct = async () => {
     try {
       const res = await fetch(`${apiUrl}/products/${params.id}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
           "Accept": "application/json",
-          "Authorization": `Bearer ${adminToken()}`
+          "Authorization": `Bearer ${token}`
         },
       });
       const result = await res.json();
@@ -141,7 +147,7 @@ function ProductEdit({ placeholder }) {
         headers: {
           'Content-Type': 'application/json',
           "Accept": "application/json",
-          "Authorization": `Bearer ${adminToken()}`
+          "Authorization": `Bearer ${token}`
         },
       });
       const result = await res.json();
@@ -160,7 +166,7 @@ function ProductEdit({ placeholder }) {
         headers: {
           'Content-Type': 'application/json',
           "Accept": "application/json",
-          "Authorization": `Bearer ${adminToken()}`
+          "Authorization": `Bearer ${token}`
         },
       });
       const result = await res.json();
@@ -200,7 +206,7 @@ function ProductEdit({ placeholder }) {
         headers: {
           'Content-Type': 'application/json',
           "Accept": "application/json",
-          "Authorization": `Bearer ${adminToken()}`
+          "Authorization": `Bearer ${token}`
         },
       });
       const result = await res.json();
@@ -231,7 +237,7 @@ function ProductEdit({ placeholder }) {
   useEffect(() => {
     fetchCategory();
     fetchBrand();
-    fetchSingleCategory();
+    fetchSingleProduct();
     fetchSizes();
   }, []);
 
@@ -356,62 +362,70 @@ function ProductEdit({ placeholder }) {
             </div>
           </div>
           {/* status */}
-          <div className="flex flex-wrap -mx-3 mb-6">
+          {
+            role === "admin" &&
+            <div className="flex flex-wrap -mx-3 mb-6">
 
-            <div className="w-full px-3 mb-6">
-              <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">Status</label>
-              <div className="relative">
-                <select
-                  {...register("status", { required: "Please select a status." })}
-                  className="block appearance-none w-full border border-gray-200 text-black py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
-                  <option value="">Select a Status</option>
-                  <option value="1">Active</option>
-                  <option value="0">Block</option>
-                </select>
-
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
+              <div className="w-full px-3 mb-6">
+                <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">Status</label>
+                <div className="relative">
+                  <select
+                    {...register("status", { required: "Please select a status." })}
+                    className="block appearance-none w-full border border-gray-200 text-black py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
+                    <option value="">Select a Status</option>
+                    <option value="1">Active</option>
+                    <option value="0">Block</option>
+                  </select>
+
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
                 </div>
+                {errors.status && <p className="text-red-500 text-sm mt-1">{errors.status.message}</p>}
               </div>
-              {errors.status && <p className="text-red-500 text-sm mt-1">{errors.status.message}</p>}
             </div>
-          </div>
+          }
           {/* featured */}
-          <div className="flex flex-wrap -mx-3 mb-6">
+          {
+            role === "admin" &&
 
-            <div className="w-full px-3 mb-6">
-              <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">Featured</label>
-              <div className="relative">
-                <select
-                  {...register("is_Featured", { required: "Please select a status." })}
-                  className="block appearance-none w-full border border-gray-200 text-black py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                >
+            <div className="flex flex-wrap -mx-3 mb-6">
 
-                  <option value="">Select</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <svg
-                    className="fill-current h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
+              <div className="w-full px-3 mb-6">
+                <label className="block uppercase tracking-wide text-black text-xs font-bold mb-2">Featured</label>
+                <div className="relative">
+                  <select
+                    {...register("is_Featured", { required: "Please select a status." })}
+                    className="block appearance-none w-full border border-gray-200 text-black py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   >
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
+
+                    <option value="">Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
                 </div>
+                {errors.is_Featured && <p className="text-red-500 text-sm mt-1">{errors.is_Featured.message}</p>}
               </div>
-              {errors.is_Featured && <p className="text-red-500 text-sm mt-1">{errors.is_Featured.message}</p>}
             </div>
-          </div>
+          }
+
           {/* CHECKOX */}
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="px-3 mb-6 w-full">
@@ -480,7 +494,7 @@ function ProductEdit({ placeholder }) {
                       <FontAwesomeIcon icon={faCircleXmark} className="text-red-500 text-lg" />
                     </button>
                   </div>
-                
+
                 </div>
               ))}
             </div>
@@ -505,7 +519,7 @@ function ProductEdit({ placeholder }) {
                       </button>
                     </div>
                   </div>
-                 
+
 
                 </div>
               ))}

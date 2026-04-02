@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Vendor_earnings;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -97,5 +98,24 @@ class OrderController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function totalCommission()
+    {
+        $total = Vendor_earnings::sum('commission');
+
+        return response()->json([
+            'status' => 200,
+            'total_commission' => $total
+        ]);
+    }
+    public function allEarnings()
+    {
+        $earnings = Vendor_earnings::with(['store', 'order'])->get();
+
+        return response()->json([
+            'status' => 200,
+            'data' => $earnings
+        ]);
     }
 }

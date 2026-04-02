@@ -98,6 +98,12 @@ Route::group(
     ],
     function () {
         Route::get('/vendor/stores', [VendorController::class, 'index']);
+        Route::get('/vendor/store/{id}/edit', [VendorController::class, 'edit']);
+        Route::put('/vendor/store/{id}', [VendorController::class, 'update']);
+        Route::get('/vendor/store/{id}', [VendorController::class, 'show']);
+        Route::delete('/vendor/store/{id}', [VendorController::class,    'destroy']);
+        // store-img-del
+        Route::delete('/store-delete/{id}', [VendorController::class, 'imageDelete']);
 
         Route::resource('/admin/stores', VendorController::class);
         Route::get('/admin/categories', [CategoryController::class, 'index']);
@@ -109,8 +115,22 @@ Route::group(
         Route::get('/products/{id}', [ProductController::class, 'show']);
         Route::post('/products', [ProductController::class, 'store']);
         Route::put('/products/{id}', [ProductController::class, 'update']);
+        // temp-img
+        Route::post('/temp-image', [TempController::class, 'store']);
+        // product-img
+        Route::get('/defaultImage', [ProductController::class, 'defaultImage']);
+
+        // product-img-del
+        Route::delete('/productimg-delete/{id}', [ProductController::class, 'imageDelete']);
+
         Route::delete('/products/{id}', [ProductController::class, 'destroy']);
         Route::get('/products/{id}/edit', [ProductController::class, 'edit']);
+
+        // vendor-earning
+        Route::get('/vendorEarnings', [OrderController::class, 'vendorEarnings']);
+
+        // total-earnings
+        Route::get('/vendor/totalEarnings', [OrderController::class, 'totalEarnings']);
     }
 
 );
@@ -156,7 +176,10 @@ Route::group(
     ]],
     function () {
         // admin-store
-        Route::get('/admin/stores', [VendorController::class, 'index']);
+        Route::get('/admin/stores/{id}/edit', [VendorController::class, 'edit']);
+        Route::put('/admin/stores/{id}', [VendorController::class, 'update']);
+        Route::get('/admin/stores/{id}', [VendorController::class, 'show']);
+        Route::delete('/admin/stores/{id}', [VendorController::class, 'destroy']);
 
         // store-status-update
         Route::post('/admin/approvedStore/{id}', [VendorController::class, 'approvedStore']);
@@ -185,14 +208,8 @@ Route::group(
         Route::get('/sizes/edit/{id}', [SizeController::class, 'edit']);
         Route::put('/sizes/{id}', [SizeController::class, 'update']);
         Route::delete('/sizes/{id}', [SizeController::class, 'destroy']);
-        // temp-img
-        Route::post('/temp-image', [TempController::class, 'store']);
 
-        // product-img
-        Route::get('/defaultImage', [ProductController::class, 'defaultImage']);
 
-        // product-img-del
-        Route::delete('/productimg-delete/{id}', [ProductController::class, 'imageDelete']);
 
         // order
         Route::resource('/orders', AdminOrderController::class);
@@ -222,9 +239,13 @@ Route::group(
         });
 
         // payment
-         Route::resource('/admin/payment-settings', PaymentController::class);
+        Route::resource('/admin/payment-settings', PaymentController::class);
 
+        // 
+        // earning total
+        Route::get('/admin/totalEarnings', [AdminOrderController::class, 'allEarnings']);
 
+        Route::get('/admin/totalCommission', [AdminOrderController::class, 'totalCommission']);
     }
 
 

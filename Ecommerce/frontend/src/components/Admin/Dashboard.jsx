@@ -6,6 +6,20 @@ import { getUserRole, apiUrl, getAuthToken } from '../common/Http';
 
 function Dashboard() {
     const role = getUserRole();
+    const [commission, setCommission] = useState(0);
+    const [earnings, setEarnings] = useState([]);
+    const fetchEarnings = async () => {
+        const res = await fetch(`${apiUrl}/admin/totalEarnings`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${getAuthToken()}`
+            },
+        });
+        const result = await res.json();
+        if (result.status === 200) {
+            setEarnings(result.data);
+        }
+    };
 
     const [counts, setCounts] = useState({
         users: 0,
@@ -34,9 +48,24 @@ function Dashboard() {
             console.log("Something went wrong!")
         }
     }
-
+    // commission
+    const fetchCommission = async () => {
+        const res = await fetch(`${apiUrl}/admin/totalCommission`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${getAuthToken()}`
+            },
+        });
+        const result = await res.json();
+        if (result.status === 200) {
+            setCommission(result.total_commission);
+        }
+    };
     useEffect(() => {
         countData()
+        fetchCommission();
+        fetchEarnings();
+
     }, [])
 
     return (
@@ -46,7 +75,7 @@ function Dashboard() {
                     <h2 className='my-2 text-base md:text-2xl'>Dashboard</h2>
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="w-full md:w-1/4">
-                        {/* Role={role} */}
+                            {/* Role={role} */}
                             <Sidebar role={role} />
                         </div>
                         <div className="w-full md:w-3/4">
@@ -81,6 +110,30 @@ function Dashboard() {
                                             </div>
                                             <div className='bg-gray-100 text-center py-2 border-t border-gray-300'>
                                                 <Link to="/admin/orders">View Orders</Link>
+                                            </div>
+                                        </div>
+                                        <div className='shadow-lg rounded-lg border-2 border-gray-200'>
+                                            <div className='p-4 text-sm md:text-2xl'>
+                                                <span >{commission}</span>
+                                                <h2 >Commission</h2>
+
+                                            </div>
+                                        </div>
+                                        <div className='shadow-lg rounded-lg border-2 border-gray-200'>
+                                            <div className='p-4 text-sm md:text-2xl'>
+                                                <span>{earnings ? earnings.length : 0}</span>
+                                                <h2 >Earnings</h2>
+
+                                            </div>
+                                        </div>
+                                        <div className='shadow-lg rounded-lg border-2 border-gray-200'>
+                                            <div className='p-4 text-sm md:text-2xl'>
+                                                {
+                                                    earnings.reduce((ear, item) => parseFloat(ear + item.earnings), 0)
+                                                }
+                                                <span>{earnings}</span>
+                                                <h2 >Total Earnings</h2>
+
                                             </div>
                                         </div>
 

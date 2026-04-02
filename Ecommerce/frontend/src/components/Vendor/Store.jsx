@@ -43,12 +43,14 @@ function Store() {
       });
 
       const result = await res.json();
-
+      console.log("Result", result)
       if (res.status === 401) {
         toast.error("You must login first before creating a store!");
         return;
       }
       if (res.status === 200) {
+        console.log("Result-200", result)
+
         toast.success(result.message || "Store created successfully!");
 
         console.log("Vendor", result.data);

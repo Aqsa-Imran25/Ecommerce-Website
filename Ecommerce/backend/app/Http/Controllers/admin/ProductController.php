@@ -71,10 +71,9 @@ class ProductController extends Controller
             'compare_price' => 'nullable|numeric',
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
+            'store_id' => 'nullable|exists:stores,id',
             'qty' => 'nullable|integer',
             'sku' => 'required|unique:products,sku',
-            'status' => 'required|integer',
-            'is_Featured' => 'required|in:yes,no',
             'gallery' => 'nullable|array',
             'sizes' => 'nullable|array',
             'sizes.*' => 'integer|exists:sizes,id',
@@ -97,11 +96,12 @@ class ProductController extends Controller
             'compare_price' => $request->compare_price,
             'category_id' => $request->category_id,
             'brand_id' => $request->brand_id,
+            'store_id' => $request->store_id,
             'qty' => $request->qty,
             'sku' => $request->sku,
-            'status' => $request->status,
-            'is_Featured' => $request->is_Featured,
-            'is_approved' => 'pending',
+            'is_approved'=>'pending',
+            'status' => 0,
+            'is_Featured' => 'no',
         ]);
         // sizes array
         if (!empty($request->sizes)) {

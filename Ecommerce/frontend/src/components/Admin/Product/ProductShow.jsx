@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState } from 'react';
-import Sample from '../../common/Sample'
 import Loader from '../../common/Loader';
 import Empty from '../../common/Empty';
 import { Link } from 'react-router-dom';
@@ -9,14 +8,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil } from '@fortawesome/free-solid-svg-icons'; // The solid style icon
 import { faXmark } from '@fortawesome/free-solid-svg-icons'; // 'xmark' is the icon name
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { apiUrl, getAuthToken, } from '../../common/Http';
+import { apiUrl, getAuthToken, getUserRole, } from '../../common/Http';
 import AdminSample from '../../common/AdminSample';
 
 function ProductShow() {
   const [products, setproducts] = useState([])
   const [loader, setLoader] = useState(false)
   // selectedcheckbox
-  const [selectedProducts, setSelectedProducts] = useState([])
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  // role
+  const role = getUserRole();
 
 
   // deleteproduct
@@ -149,6 +150,14 @@ function ProductShow() {
                       <th scope="col" className="px-6 py-3 font-medium">
                         Status
                       </th>
+                      {
+                        role === "admin"
+                        &&
+                        <th scope="col" className="px-6 py-3 font-medium text-center">
+                          is_Approved
+                        </th>
+                      }
+
                       <th scope="col" className="px-6 py-3 font-medium text-center">
                         Action
                       </th>
@@ -202,6 +211,13 @@ function ProductShow() {
                           </td>
 
                           <td className="px-6 py-4">
+                            {product.status == 1 ?
+                              <span className='text-white bg-green-700 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>Active</span>
+                              :
+                              <span className='text-white bg-red-500 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>Block</span>
+                            }
+                          </td>
+                           <td className="px-6 py-4">
                             {product.status == 1 ?
                               <span className='text-white bg-green-700 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>Active</span>
                               :

@@ -56,7 +56,7 @@ class OrderController extends Controller
             'city' => 'required',
             'state' => 'required',
             'zip' => 'required',
-            'payment' => 'required'
+
         ]);
 
         if ($validator->fails()) {

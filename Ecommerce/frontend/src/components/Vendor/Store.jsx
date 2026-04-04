@@ -43,32 +43,20 @@ function Store() {
       });
 
       const result = await res.json();
-      console.log("Result", result)
+      console.log("Result", result);
       if (res.status === 401) {
         toast.error("You must login first before creating a store!");
         return;
       }
       if (res.status === 200) {
-        console.log("Result-200", result)
+        console.log("Result-200", result);
 
-        toast.success(result.message || "Store created successfully!");
+        toast.success(
+          result.message ||
+            "Store created successfully wait for admin approval!",
+        );
 
         console.log("Vendor", result.data);
-
-        const existingVendor = JSON.parse(
-          localStorage.getItem("vendorInfo"),
-        ) || {
-          token: UserToken(),
-          role: "vendor",
-          stores: [],
-        };
-
-        const updatedVendor = {
-          ...existingVendor,
-          stores: [...existingVendor.stores, result.data.name],
-        };
-        vendorLogin(updatedVendor);
-        localStorage.setItem("vendorInfo", JSON.stringify(updatedVendor));
 
         navigate("/vendor");
       } else if (res.status === 422 && result.errors) {
@@ -125,7 +113,6 @@ function Store() {
             <div className="w-full md:w-1/4">
               <h3>Role:{role}</h3>
               <Sidebar role={role} />
-
             </div>
             <div className="w-full md:w-3/4">
               <div className="bg-white shadow-xl rounded-2xl p-6 md:p-8">

@@ -3,6 +3,7 @@
 use Illuminate\Http\Middleware\HandleCors;
 use App\Http\Middleware\CheckAdmin;
 use App\Http\Middleware\CheckProfileComplete;
+use App\Http\Middleware\CheckStoreApproved;
 use App\Http\Middleware\CheckUser;
 use App\Http\Middleware\CheckUserVendor;
 use App\Http\Middleware\CheckVendor;
@@ -32,6 +33,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'checkVendorRole' => CheckVendor::class,
             'checkProfile' => CheckProfileComplete::class,
             'CheckUserVendor' => CheckUserVendor::class,
+            'CheckStoreStatus' => CheckStoreApproved::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

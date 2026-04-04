@@ -99,7 +99,7 @@ class ProductController extends Controller
             'store_id' => $request->store_id,
             'qty' => $request->qty,
             'sku' => $request->sku,
-            'is_approved'=>'pending',
+            'is_approved' => 'pending',
             'status' => 0,
             'is_Featured' => 'no',
         ]);
@@ -145,12 +145,44 @@ class ProductController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Product submitted for approval',
+            'message' => 'Product created, waiting for admin approval',
             'data' => $product
         ]);
     }
 
     // 
+    // approve-store
+
+    public function approveProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->status = 0;
+        $product->is_approved = 'approved';
+        $product->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Product approved successfully',
+        ]);
+    }
+
+    public function rejectProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->is_approved = 'rejected';
+        $product->status = 0;
+        $product->save();
+        return response()->json(['status' => 200, 'message' => 'Product rejected successfully!']);
+    }
+
+    public function pendingProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->is_approved = 'pending';
+        $product->status = 0;
+        $product->save();
+        return response()->json(['status' => 200, 'message' => 'Product set to pending']);
+    }
 
 
     /**

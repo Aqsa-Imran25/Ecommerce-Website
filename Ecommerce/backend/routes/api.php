@@ -88,6 +88,16 @@ Route::group([
     Route::delete('/comment/{productId}', [FrontUserController::class, 'destroy']);
 });
 
+// store-status
+Route::middleware(['auth:sanctum'])->get('/vendor/store-status', function () {
+    $user = auth()->user();
+    $store = $user->store; // or stores()->first()
+    return response()->json([
+        'status' => $store ? $store->status : 'no_store'
+    ]);
+});
+
+
 // vendor AND ADMIN ROLE
 Route::group(
     [
@@ -97,7 +107,6 @@ Route::group(
         ]
     ],
     function () {
-        Route::get('/vendor/stores', [VendorController::class, 'index']);
         Route::get('/vendor/store/{id}/edit', [VendorController::class, 'edit']);
         Route::put('/vendor/store/{id}', [VendorController::class, 'update']);
         Route::get('/vendor/store/{id}', [VendorController::class, 'show']);
@@ -113,7 +122,7 @@ Route::group(
         // PRODUCTS
         Route::get('/products', [ProductController::class, 'index']);
         Route::get('/products/{id}', [ProductController::class, 'show']);
-        Route::post('/products', [ProductController::class, 'store']);
+        Route::post('/products', [ProductController::class, 'store'])->middleware('CheckStoreStatus');
         Route::put('/products/{id}', [ProductController::class, 'update']);
         // temp-img
         Route::post('/temp-image', [TempController::class, 'store']);
@@ -145,6 +154,8 @@ Route::group(
         ]
     ],
     function () {
+        // show store
+        Route::get('/vendor/stores', [VendorController::class, 'index']);
         // profile
         Route::post('/myaccount', [ProfileController::class, 'store']);
         Route::get('/myaccount', [ProfileController::class, 'show']);
@@ -208,8 +219,10 @@ Route::group(
         Route::get('/sizes/edit/{id}', [SizeController::class, 'edit']);
         Route::put('/sizes/{id}', [SizeController::class, 'update']);
         Route::delete('/sizes/{id}', [SizeController::class, 'destroy']);
-
-
+        // product-status
+        Route::post('/products/{id}/approve', [ProductController::class, 'approveProduct']);
+        Route::post('/products/{id}/reject', [ProductController::class, 'rejectProduct']);
+        Route::post('/products/{id}/pending', [ProductController::class, 'pendingProduct']);
 
         // order
         Route::resource('/orders', AdminOrderController::class);

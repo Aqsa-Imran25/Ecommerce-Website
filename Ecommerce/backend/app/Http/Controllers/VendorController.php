@@ -24,7 +24,7 @@ class VendorController extends Controller
                 'status' => 200,
                 'data' => $stores,
             ]);
-        } else if(auth()->user()->hasRole('vendor')) {
+        } else if (auth()->user()->hasRole(['vendor', 'user'])) {
             $stores = Store::orderBy('created_at', 'ASC')->where("user_id", Auth::id())->get();
             return response()->json([
                 'status' => 200,
@@ -70,12 +70,6 @@ class VendorController extends Controller
         if ($request->hasFile('logo')) {
             $logoImage = $this->tempImage($request->file('logo'), 'logo-image');
         }
-        // dd([
-        //     'name' => $request->name,
-        //     'logo' => $logoImage,
-        //     'slug' => Str::slug($request->name),
-        //     'status' => 'pending',
-        // ]);
         $vendor = Store::create(
             [
                 'user_id' => auth()->id(),
@@ -86,15 +80,28 @@ class VendorController extends Controller
 
             ]
         );
-        if (!$user->hasRole('vendor')) {
-            $user->syncRoles(['vendor']);
-        }
 
         return response()->json([
             'status' => 200,
             'message' => 'Store created, waiting for admin approval',
             'data' => $vendor,
         ], 200);
+    }
+    // approve-store
+
+    public function approvedStore($id)
+    {
+        $store = Store::findOrFail($id);
+        $store->status = 'active';
+        $store->save();
+
+        $user = $store->user;
+        $user->syncRoles(['vendor']);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Store approved successfully',
+        ]);
     }
 
     // method
@@ -110,11 +117,6 @@ class VendorController extends Controller
         ], 200);
     }
 
-
-    public function approvedStore($id)
-    {
-        return $this->updateStatus($id, 'active', 'Store approved successfully!');
-    }
 
     public function rejectedStore($id)
     {

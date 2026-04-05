@@ -156,7 +156,6 @@ class ProductController extends Controller
     public function approveProduct($id)
     {
         $product = Product::findOrFail($id);
-        $product->status = 0;
         $product->is_approved = 'approved';
         $product->save();
 
@@ -169,21 +168,47 @@ class ProductController extends Controller
     public function rejectProduct($id)
     {
         $product = Product::findOrFail($id);
-        $product->is_approved = 'rejected';
-        $product->status = 0;
-        $product->save();
-        return response()->json(['status' => 200, 'message' => 'Product rejected successfully!']);
+
+        $product->update([
+            'is_approved' => 'rejected',
+            'status' => 0
+
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Product rejected successfully!'
+        ]);
     }
 
     public function pendingProduct($id)
     {
         $product = Product::findOrFail($id);
-        $product->is_approved = 'pending';
-        $product->status = 0;
-        $product->save();
-        return response()->json(['status' => 200, 'message' => 'Product set to pending']);
+
+        $product->update([
+            'is_approved' => 'pending',
+            'status' => 0
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Product set to pending'
+        ]);
     }
 
+    public function statusProduct($id)
+    {
+        $product = Product::findOrFail($id);
+
+        $product->update([
+            'status' => $product->status == 1 ? 0 : 1
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Feature status updated'
+        ]);
+    }
 
     /**
      * Display the specified resource.

@@ -1,0 +1,36 @@
+✅ Payments Page Field Names (Professional)
+📌 Common Fields (both Admin & Vendor)
+Payment ID
+Order Number
+Customer Name
+Payment Method
+Payment Amount
+Status
+Payment Date
+Transaction Reference / Gateway ID
+Commission Amount
+Net Amount
+Currency
+📌 Admin‑Specific Fields
+Vendor Name
+Store Name
+Vendor Payout Amount
+Payout Method
+Payout Status
+Payout Date
+Admin Fee (Commission)
+Refund Amount
+Refund Date
+📌 Vendor‑Specific Fields
+Earnings Total
+Amount Due
+Last Payout Date
+Available Balance
+Requested Payout Amount
+Requested Payout Date
+Preferred Payment Method
+📌 Optional (Useful) Fields
+Notes / Remarks
+Adjustment Amount
+Created At
+Updated At

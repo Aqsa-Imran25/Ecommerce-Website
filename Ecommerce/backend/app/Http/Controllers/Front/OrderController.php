@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
+use App\Models\Payment_setting;
 use App\Models\Vendor_earnings;
+use Illuminate\Foundation\Console\ObserverMakeCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -56,26 +58,27 @@ class OrderController extends Controller
             'city' => 'required',
             'state' => 'required',
             'zip' => 'required',
-
+            'payment' => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 400,
                 'errors' => $validator->errors()
-            ], 400);
+            ]);
         }
 
         DB::beginTransaction();
 
         try {
 
+            // Create Order
             $orderNumber = 'ORD-' . now()->format('Ymd') . '-' . strtoupper(Str::random(5));
 
             $order = Order::create([
                 'user_id' => Auth::id(),
-                'sub_total' => $request->sub_total,
                 'order_number' => $orderNumber,
+                'sub_total' => $request->sub_total,
                 'shipping' => $request->shipping,
                 'grand_total' => $request->grand_total,
                 'discount' => $request->discount ?? 0,
@@ -100,9 +103,18 @@ class OrderController extends Controller
                     'price' => $amount,
                 ]);
 
-                $commissionRate = 10;
-                $commission = $amount * ($commissionRate / 100);
+                $setting = Payment_setting::where('store_id', $item['store_id'])->first();
+
+                if (!$setting) {
+                    $setting = Payment_setting::whereNull('store_id')->first();
+                }
+
+                $commissionRate = $setting ? $setting->commission : 10;
+
+
+                $commission = ($amount * $commissionRate) / 100;
                 $net_amount = $amount - $commission;
+
                 Vendor_earnings::create([
                     'store_id' => $item['store_id'],
                     'order_id' => $order->id,
@@ -111,6 +123,7 @@ class OrderController extends Controller
                     'net_amount' => $net_amount,
                 ]);
             }
+
 
             $payment = Payment::create([
                 'order_id' => $order->id,
@@ -123,8 +136,8 @@ class OrderController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'message' => "Order placed successfully",
-                'data' => $order,
+                'message' => 'Order placed successfully',
+                'order' => $order,
                 'payment' => $payment
             ]);
         } catch (\Exception $e) {
@@ -192,21 +205,13 @@ class OrderController extends Controller
         $storeId = auth()->user()->store->id;
 
         $earnings = Vendor_earnings::where('store_id', $storeId)
-            ->with('order')
+            ->with(['order', 'store'])
             ->latest()
             ->get();
 
-        return response()->json($earnings);
-    }
-
-    // totalearnings
-    public function totalEarnings()
-    {
-        $storeId = auth()->user()->store->id;
-
-        $earnings = Vendor_earnings::where('store_id', $storeId)->sum('net_amount');
-        dd($earnings);
-
-        return response()->json($earnings);
+        return response()->json([
+            'status' => 200,
+            'data' => $earnings
+        ]);
     }
 }

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('qty')->nullable();
             $table->string('sku');
             $table->integer('status')->default(1);
-            $table->enum('is_approved', ['pending', 'approved', 'reject'])->default('pending');
+            $table->enum('is_approved', ['pending', 'approved', 'rejected'])->default('pending');
             $table->enum('is_Featured', ['yes', 'no'])->default('no');
             $table->timestamps();
         });

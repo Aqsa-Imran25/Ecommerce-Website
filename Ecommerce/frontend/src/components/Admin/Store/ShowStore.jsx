@@ -1,17 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Loader from "../../common/Loader";
 import Empty from "../../common/Empty";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { faTrash, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { adminToken, apiUrl, getAdminVendorToken, getAuthToken } from "../../common/Http";
+import {
+  adminToken,
+  apiUrl,
+  getAdminVendorToken,
+  getAuthToken,
+} from "../../common/Http";
 import Sample from "../../common/Sample";
-import { updateLocalStorageUser } from "../../context/updateLocalStorageUser";
-
+import { UserAuthContext } from "../../context/UserAuth";
 function ShowStore({ mode }) {
   const [stores, setStores] = useState([]);
   const [loader, setLoader] = useState(false);
+
+  const { updateUser } = useContext(UserAuthContext);
 
   const fetchStoreApi = async () => {
     setLoader(true);
@@ -88,13 +94,13 @@ function ShowStore({ mode }) {
         // Update store status in UI
         setStores((prev) =>
           prev.map((store) =>
-            store.id === id ? { ...store, status: "active" } : store
-          )
+            store.id === id ? { ...store, status: "active" } : store,
+          ),
         );
 
         // 🔥 Update localStorage with the new user data (role becomes vendor)
         if (result.user) {
-          updateLocalStorageUser(result.user);
+          updateUser(result.user); // 🔥 MUST use this
         }
       } else {
         toast.error(result.message || "Approval failed");
@@ -124,11 +130,13 @@ function ShowStore({ mode }) {
 
         setStores((prev) =>
           prev.map((store) =>
-            store.id === id ? { ...store, status: "rejected" } : store
-          )
+            store.id === id ? { ...store, status: "rejected" } : store,
+          ),
         );
 
-        if (result.user) updateLocalStorageUser(result.user);
+        if (result.user) {
+          updateUser(result.user); // 🔥 BOTH localStorage + context update
+        }
       } else {
         toast.error(result.message || "Reject failed");
       }

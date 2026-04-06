@@ -173,8 +173,6 @@ function ProductShow() {
     }
   };
 
-
-
   useEffect(() => {
     fetchproductApi();
   }, []);
@@ -313,83 +311,57 @@ function ProductShow() {
                       </td>
 
                       <td className="px-6 py-4">
-                        {
-
-                          product.status == 1 ? (
-                            <span className="text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5">
-                              Active
-                            </span>
-                          ) : (
-                            <span className="text-white bg-red-600 hover:bg-red-400 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5">
-                              Block
-                            </span>
-                          )
-                        }
-
-
+                        {product.status == 1 ? (
+                          <span className="text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5">
+                            Active
+                          </span>
+                        ) : (
+                          <span className="text-white bg-red-600 hover:bg-red-400 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5">
+                            Block
+                          </span>
+                        )}
                       </td>
-                      {/* Approval Column */}
                       <td className="px-6 py-4 text-center">
                         {role === "vendor" && (
-                          <>
-                            {product.is_approved === "approved" && (
-                              <span className="bg-green-600 text-white px-3 py-1 rounded-full text-xs">
-                                Approved
-                              </span>
-                            )}
-                            {product.is_approved === "pending" && (
-                              <span className="bg-yellow-500 text-white px-3 py-1 rounded-full text-xs">
-                                Pending
-                              </span>
-                            )}
-                            {product.is_approved === "reject" && (
-                              <span className="bg-red-600 text-white px-3 py-1 rounded-full text-xs">
-                                Rejected
-                              </span>
-                            )}
-                          </>
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs text-white ${
+                              product.is_approved === "approved"
+                                ? "bg-green-600"
+                                : product.is_approved === "rejected"
+                                  ? "bg-red-600"
+                                  : product.is_approved === "pending"
+                                    ? "bg-yellow-500"
+                                    : "bg-gray-500"
+                            }`}
+                          >
+                            {product.is_approved === "approved"
+                              ? "Approved"
+                              : product.is_approved === "rejected"
+                                ? "Rejected"
+                                : product.is_approved === "pending"
+                                  ? "Pending"
+                                  : "Unknown"}
+                          </span>
                         )}
 
-                        {role === "admin" && (
-                          <div className="flex justify-center gap-2">
-                            {product.is_approved !== "approved" && (
+                        {role === "admin" &&
+                          product.is_approved === "pending" && (
+                            <div className="flex gap-2 justify-center">
                               <button
                                 onClick={() => approveProduct(product.id)}
                                 className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs"
                               >
-                                <FontAwesomeIcon
-                                  icon={faCheck}
-                                  className="mr-1"
-                                />{" "}
                                 Approve
                               </button>
-                            )}
-                            {product.is_approved !== "reject" && (
+
                               <button
                                 onClick={() => rejectProduct(product.id)}
-                                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs"
+                                className="border border-red-600 text-red-600 px-3 py-1 rounded text-xs"
                               >
-                                <FontAwesomeIcon
-                                  icon={faTimes}
-                                  className="mr-1"
-                                />{" "}
                                 Reject
                               </button>
-                            )}
-                            {product.is_approved !== "pending" && (
-                              <button
-                                onClick={() => setPendingProduct(product.id)}
-                                className="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded text-xs"
-                              >
-                                <FontAwesomeIcon
-                                  icon={faClock}
-                                  className="mr-1"
-                                />{" "}
-                                Set Pending
-                              </button>
-                            )}
-                          </div>
-                        )}
+                            </div>
+                          )}
                       </td>
 
                       <td className="px-6 py-4">

@@ -66,7 +66,7 @@ function Cards() {
                         <div className="flex items-center justify-between mt-4">
 
                             <span className="text-lg font-semibold text-[#007595]">
-                                ${product.price}
+                                Rs {product.price}
                             </span>
 
                             <Link

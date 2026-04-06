@@ -86,7 +86,7 @@ function EditSize() {
     }
     return (
         <>
-            <Sample title='Size/Edit' btnText='Back' to='/admin/sizes'>
+            <Sample title='Size-Edit' btnText='Back' to='/admin/sizes'>
 
                 <form onSubmit={handleSubmit(updateSize)}>
                     <div className="flex flex-wrap -mx-3 mb-6">

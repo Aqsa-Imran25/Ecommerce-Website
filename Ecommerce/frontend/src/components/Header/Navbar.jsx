@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import aura from "/assets/aura.png";
+import aura from "/assets/shopfusion.png";
+import shop from "/assets/ShopFusions.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { AdminAuthContext } from "../context/AdminAuth";
 import { UserAuthContext } from "../context/UserAuth";
 import { VendorAuthContext } from "../context/VendorAuth";
-
 import { CartContext } from "../context/Cart";
 import { apiUrl } from "../common/Http";
 
@@ -70,7 +70,7 @@ function Navbar() {
     <>
       <div className="w-full bg-[#007595] h-14 flex items-center justify-center">
         <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-wide">
-          Handcrafted Jewelry
+          Discover & Shop
         </h1>
       </div>
 
@@ -80,9 +80,9 @@ function Navbar() {
 
           <Link to="/" className="flex items-center gap-2 group">
             <img
-              src={aura}
+              src={shop}
               alt="logo"
-              className="w-14 rounded-full transition duration-300 group-hover:scale-110"
+              className="w-20 rounded-full transition duration-300 group-hover:scale-110"
             />
           </Link>
 
@@ -147,7 +147,7 @@ function Navbar() {
 
               <input
                 type="text"
-                placeholder="Search jewelry..."
+                placeholder="Search product..."
                 value={searchTerm}
                 onChange={handleSearch}
                 className="..."

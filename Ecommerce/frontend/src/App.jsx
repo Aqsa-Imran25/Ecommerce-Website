@@ -131,18 +131,18 @@ function App() {
           <Route
             path="/myorder"
             element={
-              <Userrequireauth>
+              <RoleBasedRoute allowedRoles={["user", "vendor"]}>
                 <UserOrder />
-              </Userrequireauth>
+              </RoleBasedRoute>
             }
           />
           {/* user order detail*/}
           <Route
             path="/myorder/:id"
             element={
-              <Userrequireauth>
+            <RoleBasedRoute allowedRoles={["user", "vendor"]}>
                 <UserOrderDetail />
-              </Userrequireauth>
+              </RoleBasedRoute>
             }
           />
 
@@ -218,15 +218,24 @@ function App() {
             }
           />
           {/* vendor */}
-          <Route
+          {/* <Route
             path="/vendor/stores"
             element={
               <RoleBasedRoute allowedRoles={["vendor"]}>
                 <ShowStore mode="vendor" />
               </RoleBasedRoute>
             }
+          /> */}
+          {/* user-store */}
+          <Route
+            path="/my-store"
+            element={
+              <RoleBasedRoute allowedRoles={["user", "vendor"]}>
+                <ShowStore mode="user" />
+              </RoleBasedRoute>
+            }
           />
-          {/* edit-store */}
+          edit-store
           <Route
             path="/admin/stores/:id/edit"
             element={
@@ -237,22 +246,14 @@ function App() {
           />
           {/* vendor */}
           <Route
-            path="/vendor/store/:id/edit"
+            path="/user/store/:id/edit"
             element={
-              <RoleBasedRoute allowedRoles={["vendor"]}>
-                <EditStore mode="vendor" />
+              <RoleBasedRoute allowedRoles={["user", "vendor"]}>
+                <EditStore mode="user" />
               </RoleBasedRoute>
             }
           />
 
-          {/* <Route
-            path="/admin/stores/:id/edit"
-            element={
-              <Adminrequireauth>
-                <EditStore />
-              </Adminrequireauth>
-            }
-          /> */}
 
 
           {/* product-size-create
@@ -380,7 +381,7 @@ function App() {
           {/* earnings */}
           {/* admin */}
           <Route
-            path="/admin/earnings/dashboard"
+            path="/admin/earnings/"
             element={
               <RoleBasedRoute allowedRoles={["admin"]}>
                 <EarningDashboard mode="admin" />
@@ -389,7 +390,7 @@ function App() {
           />
           {/* vendor */}
           <Route
-            path="/vendor/earnings/dashboard"
+            path="/vendor/earnings/"
             element={
               <RoleBasedRoute allowedRoles={["vendor"]}>
                 <EarningDashboard mode="vendor" />

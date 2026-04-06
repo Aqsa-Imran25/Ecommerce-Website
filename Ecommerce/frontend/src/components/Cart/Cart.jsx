@@ -15,6 +15,7 @@ function Cart() {
     grandTotal,
     updateCartqty,
     removeItem,
+    shippingCost,
   } = useContext(CartContext);
 
   const isEmpty = cartData.length === 0;

@@ -105,7 +105,7 @@ function EditPayment() {
 
     return (
         <>
-            <AdminSample title='Edit Payment' btnText='Back' to='/admin/payments'>
+            <AdminSample title='Edit-Payment' btnText='Back' to='/admin/payments'>
 
                 <form onSubmit={handleSubmit(updatePayment)}>
 

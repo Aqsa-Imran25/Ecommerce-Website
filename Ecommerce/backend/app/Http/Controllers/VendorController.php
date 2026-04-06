@@ -100,7 +100,8 @@ class VendorController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Store approved successfully',
+            'user' => $user,
+            'message' => 'Store approved and vendor role assigned'
         ]);
     }
 

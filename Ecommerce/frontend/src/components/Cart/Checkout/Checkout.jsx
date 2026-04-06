@@ -18,6 +18,8 @@ function Checkout() {
   const { cartData, shipping, subTotal, grandTotal } = useContext(CartContext);
   const navigate = useNavigate();
   const { id } = useParams();
+  // token
+  const token = getAuthToken();
   const [paymentMethod, setPaymentMethod] = useState(`cod`);
   // handlepayment
   const handlePayment = (e) => {
@@ -31,7 +33,7 @@ function Checkout() {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `Bearer ${UserToken()}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -55,7 +57,7 @@ function Checkout() {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `Bearer ${UserToken()}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -112,7 +114,8 @@ function Checkout() {
 
     if (result.status == 200) {
       localStorage.removeItem("cart");
-      navigate(`/myorder}`, {
+    
+      navigate(`/myorder`, {
         state: {
           order: result.data,
           orderItems: cartData,

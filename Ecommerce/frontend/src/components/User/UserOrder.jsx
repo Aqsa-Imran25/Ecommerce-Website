@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Empty from '../common/Empty';
 import Loader from '../common/Loader';
-import { apiUrl, getUserRole, UserToken } from '../common/Http';
+import { apiUrl, getAuthToken, getUserRole, UserToken } from '../common/Http';
 import Sidebar from '../common/Sidebar';
 
 function UserOrder() {
@@ -12,6 +12,8 @@ function UserOrder() {
     const [loader, setLoader] = useState(false)
     // roles
     const role = getUserRole();
+    // token
+    const token =getAuthToken();
 
     const fetchorder = async () => {
         setLoader(true)
@@ -20,7 +22,7 @@ function UserOrder() {
             headers: {
                 'Content-Type': 'application/json',
                 "Accept": "application/json",
-                "Authorization": `Bearer ${UserToken()}`
+                "Authorization": `Bearer ${token}`
 
             },
         })
@@ -28,7 +30,7 @@ function UserOrder() {
         const result = await res.json();
 
         console.log("API Show Result:", result.data);
-        console.log("Token-Show:", UserToken());
+        console.log("Token-Show:", token);
         if (result.status == 200) {
 
             setOrder(result.data)

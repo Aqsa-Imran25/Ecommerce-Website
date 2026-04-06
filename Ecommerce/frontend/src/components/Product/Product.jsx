@@ -9,7 +9,7 @@ import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { apiUrl, UserToken } from "../common/Http";
+import { apiUrl, getAuthToken, UserToken } from "../common/Http";
 import { toast } from "react-toastify";
 import { CartContext } from "../context/Cart";
 import striptags from "striptags";
@@ -36,6 +36,7 @@ function Product() {
   // LIKES
   const [likes, setLikes] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
+  const token=getAuthToken();
   // like count
 
   // time
@@ -108,7 +109,7 @@ function Product() {
     return (
       <Layout>
         <div className="text-center py-20 text-xl font-semibold">
-          <Loader/>
+          <Loader />
         </div>
       </Layout>
     );
@@ -125,7 +126,7 @@ function Product() {
     }
   };
 
-  // handlecomment
+  // handlelikes
   // const submitComment = async (data) => {
   //   console.log(data);
   //   try {
@@ -184,12 +185,15 @@ function Product() {
         method: "POST",
         headers: {
           Accept: "application/json",
-          Authorization: `Bearer ${UserToken()}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
       const result = await res.json();
+      if (!result.status === 401) {
 
+        toast.error("Login First!");
+      }
       if (result.status === 200) {
         console.log("like", result.liked)
         setLikes(result.liked);
@@ -312,12 +316,12 @@ function Product() {
           </div>
           <div className="w-full md:w-3/5 rounded-2xl ms-7 px-5">
             <h1 className="text-4xl font-bold"> {product?.title}</h1>
-           
+
             {/* price */}
             <div className="text-2xl pb-3 py-3">
-              ${product?.price}
+              Rs {product?.price}
               <span className="text-gray-400 ps-3">
-                ${product?.compare_price}
+                Rs {product?.compare_price}
               </span>
             </div>
             {/* description */}

@@ -155,60 +155,71 @@ class ProductController extends Controller
 
     public function approveProduct($id)
     {
-        $product = Product::findOrFail($id);
-        $product->is_approved = 'approved';
-        $product->save();
+        if (auth()->user()->hasRole('admin')) {
+            $product = Product::findOrFail($id);
+            $product->is_approved = 'approved';
+            $product->save();
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Product approved successfully',
-        ]);
+            return response()->json([
+                'status' => 200,
+                'message' => ' Admin Product approved successfully',
+            ]);
+        }
     }
 
     public function rejectProduct($id)
     {
-        $product = Product::findOrFail($id);
+        if (auth()->user()->hasRole('admin')) {
 
-        $product->update([
-            'is_approved' => 'rejected',
-            'status' => 0
+            $product = Product::findOrFail($id);
 
-        ]);
+            $product->update([
+                'is_approved' => 'rejected',
+                'status' => 0
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Product rejected successfully!'
-        ]);
+            ]);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Product rejected successfully!'
+            ]);
+        }
     }
 
     public function pendingProduct($id)
     {
-        $product = Product::findOrFail($id);
+        if (auth()->user()->hasRole('admin')) {
 
-        $product->update([
-            'is_approved' => 'pending',
-            'status' => 0
-        ]);
+            $product = Product::findOrFail($id);
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Product set to pending'
-        ]);
+            $product->update([
+                'is_approved' => 'pending',
+                'status' => 0
+            ]);
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Product set to pending'
+            ]);
+        }
     }
 
-    public function statusProduct($id)
-    {
-        $product = Product::findOrFail($id);
+    // public function statusProduct($id)
+    // {
+    //     if (!auth()->user()->hasRole('admin')) {
 
-        $product->update([
-            'status' => $product->status == 1 ? 0 : 1
-        ]);
+    //         $product = Product::findOrFail($id);
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Feature status updated'
-        ]);
-    }
+    //         $product->update([
+    //             'status' => $product->status == 1 ? 0 : 1
+    //         ]);
+
+    //         return response()->json([
+    //             'status' => 200,
+    //             'message' => 'Feature status updated'
+    //         ]);
+    //     }
+    // }
 
     /**
      * Display the specified resource.

@@ -243,52 +243,63 @@ function ProductCreate({ placeholder }) {
     setGalleryIds((prev) => prev.filter((_, i) => i !== index));
   };
 
+
+  const checkStoreStatus = async () => {
+    const token = getAuthToken();
+    const res = await fetch(`${apiUrl}/vendor/store-status`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
+    const data = await res.json();
+
+    setStoreStatus(data.status);
+
+    if (data.status !== "active") {
+      toast.error("Your store is not approved yet");
+      navigate("/vendor");
+      return;
+    }
+
+
+  };
+
+
+  // useeffect
   useEffect(() => {
-    const checkStoreStatus = async () => {
-      const token = getAuthToken();
-      const res = await fetch(`${apiUrl}/vendor/store-status`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      const data = await res.json();
-
-      setStoreStatus(data.status);
-
-      if (data.status !== "active") {
-        toast.error("Your store is not approved yet");
-        navigate("/vendor");
-        return;
-      }
-
-      fetchCategory();
-      fetchBrand();
-      fetchSizes();
-      fetchStore();
-    };
-
-    checkStoreStatus();
+    fetchCategory();
+    fetchBrand();
+    fetchSizes();
+    fetchStore();
+    if (role === "vendor" || role === "user") {
+      checkStoreStatus();
+    }
   }, []);
 
-  if (storeStatus === undefined) {
-    return (
-      <p>
-        <Loader />
-      </p>
-    );
-  }
+  if (role === "vendor" || role === "user") {
 
-  if (storeStatus !== "active") {
-    return (
-      <div className="text-center mt-10 text-red-600">
-        <p>Your store is not approved yet.</p>
-      </div>
-    );
+    if (storeStatus === undefined) {
+      return (
+        <p>
+          <Loader />
+        </p>
+      );
+    }
+  }
+  if (role === "vendor" || role === "user") {
+
+    if (storeStatus !== "active") {
+      return (
+        <div className="text-center mt-10 text-red-600">
+          <p>Your store is not approved yet.</p>
+        </div>
+      );
+    }
   }
   return (
     <>
-      <AdminSample title="Product/Create" btnText="Back" to="/products">
+      <AdminSample title="Product-Create" btnText="Back" to="/products">
         <form onSubmit={handleSubmit(saveProduct)}>
           {/* Title */}
           <div className="flex flex-wrap -mx-3 mb-6">

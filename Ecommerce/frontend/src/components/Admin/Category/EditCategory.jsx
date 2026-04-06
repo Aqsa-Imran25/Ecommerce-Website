@@ -75,7 +75,7 @@ function EditCategory() {
     }
     return (
         <>
-            <Sample title='Edit/Category' btnText='Back' to='/admin/categories'>
+            <Sample title='Edit-Category' btnText='Back' to='/admin/categories'>
 
                 <form onSubmit={handleSubmit(updateCategory)}>
                     <div className="flex flex-wrap -mx-3 mb-6">

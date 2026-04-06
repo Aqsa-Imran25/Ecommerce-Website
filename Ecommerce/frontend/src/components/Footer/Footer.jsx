@@ -2,6 +2,8 @@ import React from "react";
 import aura from "/assets/aura.png";
 import { FaFacebookF, FaInstagram, FaTwitter, FaPinterestP } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import shop from "/assets/ShopFusions.png";
+
 
 function Footer() {
   return (
@@ -10,7 +12,7 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-6 md:px-10 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
         <div className="space-y-4">
-          <img src={aura} alt="logo" className="w-16 rounded-full" />
+          <img src={shop} alt="logo" className="w-40 rounded-full" />
 
           <h3 className="text-xl font-semibold text-[#007595]">
             Artisan Aura

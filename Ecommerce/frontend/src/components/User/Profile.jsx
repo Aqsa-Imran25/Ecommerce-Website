@@ -48,11 +48,12 @@ function Profile() {
                 headers: {
                     'Content-Type': 'application/json',
                     "Accept": "application/json",
-                    Authorization: `Bearer ${UserToken()}`
+                    Authorization: `Bearer ${getAuthToken()}`
                 },
             });
 
             const result = await res.json();
+            console.log("User", result);
 
             if (result.status === 200 && result.data) {
                 setValue("name", result.data.name)

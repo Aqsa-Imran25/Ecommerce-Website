@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { apiUrl, UserToken } from "../common/Http";
+import { apiUrl, getAuthToken, UserToken } from "../common/Http";
 
 export const CartContext = createContext({
   cartData: [],
@@ -33,7 +33,7 @@ export const CartProvider = ({ children }) => {
   }, [cartData]);
   // shipping cost fetch
   useEffect(() => {
-    const token = UserToken();
+    const token = getAuthToken();
 
     if (!token) return;
 
@@ -49,8 +49,9 @@ export const CartProvider = ({ children }) => {
         if (!res.ok) return;
 
         const result = await res.json();
-
+        console.log("Shipping", result)
         if (result.status === 200) {
+          console.log("Shipping", result)
           setShippingCost(result.data?.shipping_charge || 0);
         }
 

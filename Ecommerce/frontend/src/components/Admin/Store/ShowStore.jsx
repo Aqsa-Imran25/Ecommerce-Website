@@ -3,11 +3,11 @@ import Loader from "../../common/Loader";
 import Empty from "../../common/Empty";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { adminToken, apiUrl, getAuthToken } from "../../common/Http";
-import Sample from "../../common/Sample";
+import { faTrash, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil } from "@fortawesome/free-solid-svg-icons"; // The solid style icon
+import { adminToken, apiUrl, getAdminVendorToken, getAuthToken } from "../../common/Http";
+import Sample from "../../common/Sample";
+import { updateLocalStorageUser } from "../../context/updateLocalStorageUser";
 
 function ShowStore({ mode }) {
   const [stores, setStores] = useState([]);
@@ -15,13 +15,9 @@ function ShowStore({ mode }) {
 
   const fetchStoreApi = async () => {
     setLoader(true);
-
     let url = "";
-
     if (mode === "admin") {
       url = `${apiUrl}/admin/stores`;
-    } else if (mode === "vendor") {
-      url = `${apiUrl}/vendor/stores`;
     } else {
       url = `${apiUrl}/vendor/stores`;
     }
@@ -30,12 +26,12 @@ function ShowStore({ mode }) {
       method: "GET",
       headers: {
         Accept: "application/json",
-        Authorization: `Bearer ${getAuthToken()}`,
+        Authorization: `Bearer ${getAdminVendorToken()}`,
       },
     });
 
     const result = await res.json();
-
+    console.log("Result:", result);
     setLoader(false);
 
     if (result.status === 200) {
@@ -58,9 +54,7 @@ function ShowStore({ mode }) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${
-          mode === "admin" ? adminToken() : getAuthToken()
-        }`,
+        Authorization: `Bearer ${mode === "admin" ? adminToken() : getAdminVendorToken()}`,
       },
     });
 
@@ -77,52 +71,70 @@ function ShowStore({ mode }) {
   const approveStore = async (id) => {
     if (mode !== "admin") return;
 
-    const res = await fetch(`${apiUrl}/admin/approvedStore/${id}`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${adminToken()}`,
-      },
-    });
+    try {
+      const res = await fetch(`${apiUrl}/admin/approvedStore/${id}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${adminToken()}`,
+        },
+      });
 
-    const result = await res.json();
+      const result = await res.json();
 
-    if (result.status === 200) {
-      toast.success(result.message);
+      if (result.status === 200) {
+        toast.success(result.message);
 
-      setStores((prev) =>
-        prev.map((store) =>
-          store.id === id ? { ...store, status: "active" } : store,
-        ),
-      );
-    } else {
-      toast.error(result.message || "Approval failed");
+        // Update store status in UI
+        setStores((prev) =>
+          prev.map((store) =>
+            store.id === id ? { ...store, status: "active" } : store
+          )
+        );
+
+        // 🔥 Update localStorage with the new user data (role becomes vendor)
+        if (result.user) {
+          updateLocalStorageUser(result.user);
+        }
+      } else {
+        toast.error(result.message || "Approval failed");
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+      console.error(err);
     }
   };
 
   const rejectStore = async (id) => {
     if (mode !== "admin") return;
 
-    const res = await fetch(`${apiUrl}/admin/rejectedStore/${id}`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${adminToken()}`,
-      },
-    });
+    try {
+      const res = await fetch(`${apiUrl}/admin/rejectedStore/${id}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${adminToken()}`,
+        },
+      });
 
-    const result = await res.json();
+      const result = await res.json();
 
-    if (result.status === 200) {
-      toast.success(result.message);
+      if (result.status === 200) {
+        toast.success(result.message);
 
-      setStores((prev) =>
-        prev.map((store) =>
-          store.id === id ? { ...store, status: "rejected" } : store,
-        ),
-      );
-    } else {
-      toast.error(result.message || "Reject failed");
+        setStores((prev) =>
+          prev.map((store) =>
+            store.id === id ? { ...store, status: "rejected" } : store
+          )
+        );
+
+        if (result.user) updateLocalStorageUser(result.user);
+      } else {
+        toast.error(result.message || "Reject failed");
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+      console.error(err);
     }
   };
 
@@ -147,7 +159,7 @@ function ShowStore({ mode }) {
                 <th className="px-6 py-3">Logo</th>
                 <th className="px-6 py-3">Status</th>
                 {mode === "admin" && <th className="px-6 py-3">is_Approved</th>}
-                {mode === "vendor" && stores.status !== "rejected" && (
+                {(mode === "vendor" || mode === "user") && (
                   <th className="px-6 py-3">Action</th>
                 )}
               </tr>
@@ -162,7 +174,6 @@ function ShowStore({ mode }) {
                   <td className="px-6 py-4">{store.id}</td>
                   <td className="px-6 py-4">{store.name}</td>
                   <td className="px-6 py-4">{store.slug}</td>
-
                   <td className="px-6 py-4">
                     <img
                       src={
@@ -192,49 +203,44 @@ function ShowStore({ mode }) {
                     )}
                   </td>
 
-                  {/* ACTION */}
-
+                  {/* ADMIN APPROVAL BUTTONS */}
                   {mode === "admin" && store.status === "pending" && (
                     <td className="px-6 py-4 text-center">
                       <div className="flex gap-2 justify-center">
-                        <>
-                          <button
-                            onClick={() => approveStore(store.id)}
-                            className="bg-green-600 text-white px-2 py-1 rounded"
-                          >
-                            Approve
-                          </button>
-
-                          <button
-                            onClick={() => rejectStore(store.id)}
-                            className="bg-red-600 text-white px-2 py-1 rounded"
-                          >
-                            Reject
-                          </button>
-                        </>
+                        <button
+                          onClick={() => approveStore(store.id)}
+                          className="bg-green-600 text-white px-2 py-1 rounded"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          onClick={() => rejectStore(store.id)}
+                          className="bg-red-600 text-white px-2 py-1 rounded"
+                        >
+                          Reject
+                        </button>
                       </div>
                     </td>
                   )}
 
-                  {/* actions */}
+                  {/* EDIT/DELETE ACTIONS */}
                   <td className="px-6 py-4">
-                    <div className="flex">
-                      {mode === "vendor" && store.status !== "rejected" && (
+                    <div className="flex gap-2">
+                      {(mode === "vendor" || mode === "user") && (
                         <Link
-                          to={`/vendor/store/${store.id}/edit`}
+                          to={`/user/store/${store.id}/edit`}
                           className="font-medium text-fg-brand hover:underline text-blue-600"
                         >
                           <FontAwesomeIcon icon={faPencil} />
                         </Link>
                       )}
-                      {mode === "vendor" && store.status !== "rejected" && (
-                        <Link
+                      {(mode === "vendor" || mode === "user") && (
+                        <button
                           onClick={() => deleteStore(store.id)}
-                          to="#"
                           className="font-medium text-fg-brand hover:underline text-red-600"
                         >
                           <FontAwesomeIcon icon={faTrash} />
-                        </Link>
+                        </button>
                       )}
                     </div>
                   </td>

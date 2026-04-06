@@ -152,11 +152,7 @@ function Store() {
                         type="text"
                         placeholder="Slug"
                       />
-                      {errors.slug && (
-                        <p className="text-red-500 text-sm">
-                          {errors.slug.message}
-                        </p>
-                      )}
+                      
                     </div>
                   </div>
 

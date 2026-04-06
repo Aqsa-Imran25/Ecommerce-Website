@@ -13,29 +13,28 @@ function Sidebar({ role }) {
       { name: "Categories", path: "/admin/categories" },
       { name: "Brands", path: "/admin/brands" },
       { name: "Sizes", path: "/admin/sizes" },
+      { name: "Stores", path: "/admin/stores" },
       { name: "Products", path: "/products" },
       { name: "Shipping", path: "/admin/shipping" },
-      { name: "Stores", path: "/admin/stores" },
-      { name: "Earnings", path: "/admin/earnings/dashboard" },
-      { name: "Orders", path: "/admin/orders" },
       { name: "Payments", path: "/admin/payments" },
+      { name: "Earnings", path: "/admin/earnings/" },
+      { name: "Orders", path: "/admin/orders" },
       { name: "Users", path: "/admin/users" },
     ];
   } else if (role === "vendor") {
     sideBarLinks = [
       { name: "Dashboard", path: "/vendor/dashboard" },
       { name: "My Account", path: "/myaccount" },
-      { name: "Stores", path: "/vendor/stores" },
+      { name: "Stores", path: "/my-store" },
       { name: "Products", path: "/products" },
       { name: "Orders", path: "/myorder" },
-      { name: "Earning", path: "/vendor/earnings/dashboard" },
+      { name: "Earning", path: "/vendor/earnings/" },
     ];
   } else {
     sideBarLinks = [
       { name: "Dashboard", path: "/user/dashboard" },
       { name: "My Account", path: "/myaccount" },
       { name: "Store", path: "/my-store" },
-      { name: "Become a Seller", path: "/vendor" },
       { name: "Order", path: "/myorder" },
     ];
   }

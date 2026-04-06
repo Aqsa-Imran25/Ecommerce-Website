@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { apiUrl, UserToken } from "../common/Http";
+import { apiUrl, getAuthToken, getUserRole, UserToken } from "../common/Http";
 import Layout from "../common/Layout";
 import Loader from "../common/Loader";
-import Sidebar from "./Sidebar";
+import Sidebar from "../common/Sidebar";
 
 function UserOrderDetail() {
     const { id } = useParams();
@@ -12,7 +12,8 @@ function UserOrderDetail() {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(false);
     const [profile, setProfile] = useState(null);
-
+    const token = getAuthToken();
+    const role=getUserRole();
 
     // fetch single id order
     useEffect(() => {
@@ -20,7 +21,7 @@ function UserOrderDetail() {
             setLoading(true);
             try {
                 const res = await fetch(`${apiUrl}/order/${id}`, {
-                    headers: { Authorization: `Bearer ${UserToken()}` },
+                    headers: { Authorization: `Bearer ${token}` },
                 });
                 const result = await res.json();
                 if (res.ok && result.data) {
@@ -45,7 +46,7 @@ function UserOrderDetail() {
                     headers: {
                         'Content-Type': 'application/json',
                         "Accept": "application/json",
-                        Authorization: `Bearer ${UserToken()}`
+                        Authorization: `Bearer ${token}`
                     },
                 });
 
@@ -87,7 +88,7 @@ function UserOrderDetail() {
 
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="w-full md:w-1/4">
-                            <Sidebar />
+                            <Sidebar role={role} />
                         </div>
                         <div className="w-full md:w-3/4">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

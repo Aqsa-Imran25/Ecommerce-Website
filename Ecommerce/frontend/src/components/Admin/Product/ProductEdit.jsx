@@ -185,11 +185,11 @@ function ProductEdit({ placeholder }) {
         headers: {
           'Content-Type': 'application/json',
           "Accept": "application/json",
-          "Authorization": `Bearer ${adminToken()}`
+          "Authorization": `Bearer ${token}`
         },
       });
       const result = await res.json();
-      console.log(result)
+      console.log("Sizes",result)
       if (result.status === 200) setSizes(result.data);
     } catch (error) {
       console.error("Fetch error:", error);
@@ -247,7 +247,7 @@ function ProductEdit({ placeholder }) {
   return (
 
     <>
-      <Sample title='Product/Edit' btnText='Back' to='/products'>
+      <Sample title='Product-Edit' btnText='Back' to='/products'>
         <form onSubmit={handleSubmit(updatedProduct)}>
           {/* Title */}
 

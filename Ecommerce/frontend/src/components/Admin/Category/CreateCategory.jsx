@@ -44,7 +44,7 @@ function CreateCategory() {
 
   return (
     <>
-      <AdminSample title='Create/Category' btnText='Back' to='/admin/categories'>
+      <AdminSample title='Create-Category' btnText='Back' to='/admin/categories'>
 
         <form onSubmit={handleSubmit(saveCategory)}>
           <div className="flex flex-wrap -mx-3 mb-6">

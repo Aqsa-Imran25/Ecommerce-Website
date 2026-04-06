@@ -40,7 +40,7 @@ function CreateSize() {
     }
     return (
         <>
-            <AdminSample title='Size/Create' btnText='Back' to='/admin/sizes'>
+            <AdminSample title='Size-Create' btnText='Back' to='/admin/sizes'>
 
                 <form onSubmit={handleSubmit(saveSizes)}>
                     <div className="flex flex-wrap -mx-3 mb-6">

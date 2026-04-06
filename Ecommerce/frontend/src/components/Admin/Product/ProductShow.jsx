@@ -100,7 +100,9 @@ function ProductShow() {
         },
       });
       const result = await res.json();
+      console.log("approveProduct", result);
       if (result.status === 200) {
+        console.log("approveProduct", result);
         toast.success(result.message);
         setproducts((prev) =>
           prev.map((p) =>
@@ -170,6 +172,8 @@ function ProductShow() {
       setLoader(false);
     }
   };
+
+
 
   useEffect(() => {
     fetchproductApi();
@@ -309,15 +313,20 @@ function ProductShow() {
                       </td>
 
                       <td className="px-6 py-4">
-                        {product.status == 1 ? (
-                          <span className="text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5">
-                            Active
-                          </span>
-                        ) : (
-                          <span className="text-white bg-red-600 hover:bg-red-400 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5">
-                            Block
-                          </span>
-                        )}
+                        {
+
+                          product.status == 1 ? (
+                            <span className="text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5">
+                              Active
+                            </span>
+                          ) : (
+                            <span className="text-white bg-red-600 hover:bg-red-400 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5">
+                              Block
+                            </span>
+                          )
+                        }
+
+
                       </td>
                       {/* Approval Column */}
                       <td className="px-6 py-4 text-center">

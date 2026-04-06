@@ -67,8 +67,6 @@ Route::group([
 
 
 
-    // productlike
-    Route::post('/product/{id}/like', [FrontUserController::class, 'toggleProductLike']);
 
     // COMMENTlike
     Route::post('/comment/{id}/like', [FrontUserController::class, 'toggleCommentLike']);
@@ -76,8 +74,6 @@ Route::group([
     // ratings
     Route::post('/product/{id}/reviews', [FrontUserController::class, 'storeReviews']);
 
-    // shipping
-    Route::get('/customer-shipping', [ShippingController::class, 'getShippedUser']);
 
     // comment
     //  Route::resource('/comment',FrontUserController::class);
@@ -107,10 +103,6 @@ Route::group(
         ]
     ],
     function () {
-        Route::get('/vendor/store/{id}/edit', [VendorController::class, 'edit']);
-        Route::put('/vendor/store/{id}', [VendorController::class, 'update']);
-        Route::get('/vendor/store/{id}', [VendorController::class, 'show']);
-        Route::delete('/vendor/store/{id}', [VendorController::class,    'destroy']);
         // store-img-del
         Route::delete('/store-delete/{id}', [VendorController::class, 'imageDelete']);
 
@@ -144,6 +136,12 @@ Route::group(
 
 );
 
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return response()->json([
+        'user' => $request->user()
+    ]);
+});
 // USER AND VENDOR
 // vendor
 Route::group(
@@ -154,8 +152,17 @@ Route::group(
         ]
     ],
     function () {
+        // shipping
+        Route::get('/customer-shipping', [ShippingController::class, 'getShippedUser']);
         // show store
         Route::get('/vendor/stores', [VendorController::class, 'index']);
+        Route::get('/vendor/store/{id}/edit', [VendorController::class, 'edit']);
+        Route::put('/vendor/store/{id}', [VendorController::class, 'update']);
+        Route::get('/vendor/store/{id}', [VendorController::class, 'show']);
+        Route::delete('/vendor/store/{id}', [VendorController::class,    'destroy']);
+
+        // productlike
+        Route::post('/product/{id}/like', [FrontUserController::class, 'toggleProductLike']);
         // profile
         Route::post('/myaccount', [ProfileController::class, 'store']);
         Route::get('/myaccount', [ProfileController::class, 'show']);
@@ -172,13 +179,7 @@ Route::group(
     }
 
 );
-
-
-
-// Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
+// admin-routes
 
 Route::group(
     ['middleware' => [
@@ -187,10 +188,10 @@ Route::group(
     ]],
     function () {
         // admin-store
-        Route::get('/admin/stores/{id}/edit', [VendorController::class, 'edit']);
-        Route::put('/admin/stores/{id}', [VendorController::class, 'update']);
-        Route::get('/admin/stores/{id}', [VendorController::class, 'show']);
-        Route::delete('/admin/stores/{id}', [VendorController::class, 'destroy']);
+        // Route::get('/admin/stores/{id}/edit', [VendorController::class, 'edit']);
+        // Route::put('/admin/stores/{id}', [VendorController::class, 'update']);
+        // Route::get('/admin/stores/{id}', [VendorController::class, 'show']);
+        // Route::delete('/admin/stores/{id}', [VendorController::class, 'destroy']);
 
         // store-status-update
         Route::post('/admin/approvedStore/{id}', [VendorController::class, 'approvedStore']);
@@ -223,6 +224,8 @@ Route::group(
         Route::post('/products/{id}/approve', [ProductController::class, 'approveProduct']);
         Route::post('/products/{id}/reject', [ProductController::class, 'rejectProduct']);
         Route::post('/products/{id}/pending', [ProductController::class, 'pendingProduct']);
+
+        Route::post('/products/{id}/status', [ProductController::class, 'statusProduct']);
 
         // order
         Route::resource('/orders', AdminOrderController::class);

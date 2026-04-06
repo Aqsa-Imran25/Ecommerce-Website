@@ -88,9 +88,7 @@ function ShowOrder() {
                                                         <th scope="col" className="px-6 py-3 font-medium text-center">
                                                             Date
                                                         </th>
-                                                        <th scope="col" className="px-6 py-3 font-medium text-center">
-                                                            Payment
-                                                        </th>
+                                                       
                                                         <th scope="col" className="px-6 py-3 font-medium text-center">
                                                             Status
                                                         </th>
@@ -121,13 +119,7 @@ function ShowOrder() {
                                                                 <td className="px-6 py-4">
                                                                     {new Date(order.created_at).toISOString().split("T")[0]}
                                                                 </td>
-                                                                <td className="px-6 py-4">
-                                                                    {order.payment_status == 'paid' ?
-                                                                        <span className='text-white bg-green-700 hover:bg-green-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>Paid</span>
-                                                                        :
-                                                                        <span className='text-white bg-red-500 hover:bg-red-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>UnPaid</span>
-                                                                    }
-                                                                </td>
+                                                              
                                                                 <td className="px-6 py-4">
                                                                     {order.status == 'pending'
                                                                         &&

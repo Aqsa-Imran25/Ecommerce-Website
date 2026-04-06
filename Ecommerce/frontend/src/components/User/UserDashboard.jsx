@@ -1,8 +1,7 @@
 import React, { useContext } from 'react'
 import Layout from '../common/Layout'
-import Sidebar from '../User/Sidebar';
-import { VendorAuthContext } from '../context/VendorAuth';
 import { UserAuthContext } from '../context/UserAuth';
+import Sidebar from '../common/Sidebar';
 
 
 function UserDashboard() {

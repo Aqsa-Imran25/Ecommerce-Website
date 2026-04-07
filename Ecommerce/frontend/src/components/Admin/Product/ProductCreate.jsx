@@ -158,7 +158,7 @@ function ProductCreate({ placeholder }) {
   const fetchStore = async () => {
     try {
       const token = getAuthToken();
-      const res = await fetch(`${apiUrl}/admin/stores`, {
+      const res = await fetch(`${apiUrl}/active/stores`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -167,7 +167,7 @@ function ProductCreate({ placeholder }) {
         },
       });
       const result = await res.json();
-
+      console.log("stores", result)
       if (result.status === 200) setStore(result.data);
     } catch (error) {
       console.error("Fetch error:", error);
@@ -245,49 +245,42 @@ function ProductCreate({ placeholder }) {
 
 
   const checkStoreStatus = async () => {
-    const token = getAuthToken();
-    const res = await fetch(`${apiUrl}/vendor/store-status`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-    });
-    const data = await res.json();
+    const activeStore = stores.find(s => s.status === "active");
 
-    setStoreStatus(data.status);
-
-    if (data.status !== "active") {
-      toast.error("Your store is not approved yet");
+    if (!activeStore) {
+      toast.error("No active store found");
       navigate("/vendor");
       return;
     }
 
-
+    setStoreStatus("active");
   };
 
 
-  // useeffect
   useEffect(() => {
     fetchCategory();
     fetchBrand();
     fetchSizes();
     fetchStore();
-    if (role === "vendor" || role === "user") {
-      checkStoreStatus();
-    }
   }, []);
 
-  if (role === "vendor" || role === "user") {
+  useEffect(() => {
+    if (role === "vendor" && stores.length > 0) {
+      checkStoreStatus(stores[0].id);
+    }
+  }, [stores]);
 
-    if (storeStatus === undefined) {
+  if (role === "vendor") {
+
+    if (storeStatus === null) {
       return (
-        <p>
-          <Loader />
-        </p>
+
+        <Loader />
+
       );
     }
   }
-  if (role === "vendor" || role === "user") {
+  if (role === "vendor") {
 
     if (storeStatus !== "active") {
       return (

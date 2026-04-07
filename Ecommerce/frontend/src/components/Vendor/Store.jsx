@@ -3,7 +3,7 @@ import Layout from "../common/Layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
-import { apiUrl, getUserRole, UserToken } from "../common/Http";
+import { apiUrl, getAuthToken, getUserRole, UserToken } from "../common/Http";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { VendorAuthContext } from "../context/VendorAuth";
@@ -11,6 +11,7 @@ import Sidebar from "../common/Sidebar";
 
 function Store() {
   const { login: vendorLogin } = useContext(VendorAuthContext);
+  const token=getAuthToken();
   const {
     register,
     setValue,
@@ -36,7 +37,7 @@ function Store() {
       const res = await fetch(`${apiUrl}/vendors`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${UserToken()}`,
+          Authorization: `Bearer ${token}`,
           Accept: "application/json",
         },
         body: formData,

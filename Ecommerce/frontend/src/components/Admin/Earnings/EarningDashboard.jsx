@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { apiUrl, getAuthToken, getUserRole } from "../../common/Http";
+import { adminToken, apiUrl, getAuthToken, getUserRole } from "../../common/Http";
 import Sample2 from "../../common/Sample2";
 import Loader from "../../common/Loader";
 import Empty from "../../common/Empty";
@@ -14,30 +14,61 @@ function EarningDashboard() {
 
   // fetch all earnings
   const fetchEarnings = async () => {
-    const res = await fetch(`${apiUrl}/admin/totalEarnings`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-    });
-    const result = await res.json();
-    if (result.status === 200) {
-      setEarnings(result.data);
+    try {
+      setLoader(true);
+
+      const res = await fetch(`${apiUrl}/admin/totalEarnings`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${adminToken()}`,
+        },
+      });
+
+      const result = await res.json();
+      console.log("Result", result)
+      if (!res.ok) {
+        throw new Error(result.message || "Server Error");
+      }
+
+      setEarnings(result.data || []);
+    } catch (err) {
+      console.log("Fetch error:", err.message);
+      setEarnings([]);
+    } finally {
+      setLoader(false);
     }
   };
 
   // vendorearnings
   const fetchVendorEarnings = async () => {
-    const res = await fetch(`${apiUrl}/vendorEarnings`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-    });
-    const result = await res.json();
-    console.log("Vendorresult", result);
-    if (result.status === 200) {
-      setEarningsVendor(result.data);
+    try {
+      setLoader(true);
+
+      const res = await fetch(`${apiUrl}/vendorEarnings`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+          Accept: "application/json",
+        },
+      });
+
+      const result = await res.json();
+      console.log("earnings", result)
+
+      if (!res.ok) {
+        throw new Error(result.message || "API Error");
+      }
+
+      if (result.status === 200) {
+        setEarningsVendor(result.data);
+      }
+    } catch (error) {
+      console.log("Error:", error.message);
+      setEarningsVendor([]);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -66,6 +97,9 @@ function EarningDashboard() {
               <tr>
                 <th scope="col" className="px-6 py-3 font-medium">
                   Order
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Name
                 </th>
 
                 <th scope="col" className="px-6 py-3 font-medium">

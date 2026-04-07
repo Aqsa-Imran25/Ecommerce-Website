@@ -120,10 +120,10 @@ function UserOrderDetail() {
                                             {order.status}
                                         </span>
 
-                                        <span className={`px-3 py-1 text-sm rounded-full text-white ${order.payment_status === "paid" ? "bg-green-600" : "bg-red-500"
+                                        {/* <span className={`px-3 py-1 text-sm rounded-full text-white ${order.payment_status === "paid" ? "bg-green-600" : "bg-red-500"
                                             }`}>
                                             {order.payment_status}
-                                        </span>
+                                        </span> */}
                                     </div>
                                 </div>
 

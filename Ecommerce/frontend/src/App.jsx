@@ -80,22 +80,21 @@ function App() {
           <Route
             path="/vendor"
             element={
-              <RoleBasedRoute allowedRoles={["user"]}>
+              <RoleBasedRoute allowedRoles={["user", "vendor"]}>
                 <Store />
               </RoleBasedRoute>
             }
           />
 
-          {/* vendor */}
-          <Route
+          {/* vendor-product-create */}
+          {/* <Route
             path="/vendor/products/create"
             element={
               <Vendorrequireauth>
                 <ProductCreate />
               </Vendorrequireauth>
             }
-          />
-
+          /> */}
 
 
           {/* profile */}
@@ -140,7 +139,7 @@ function App() {
           <Route
             path="/myorder/:id"
             element={
-            <RoleBasedRoute allowedRoles={["user", "vendor"]}>
+              <RoleBasedRoute allowedRoles={["user", "vendor"]}>
                 <UserOrderDetail />
               </RoleBasedRoute>
             }
@@ -314,22 +313,23 @@ function App() {
           />
           {/* orders */}
           <Route
-            path="/admin/orders"
+            path="/orders"
             element={
-              <Adminrequireauth>
+              <RoleBasedRoute allowedRoles={["admin", "vendor"]}>
                 <ShowOrder />
-              </Adminrequireauth>
+              </RoleBasedRoute>
             }
           />
           {/* order-detail */}
           <Route
-            path="/admin/orders/:id"
+            path="/orders/:id"
             element={
-              <Adminrequireauth>
+              <RoleBasedRoute allowedRoles={["admin", "vendor"]}>
                 <OrderDetail />
-              </Adminrequireauth>
+              </RoleBasedRoute>
             }
           />
+
 
           {/* SHIPPING */}
           <Route
@@ -397,8 +397,24 @@ function App() {
               </RoleBasedRoute>
             }
           />
-
-
+          {/* order */}
+          {/* order-detail */}
+          <Route
+            path="/vendor/orders/:id"
+            element={
+              <Adminrequireauth>
+                <OrderDetail />
+              </Adminrequireauth>
+            }
+          />
+          <Route
+            path="/vendor/orders/"
+            element={
+              <Adminrequireauth>
+                <OrderDetail />
+              </Adminrequireauth>
+            }
+          />
         </Routes>
       </BrowserRouter>
       <ToastContainer />

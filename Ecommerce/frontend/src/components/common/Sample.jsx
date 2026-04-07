@@ -13,7 +13,7 @@ function Sample({
     const role = getUserRole();
 
     // ONLY vendor can see create button
-    const showCreateButton = role === "vendor" || role === "user";
+    const showCreateButton = role === "vendor" || role === "user" || role === "admin";
 
     return (
         <div>

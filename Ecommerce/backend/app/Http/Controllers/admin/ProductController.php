@@ -63,6 +63,8 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+
+        $user = auth()->user();
         $validator = Validator::make($request->all(), [
             'title' => 'required|min:3',
             'description' => 'nullable',
@@ -81,10 +83,15 @@ class ProductController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 400,
+                'status' => 422,
                 'errors' => $validator->errors()
-            ], 400);
+            ], 422);
         }
+        $store = $user->stores()
+            ->where('id', $request->store_id)
+            ->where('status', 'active')->first();
+
+
         $clean = Purifier::clean($request->description);
 
         $product = Product::create([
@@ -96,7 +103,7 @@ class ProductController extends Controller
             'compare_price' => $request->compare_price,
             'category_id' => $request->category_id,
             'brand_id' => $request->brand_id,
-            'store_id' => $request->store_id,
+            'store_id' => $store->id,
             'qty' => $request->qty,
             'sku' => $request->sku,
             'is_approved' => 'pending',

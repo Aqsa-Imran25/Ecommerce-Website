@@ -25,7 +25,28 @@ class VendorController extends Controller
                 'data' => $stores,
             ]);
         } else if (auth()->user()->hasRole(['vendor', 'user'])) {
-            $stores = Store::orderBy('created_at', 'ASC')->where("user_id", Auth::id())->get();
+            $stores = Store::orderBy('created_at', 'ASC')->where("user_id", Auth::id())
+                // ->where('status','active')
+                ->get();
+            return response()->json([
+                'status' => 200,
+                'data' => $stores,
+            ]);
+        }
+    }
+
+    public function activeStore()
+    {
+         if (auth()->user()->hasRole('admin')) {
+            $stores = Store::orderBy('created_at', 'ASC')->where('status','active')->get();
+            return response()->json([
+                'status' => 200,
+                'data' => $stores,
+            ]);
+        } else if (auth()->user()->hasRole(['vendor', 'user'])) {
+            $stores = Store::orderBy('created_at', 'ASC')->where("user_id", Auth::id())
+                ->where('status','active')
+                ->get();
             return response()->json([
                 'status' => 200,
                 'data' => $stores,
@@ -46,13 +67,6 @@ class VendorController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth()->user();
-        if ($user->store()->exists()) {
-            return response()->json([
-                'status' => 400,
-                'message' => 'You already have a store'
-            ], 400);
-        }
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -83,7 +97,7 @@ class VendorController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Store created, waiting for admin approval',
+            'message' => 'Your Store created, waiting for admin approval',
             'data' => $vendor,
         ], 200);
     }
@@ -127,6 +141,27 @@ class VendorController extends Controller
     public function pendingStore($id)
     {
         return $this->updateStatus($id, 'pending', 'Store set to pending!');
+    }
+
+    // store-status
+    public function statusStore($id)
+    {
+        $store = Store::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+        if ($store->status !== 'active') {
+            return response()->json([
+                'success' => false,
+                'status' => $store->status,
+                'message' => 'Store not approved'
+            ], 403);
+        }
+
+        return response()->json([
+            'success' => true,
+            'status' => $store->status,
+            'message' => 'Store is active'
+        ], 200);
     }
 
     /**

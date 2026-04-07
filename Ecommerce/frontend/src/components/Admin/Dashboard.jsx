@@ -112,13 +112,13 @@ function Dashboard() {
                       <h2>Earnings</h2>
                     </div>
                     <div className="bg-gray-100 py-2 text-center border-t border-gray-300">
-                      <Link to="/products">View Earnings</Link>
+                      <Link to="/admin/earnings/">View Earnings</Link>
                     </div>
                   </div>
                   <div className="shadow-lg rounded-lg border-2 border-gray-200">
                     <div className="p-4 text-sm md:text-2xl">
                       <span>{commission}</span>
-                      <h2>Commission</h2>
+                      <h2>Total Commission</h2>
                     </div>
                   </div>
                   <div className="shadow-lg rounded-lg border-2 border-gray-200">
@@ -131,6 +131,10 @@ function Dashboard() {
                       </span>
                       <h2>Vendor Earnings</h2>
                     </div>
+                    <div className="bg-gray-100 py-2 text-center border-t border-gray-300">
+                      <Link to="/admin/earnings/">View Vendor Earnings</Link>
+                    </div>
+
                   </div>
                 </div>
               )}

@@ -12,15 +12,16 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-6 md:px-10 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
         <div className="space-y-4">
-          <img src={shop} alt="logo" className="w-40 rounded-full" />
+          <img src={shop} alt="logo" className="w-40 rounded-full mb-0" />
 
           <h3 className="text-xl font-semibold text-[#007595]">
-            Artisan Aura
+            ShopFusion
           </h3>
 
           <p className="text-sm leading-relaxed text-gray-600">
-            Handcrafted jewelry designed with passion and precision.
-            Every piece reflects elegance, craftsmanship, and timeless beauty.
+            Everything you love, in one place.
+
+
           </p>
 
           <div className="flex gap-4 pt-2">
@@ -115,11 +116,14 @@ function Footer() {
         <div>
 
           <h4 className="text-lg font-semibold mb-4 text-gray-900">
-            Join Our Jewelry Lovers List
+
+            Stay Updated
+
           </h4>
 
           <p className="text-sm text-gray-600 mb-4">
-            Subscribe to receive exclusive offers and new handcrafted collections.
+            New arrivals. Exclusive deals.
+
           </p>
 
           <div className="flex items-center bg-white rounded-full shadow overflow-hidden">
@@ -145,7 +149,7 @@ function Footer() {
         <div className="max-w-7xl mx-auto px-6 md:px-10 py-6 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500">
 
           <p>
-            © {new Date().getFullYear()} Artisan Aura. All rights reserved.
+            © {new Date().getFullYear()} ShopFusion. All rights reserved.
           </p>
 
           <div className="flex gap-6 mt-3 md:mt-0">

@@ -38,7 +38,7 @@ function Login() {
       });
 
       const result = await response.json();
-
+      console.log("login", result)
       if (result.role === "admin") {
         localStorage.removeItem("userInfo");
         localStorage.removeItem("vendorInfo");
@@ -100,6 +100,7 @@ function Login() {
         }
       }
     } catch (error) {
+      console.error("Fetch error:", error);
       toast.error("Something went wrong!");
     } finally {
       setLoading(false);

@@ -3,7 +3,7 @@ import Layout from '../../common/Layout'
 import Sidebar from '../../common/Sidebar'
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { adminToken, apiUrl, getUserRole } from '../../common/Http';
+import { adminToken, apiUrl, getAuthToken, getUserRole } from '../../common/Http';
 import Loader from '../../common/Loader';
 import Empty from '../../common/Empty';
 import Pagination from '../../Pagination';
@@ -12,7 +12,8 @@ function ShowOrder() {
     const [orders, setOrders] = useState([])
     const [loader, setLoader] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
-    const role=getUserRole();
+    const role = getUserRole();
+    const token = getAuthToken();
     const fetchOrders = async (page = 1) => {
         setLoader(true)
         const res = await fetch(`${apiUrl}/orders?page=${page}`, {
@@ -20,15 +21,15 @@ function ShowOrder() {
             headers: {
                 'Content-Type': 'application/json',
                 "Accept": "application/json",
-                "Authorization": `Bearer ${adminToken()}`
+                "Authorization": `Bearer ${token}`
 
             },
         })
         setLoader(false)
         const result = await res.json();
 
-        console.log("API Show Result:", result.data);
-        console.log("Token-Show:", adminToken());
+        console.log("API Show Result:", result);
+        console.log("Token-Show:", token);
         if (result.status == 200) {
 
             setOrders(result.data)
@@ -51,7 +52,7 @@ function ShowOrder() {
                 <div className='md:container md:mx-auto px-6 py-5 my-5'>
                     <div className='flex justify-between my-4'>
                         <h2 className='my-2 text-base md:text-2xl'>Orders</h2>
-                       
+
                     </div>
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="w-full md:w-1/4">
@@ -88,7 +89,7 @@ function ShowOrder() {
                                                         <th scope="col" className="px-6 py-3 font-medium text-center">
                                                             Date
                                                         </th>
-                                                       
+
                                                         <th scope="col" className="px-6 py-3 font-medium text-center">
                                                             Status
                                                         </th>
@@ -103,7 +104,7 @@ function ShowOrder() {
                                                                 className="odd:bg-neutral-primary even:bg-neutral-secondary-soft hover:bg-gray-100  transition"
                                                             >
                                                                 <th scope="row" className="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                                                                    <Link to={`/admin/orders/${order.id}`}>
+                                                                    <Link to={`/orders/${order.id}`}>
                                                                         {order.id}
                                                                     </Link>
                                                                 </th>
@@ -119,7 +120,7 @@ function ShowOrder() {
                                                                 <td className="px-6 py-4">
                                                                     {new Date(order.created_at).toISOString().split("T")[0]}
                                                                 </td>
-                                                              
+
                                                                 <td className="px-6 py-4">
                                                                     {order.status == 'pending'
                                                                         &&
@@ -158,7 +159,7 @@ function ShowOrder() {
                                     />
                                 </div>
                             }
-                           
+
                         </div>
                     </div>
                 </div>

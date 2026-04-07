@@ -14,6 +14,7 @@ class OrderController extends Controller
      */
     public function index()
     {
+
         $orders = Order::with(['items', 'user.profile'])->orderBy('created_at', 'ASC')->paginate(5);
 
         return response()->json([
@@ -112,7 +113,6 @@ class OrderController extends Controller
     public function allEarnings()
     {
         $earnings = Vendor_earnings::with(['store', 'order'])->get();
-
         return response()->json([
             'status' => 200,
             'data' => $earnings

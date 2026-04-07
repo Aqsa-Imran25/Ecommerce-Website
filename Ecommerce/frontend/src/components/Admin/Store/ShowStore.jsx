@@ -98,9 +98,8 @@ function ShowStore({ mode }) {
           ),
         );
 
-        // 🔥 Update localStorage with the new user data (role becomes vendor)
         if (result.user) {
-          updateUser(result.user); // 🔥 MUST use this
+          updateUser(result.user); 
         }
       } else {
         toast.error(result.message || "Approval failed");
@@ -135,7 +134,7 @@ function ShowStore({ mode }) {
         );
 
         if (result.user) {
-          updateUser(result.user); // 🔥 BOTH localStorage + context update
+          updateUser(result.user); 
         }
       } else {
         toast.error(result.message || "Reject failed");
@@ -219,13 +218,13 @@ function ShowStore({ mode }) {
                           onClick={() => approveStore(store.id)}
                           className="bg-green-600 text-white px-2 py-1 rounded"
                         >
-                          Approve
+                          Active
                         </button>
                         <button
                           onClick={() => rejectStore(store.id)}
                           className="bg-red-600 text-white px-2 py-1 rounded"
                         >
-                          Reject
+                          Rejected
                         </button>
                       </div>
                     </td>

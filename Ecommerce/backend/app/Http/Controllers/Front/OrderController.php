@@ -202,9 +202,18 @@ class OrderController extends Controller
     // vendorEarnings
     public function vendorEarnings()
     {
-        $storeId = auth()->user()->store->id;
+        $user = auth()->user();
 
-        $earnings = Vendor_earnings::where('store_id', $storeId)
+        if (!$user) {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Unauthenticated'
+            ]);
+        }
+
+        $storeIds = $user->stores()->pluck('id');
+
+        $earnings = Vendor_earnings::whereIn('store_id', $storeIds)
             ->with(['order', 'store'])
             ->latest()
             ->get();

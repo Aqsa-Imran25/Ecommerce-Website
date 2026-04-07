@@ -35,14 +35,15 @@ function SectionThree() {
 
         <div className="text-center mb-14">
           <h2 className="text-4xl font-bold text-[#007595] tracking-wide">
-            Featured Jewelry
+          Trending Collections
           </h2>
 
           <div className="w-20 h-[3px] bg-[#007595] mx-auto mt-4 rounded-full"></div>
 
           <p className="text-gray-500 mt-4 max-w-xl mx-auto">
-            Discover our curated collection of handcrafted jewelry designed
-            with elegance, craftsmanship, and timeless beauty.
+            Shop everything you love in one place — from trending fashion and beauty 
+  to must-have accessories and daily essentials. Fresh styles, top deals, 
+  and endless choices await you.
           </p>
         </div>
 

@@ -18,7 +18,7 @@ function Sidebar({ role }) {
       { name: "Shipping", path: "/admin/shipping" },
       { name: "Payments", path: "/admin/payments" },
       { name: "Earnings", path: "/admin/earnings/" },
-      { name: "Orders", path: "/admin/orders" },
+      { name: "Orders", path: "/orders" },
       { name: "Users", path: "/admin/users" },
     ];
   } else if (role === "vendor") {
@@ -27,7 +27,8 @@ function Sidebar({ role }) {
       { name: "My Account", path: "/myaccount" },
       { name: "Stores", path: "/my-store" },
       { name: "Products", path: "/products" },
-      { name: "Orders", path: "/myorder" },
+      { name: "Orders", path: "/orders" },
+      { name: "My-Orders", path: "/myorder" },
       { name: "Earning", path: "/vendor/earnings/" },
     ];
   } else {

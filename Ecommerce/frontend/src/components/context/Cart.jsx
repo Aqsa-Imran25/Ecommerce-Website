@@ -49,9 +49,7 @@ export const CartProvider = ({ children }) => {
         if (!res.ok) return;
 
         const result = await res.json();
-        console.log("Shipping", result)
         if (result.status === 200) {
-          console.log("Shipping", result)
           setShippingCost(result.data?.shipping_charge || 0);
         }
 

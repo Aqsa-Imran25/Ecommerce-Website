@@ -146,32 +146,32 @@ function ProductShow() {
     }
   };
 
-  const setPendingProduct = async (id) => {
-    setLoader(true);
-    try {
-      const res = await fetch(`${apiUrl}/products/${id}/pending`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      });
-      const result = await res.json();
-      if (result.status === 200) {
-        toast.success(result.message);
-        setproducts((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, is_approved: "pending" } : p)),
-        );
-      } else {
-        toast.error(result.message || "Update failed");
-      }
-    } catch (error) {
-      toast.error("Error updating product status");
-    } finally {
-      setLoader(false);
-    }
-  };
+  // const setPendingProduct = async (id) => {
+  //   setLoader(true);
+  //   try {
+  //     const res = await fetch(`${apiUrl}/products/${id}/pending`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //         Authorization: `Bearer ${getAuthToken()}`,
+  //       },
+  //     });
+  //     const result = await res.json();
+  //     if (result.status === 200) {
+  //       toast.success(result.message);
+  //       setproducts((prev) =>
+  //         prev.map((p) => (p.id === id ? { ...p, is_approved: "pending" } : p)),
+  //       );
+  //     } else {
+  //       toast.error(result.message || "Update failed");
+  //     }
+  //   } catch (error) {
+  //     toast.error("Error updating product status");
+  //   } finally {
+  //     setLoader(false);
+  //   }
+  // };
 
   useEffect(() => {
     fetchproductApi();
@@ -324,15 +324,14 @@ function ProductShow() {
                       <td className="px-6 py-4 text-center">
                         {role === "vendor" && (
                           <span
-                            className={`px-3 py-1 rounded-full text-xs text-white ${
-                              product.is_approved === "approved"
-                                ? "bg-green-600"
-                                : product.is_approved === "rejected"
-                                  ? "bg-red-600"
-                                  : product.is_approved === "pending"
-                                    ? "bg-yellow-500"
-                                    : "bg-gray-500"
-                            }`}
+                            className={`px-3 py-1 rounded-full text-xs text-white ${product.is_approved === "approved"
+                              ? "bg-green-600"
+                              : product.is_approved === "rejected"
+                                ? "bg-red-600"
+                                : product.is_approved === "pending"
+                                  ? "bg-yellow-500"
+                                  : "bg-gray-500"
+                              }`}
                           >
                             {product.is_approved === "approved"
                               ? "Approved"
@@ -343,6 +342,7 @@ function ProductShow() {
                                   : "Unknown"}
                           </span>
                         )}
+
 
                         {role === "admin" &&
                           product.is_approved === "pending" && (

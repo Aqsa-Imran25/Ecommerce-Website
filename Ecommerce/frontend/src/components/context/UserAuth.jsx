@@ -1,6 +1,7 @@
 import { createContext, useState } from "react";
+import { updateLocalStorage } from "./updateLocalStorage";
 
-export const UserAuthContext = createContext(); // ✅ Named export
+export const UserAuthContext = createContext(); 
 export const UserAuthProvider = ({ children }) => {
   const userInfo =
     localStorage.getItem("adminInfo") ||
@@ -21,7 +22,7 @@ export const UserAuthProvider = ({ children }) => {
 
   const updateUser = (userData) => {
     updateLocalStorage(userData);
-    setUser(userData); // 🔥 THIS IS KEY
+    setUser(userData); 
   };
 
   return (

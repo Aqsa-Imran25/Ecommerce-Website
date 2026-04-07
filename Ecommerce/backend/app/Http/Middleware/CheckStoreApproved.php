@@ -16,7 +16,16 @@ class CheckStoreApproved
     public function handle(Request $request, Closure $next): Response
     {
         $user = auth()->user();
-        if ($user->store && $user->store->status === "active") {
+        if (!$user) {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Unauthenticated'
+            ]);
+        }
+        $active = $user->store()->where('status', 'active')->exists();
+
+        if ($active) {
+
             return $next($request);
         }
         return response()->json([

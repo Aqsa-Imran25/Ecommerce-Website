@@ -13,7 +13,7 @@ function UserOrder() {
     // roles
     const role = getUserRole();
     // token
-    const token =getAuthToken();
+    const token = getAuthToken();
 
     const fetchorder = async () => {
         setLoader(true)
@@ -66,11 +66,12 @@ function UserOrder() {
                         <div className="w-full md:w-3/4">
                             <div className="shadow-lg border-2 border-gray-200 p-4 rounded-lg">
                                 <div className="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base">
+
                                     {
                                         loader == true && <Loader />
+                                    }{
+                                        loader == false && order.length == 0 && <Empty text='Order Are Empty !' />
                                     }
-                                    {
-                                        !loader && !order && <Empty text="Order Not Found!" />}
                                     {
                                         order && order.length > 0 &&
                                         <div>
@@ -98,9 +99,9 @@ function UserOrder() {
                                                         <th scope="col" className="px-6 py-3 font-medium text-center">
                                                             Date
                                                         </th>
-                                                        <th scope="col" className="px-6 py-3 font-medium text-center">
+                                                        {/* <th scope="col" className="px-6 py-3 font-medium text-center">
                                                             Payment
-                                                        </th>
+                                                        </th> */}
                                                         <th scope="col" className="px-6 py-3 font-medium text-center">
                                                             Status
                                                         </th>
@@ -140,13 +141,6 @@ function UserOrder() {
                                                                 </td>
                                                                 <td className="px-6 py-4">
                                                                     {new Date(order.created_at).toISOString().split("T")[0]}
-                                                                </td>
-                                                                <td className="px-6 py-4">
-                                                                    {order.payment_status == 'paid' ?
-                                                                        <span className='text-white bg-green-700 hover:bg-green-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>Paid</span>
-                                                                        :
-                                                                        <span className='text-white bg-red-500 hover:bg-red-300 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-full text-sm px-4 py-2 text-center leading-5'>UnPaid</span>
-                                                                    }
                                                                 </td>
                                                                 <td className="px-6 py-4">
                                                                     {order.status == 'pending'

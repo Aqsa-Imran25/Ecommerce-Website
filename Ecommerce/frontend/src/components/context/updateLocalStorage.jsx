@@ -1,3 +1,5 @@
+import React from 'react'
+
 export const updateLocalStorage = (user) => {
   localStorage.removeItem("adminInfo");
   localStorage.removeItem("vendorInfo");

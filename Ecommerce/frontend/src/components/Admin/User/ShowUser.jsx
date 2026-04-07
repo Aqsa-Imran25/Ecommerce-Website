@@ -72,7 +72,7 @@ function ShowUser() {
       <Layout>
         <div className='md:container md:mx-auto px-6 py-5 my-5'>
           <div className='flex justify-between my-4'>
-            <h2 className='my-2 text-base md:text-2xl'>users</h2>
+            <h2 className='my-2 text-base md:text-2xl'>Users</h2>
            
           </div>
           <div className="flex flex-col md:flex-row gap-3">

@@ -59,9 +59,6 @@ Route::group([
     // chatbot
     Route::post('/ai/ask', [AIController::class, 'askAI']);
     Route::post('/ai/chat', [AIController::class, 'chat']);
-    // vendor store
-    Route::post('/vendors', [VendorController::class, 'store'])
-        ->middleware(['auth:sanctum', 'checkProfile']);
     // product purchase
     Route::get('/purchaseproduct', [ProducController::class, 'index']);
 
@@ -85,13 +82,13 @@ Route::group([
 });
 
 // store-status
-Route::middleware(['auth:sanctum'])->get('/vendor/store-status', function () {
-    $user = auth()->user();
-    $store = $user->store; // or stores()->first()
-    return response()->json([
-        'status' => $store ? $store->status : 'no_store'
-    ]);
-});
+// Route::middleware(['auth:sanctum'])->get('/vendor/store-status', function () {
+//     $user = auth()->user();
+//     $store = $user->store; // or stores()->first()
+//     return response()->json([
+//         'status' => $store ? $store->status : 'no_store'
+//     ]);
+// });
 
 
 // vendor AND ADMIN ROLE
@@ -107,8 +104,14 @@ Route::group(
         Route::delete('/store-delete/{id}', [VendorController::class, 'imageDelete']);
 
         Route::resource('/admin/stores', VendorController::class);
+        // activestoredropdown
+        Route::get('/active/stores', [VendorController::class, 'activeStore']);
+
+
         Route::get('/admin/categories', [CategoryController::class, 'index']);
         Route::get('/admin/brands', [BrandController::class, 'index']);
+        // store-status
+        Route::get('/vendor/store-status/{id}', [VendorController::class, 'statusStore']);
         // sizes
         Route::get('/sizes', [SizeController::class, 'index']);
         // PRODUCTS
@@ -126,7 +129,10 @@ Route::group(
 
         Route::delete('/products/{id}', [ProductController::class, 'destroy']);
         Route::get('/products/{id}/edit', [ProductController::class, 'edit']);
-
+        // orders
+        Route::get('/orders', [AdminOrderController::class, 'index']);
+        Route::get('/orders/{id}', [AdminOrderController::class, 'show']);
+        
         // vendor-earning
         Route::get('/vendorEarnings', [OrderController::class, 'vendorEarnings']);
 
@@ -157,6 +163,9 @@ Route::group(
         // show store
         Route::get('/vendor/stores', [VendorController::class, 'index']);
         Route::get('/vendor/store/{id}/edit', [VendorController::class, 'edit']);
+        // vendor store
+        Route::post('/vendors', [VendorController::class, 'store'])
+            ->middleware(['auth:sanctum', 'checkProfile']);
         Route::put('/vendor/store/{id}', [VendorController::class, 'update']);
         Route::get('/vendor/store/{id}', [VendorController::class, 'show']);
         Route::delete('/vendor/store/{id}', [VendorController::class,    'destroy']);
@@ -187,11 +196,6 @@ Route::group(
         'checkAdminRole'
     ]],
     function () {
-        // admin-store
-        // Route::get('/admin/stores/{id}/edit', [VendorController::class, 'edit']);
-        // Route::put('/admin/stores/{id}', [VendorController::class, 'update']);
-        // Route::get('/admin/stores/{id}', [VendorController::class, 'show']);
-        // Route::delete('/admin/stores/{id}', [VendorController::class, 'destroy']);
 
         // store-status-update
         Route::post('/admin/approvedStore/{id}', [VendorController::class, 'approvedStore']);
@@ -206,7 +210,6 @@ Route::group(
         Route::delete('/admin/categories/{id}', [CategoryController::class, 'destroy']);
 
         // brands
-        // Route::resource('/admin/brands', BrandController::class);
         Route::get('/admin/brands/{id}', [BrandController::class, 'show']);
         Route::post('/admin/brands', [BrandController::class, 'store']);
         Route::get('/admin/brands/edit/{id}', [BrandController::class, 'edit']);
@@ -214,7 +217,6 @@ Route::group(
         Route::delete('/admin/brands/{id}', [BrandController::class, 'destroy']);
 
         // sizes
-        // Route::resource('/sizes', SizeController::class);
         Route::get('/sizes/{id}', [SizeController::class, 'show']);
         Route::post('/sizes', [SizeController::class, 'store']);
         Route::get('/sizes/edit/{id}', [SizeController::class, 'edit']);
@@ -226,9 +228,12 @@ Route::group(
         Route::post('/products/{id}/pending', [ProductController::class, 'pendingProduct']);
 
         Route::post('/products/{id}/status', [ProductController::class, 'statusProduct']);
-
         // order
-        Route::resource('/orders', AdminOrderController::class);
+        Route::post('/orders', [AdminOrderController::class, 'store']);
+        Route::get('/orders/edit/{id}', [AdminOrderController::class, 'edit']);
+        Route::put('/orders/{id}', [AdminOrderController::class, 'update']);
+        Route::delete('/orders/{id}', [AdminOrderController::class, 'destroy']);
+        // Route::resource('/orders', AdminOrderController::class);
 
         //  shipping-charge-get
         Route::get('/admin/getCharge', [ShippingChargeController::class, 'getShipped']);

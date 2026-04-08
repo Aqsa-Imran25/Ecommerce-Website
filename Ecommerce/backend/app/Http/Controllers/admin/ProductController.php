@@ -22,26 +22,28 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index()
     {
         $user = auth()->user();
 
-        $query = Product::with(['product_images', 'product_sizes'])
+        $query = Product::with(['product_images', 'product_sizes','vendor.user'])
             ->orderBy('created_at', 'ASC');
 
         if ($user->hasRole('admin')) {
             $products = $query->get();
         } else if ($user->hasRole('vendor')) {
-            $storeId = Store::where('user_id', $user->id)->value('id');
 
-            if (!$storeId) {
+            $storeIds = Store::where('user_id', $user->id)->pluck('id');
+
+            if ($storeIds->isEmpty()) {
                 return response()->json([
                     'status' => 200,
                     'data' => []
                 ]);
             }
 
-            $products = $query->where('store_id', $storeId)->get();
+            $products = $query->whereIn('store_id', $storeIds)->get();
         }
 
         return response()->json([
@@ -210,23 +212,6 @@ class ProductController extends Controller
             ]);
         }
     }
-
-    // public function statusProduct($id)
-    // {
-    //     if (!auth()->user()->hasRole('admin')) {
-
-    //         $product = Product::findOrFail($id);
-
-    //         $product->update([
-    //             'status' => $product->status == 1 ? 0 : 1
-    //         ]);
-
-    //         return response()->json([
-    //             'status' => 200,
-    //             'message' => 'Feature status updated'
-    //         ]);
-    //     }
-    // }
 
     /**
      * Display the specified resource.

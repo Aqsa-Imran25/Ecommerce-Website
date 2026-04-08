@@ -7,8 +7,8 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Payment_setting;
+use App\Models\Store;
 use App\Models\Vendor_earnings;
-use Illuminate\Foundation\Console\ObserverMakeCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -210,12 +210,47 @@ class OrderController extends Controller
                 'message' => 'Unauthenticated'
             ]);
         }
+        $store = Store::where('user_id', $user->id)->first();
 
-        $storeIds = $user->stores()->pluck('id');
+        if (!$store) {
+            return response()->json([
+                'status' => 404,
+                'message' => "Store Not Found!",
+                'data' => []
+            ], 404);
+        }
+
+        $earnings = Vendor_earnings::where('store_id', $store->id)->sum('net_amount');
+
+        return response()->json([
+            'status' => 200,
+            'data' => $earnings
+        ]);
+    }
+    // earning
+    public function earnings()
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 401,
+                'message' => 'Unauthenticated'
+            ]);
+        }
+
+        $storeIds = Store::where('user_id', $user->id)->pluck('id');
+
+        if ($storeIds->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => "Store Not Found!",
+                'data' => []
+            ]);
+        }
 
         $earnings = Vendor_earnings::whereIn('store_id', $storeIds)
-            ->with(['order', 'store'])
-            ->latest()
+            ->with(['store.user', 'order.user'])
             ->get();
 
         return response()->json([

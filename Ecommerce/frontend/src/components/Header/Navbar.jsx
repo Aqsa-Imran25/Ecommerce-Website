@@ -82,7 +82,7 @@ function Navbar() {
             <img
               src={shop}
               alt="logo"
-              className="w-20 rounded-full transition duration-300 group-hover:scale-110"
+              className="w-20 rounded-full transition duration-300 group-hover:scale-110 border-0"
             />
           </Link>
 
@@ -141,7 +141,7 @@ function Navbar() {
 
           </div>
 
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-6 border-0">
 
             <div className="relative flex items-center">
 
@@ -150,20 +150,26 @@ function Navbar() {
                 placeholder="Search product..."
                 value={searchTerm}
                 onChange={handleSearch}
-                className="..."
+                className="border-0"
               />
               {searchResults.length > 0 && (
-                <div className="search-results text-gray-700 hover:text-[#007595] transition duration-300 hover:scale-110">
-                  {searchResults.map((product) => (
-                    <Link to={`/product/${product.id}`} key={product.id}>
-                      <div className="p-2">
-                        {product.name}
-                        <FontAwesomeIcon icon={faSearch} />
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
+  <div className="search-results text-gray-700">
+    
+    <div className="flex items-center p-2">
+      <FontAwesomeIcon icon={faSearch} className="mr-2" />
+      <span>Results:</span>
+    </div>
+
+    {searchResults.map((product) => (
+      <Link to={`/product/${product.id}`} key={product.id}>
+        <div className="p-2 hover:text-[#007595] hover:scale-105 transition">
+          {product.name}
+        </div>
+      </Link>
+    ))}
+    
+  </div>
+)}
 
             </div>
 
@@ -240,7 +246,7 @@ function Navbar() {
               isLoggedIn &&
               <NavLink
                 className="block hover:text-[#007595]"
-                to={dashboard}
+                to={dashboard()}
               >
                 Dashboard
               </NavLink>

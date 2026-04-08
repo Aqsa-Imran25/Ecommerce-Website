@@ -132,12 +132,15 @@ Route::group(
         // orders
         Route::get('/orders', [AdminOrderController::class, 'index']);
         Route::get('/orders/{id}', [AdminOrderController::class, 'show']);
-        
+
         // vendor-earning
-        Route::get('/vendorEarnings', [OrderController::class, 'vendorEarnings']);
+        Route::get('/vendorEarnings', [OrderController::class, 'earnings']);
 
         // total-earnings
-        Route::get('/vendor/totalEarnings', [OrderController::class, 'totalEarnings']);
+        Route::get('/vendor/totalEarnings', [OrderController::class, 'vendorEarnings']);
+
+        // count
+        Route::get('/dashboard-count-vendor', [VendorController::class, 'dashboardCount']);
     }
 
 );

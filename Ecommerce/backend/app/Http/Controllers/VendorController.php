@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Store;
 use App\Traits\ImageUpload;
 use Illuminate\Http\Request;
@@ -37,15 +38,15 @@ class VendorController extends Controller
 
     public function activeStore()
     {
-         if (auth()->user()->hasRole('admin')) {
-            $stores = Store::orderBy('created_at', 'ASC')->where('status','active')->get();
+        if (auth()->user()->hasRole('admin')) {
+            $stores = Store::orderBy('created_at', 'ASC')->where('status', 'active')->get();
             return response()->json([
                 'status' => 200,
                 'data' => $stores,
             ]);
         } else if (auth()->user()->hasRole(['vendor', 'user'])) {
             $stores = Store::orderBy('created_at', 'ASC')->where("user_id", Auth::id())
-                ->where('status','active')
+                ->where('status', 'active')
                 ->get();
             return response()->json([
                 'status' => 200,
@@ -284,6 +285,24 @@ class VendorController extends Controller
         return response()->json([
             'status' => 200,
             'message' => "Logo Deleted Successfully!",
+        ]);
+    }
+    // count-vendor-dashboard
+    public function dashboardCount()
+    {
+        $user = auth()->user();
+        $store = \App\Models\Store::where('user_id', $user->id)->count();
+        $storeIds = \App\Models\Store::where('user_id', $user->id)->pluck('id');
+        $products = \App\Models\Product::whereIn('store_id', $storeIds)->count();
+        $orders = Order::whereHas('items.product', function ($q) use ($storeIds) {
+            $q->whereIn('store_id', $storeIds);
+        })->count();
+
+        return response()->json([
+            'status' => 200,
+            'stores' => $store,
+            'products' => $products,
+            'orders' => $orders,
         ]);
     }
 }

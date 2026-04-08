@@ -12,7 +12,7 @@ function EarningDashboard() {
 
   const [earnings, setEarnings] = useState([]);
 
-  // fetch all earnings
+  // fetch all earnings-admin
   const fetchEarnings = async () => {
     try {
       setLoader(true);
@@ -27,7 +27,9 @@ function EarningDashboard() {
       });
 
       const result = await res.json();
-      console.log("Result", result)
+      console.log("Result", result.data)
+      console.log("Result", result.data.commission)
+
       if (!res.ok) {
         throw new Error(result.message || "Server Error");
       }
@@ -55,7 +57,6 @@ function EarningDashboard() {
       });
 
       const result = await res.json();
-      console.log("earnings", result)
 
       if (!res.ok) {
         throw new Error(result.message || "API Error");
@@ -95,11 +96,12 @@ function EarningDashboard() {
           <table className="w-full text-sm text-left rtl:text-right text-body">
             <thead className="bg-neutral-secondary-soft border-b border-gray-300">
               <tr>
+
                 <th scope="col" className="px-6 py-3 font-medium">
                   Order
                 </th>
                 <th scope="col" className="px-6 py-3 font-medium">
-                  Name
+                  Owner Name
                 </th>
 
                 <th scope="col" className="px-6 py-3 font-medium">
@@ -110,18 +112,25 @@ function EarningDashboard() {
                   Date
                 </th>
                 <th scope="col" className="px-6 py-3 font-medium">
-                  Amount
+                  Grand Total
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Unit Price
                 </th>
                 <th scope="col" className="px-6 py-3 font-medium">
                   Commission
                 </th>
                 <th scope="col" className="px-6 py-3 font-medium">
-                  Net
+                  Vendor Profit
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
+                  Status
                 </th>
               </tr>
             </thead>
             <tbody>
               {earnings.map((earning, index) => (
+
                 <tr
                   key={index}
                   className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-gray-300"
@@ -132,6 +141,7 @@ function EarningDashboard() {
                   >
                     {earning.order.order_number}{" "}
                   </th>
+                  <td className="px-6 py-4">{earning.store.user?.name} </td>
                   <td className="px-6 py-4">{earning.store.name} </td>
                   <td className="px-6 py-4">
                     {new Date(earning.order.created_at).toLocaleString(
@@ -145,9 +155,11 @@ function EarningDashboard() {
                       },
                     )}
                   </td>{" "}
+                  <td className="px-6 py-4">{earning.order.grand_total} </td>
                   <td className="px-6 py-4">{earning.amount}</td>
                   <td className="px-6 py-4">{earning.commission}</td>
                   <td className="px-6 py-4">{earning.net_amount}</td>
+                  <td className="px-6 py-4">{earning.order.status}</td>
                 </tr>
               ))}
             </tbody>
@@ -158,22 +170,25 @@ function EarningDashboard() {
             <thead className="bg-neutral-secondary-soft border-b border-gray-300">
               <tr>
                 <th scope="col" className="px-6 py-3 font-medium">
+                  Customer Name
+                </th>
+                <th scope="col" className="px-6 py-3 font-medium">
                   Order
                 </th>
                 <th scope="col" className="px-6 py-3 font-medium">
                   Order Date
                 </th>
                 <th scope="col" className="px-6 py-3 font-medium">
-                  Total
+                  Grand Total
                 </th>
                 <th scope="col" className="px-6 py-3 font-medium">
-                  Amount
+                  Product Price
                 </th>
                 <th scope="col" className="px-6 py-3 font-medium">
-                  Commission
+                  Admin Commission
                 </th>
                 <th scope="col" className="px-6 py-3 font-medium">
-                  Net
+                  Profit
                 </th>
                 <th scope="col" className="px-6 py-3 font-medium">
                   Status
@@ -186,6 +201,12 @@ function EarningDashboard() {
                   key={index}
                   className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-gray-300"
                 >
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-heading whitespace-nowrap"
+                  >
+                    {earning.order.user?.name}{" "}
+                  </th>
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium text-heading whitespace-nowrap"

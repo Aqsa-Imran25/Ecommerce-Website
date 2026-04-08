@@ -173,12 +173,12 @@ function ShowStore({ mode }) {
             </thead>
 
             <tbody>
-              {stores.map((store) => (
+              {stores.map((store,index) => (
                 <tr
                   key={store.id}
                   className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-gray-300"
                 >
-                  <td className="px-6 py-4">{store.id}</td>
+                  <td className="px-6 py-4">{index + 1}</td>
                   <td className="px-6 py-4">{store.name}</td>
                   <td className="px-6 py-4">{store.slug}</td>
                   <td className="px-6 py-4">

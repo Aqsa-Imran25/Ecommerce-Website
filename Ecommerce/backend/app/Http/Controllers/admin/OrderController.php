@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Store;
 use App\Models\Vendor_earnings;
 use Illuminate\Http\Request;
 
@@ -44,13 +45,32 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        $order = Order::with(['items', 'items.product', 'user.profile'])->findOrFail($id);
+        $user = auth()->user();
+        $storeIds = Store::where('user_id', $user->id)->pluck('id');
 
+        if ($user->hasRole('admin')) {
+            $order = Order::with(['items', 'items.product', 'user.profile'])->findOrFail($id);
+        } else {
+            $order = Order::with(['items', 'items.product', 'user.profile'])
+                ->where('id', $id)
+                ->whereHas('items.product.vendor', function ($q) use ($storeIds) {
+                    $q->whereIn('id', $storeIds);
+                })
+                ->first();
+            if ($order) {
+                $order->items = $order->items->filter(function ($item) use ($storeIds) {
+                    return in_array($item->product->store_id, $storeIds->toArray());
+                })->values();
+            }
+        }
         if (!$order) {
             return response()->json([
                 'status' => 404,
                 'message' => "Order Not Found!",
-                'data' => []
+                'data' => [
+                    'order' => null,
+                    'items' => []
+                ]
             ], 404);
         }
 
@@ -112,7 +132,7 @@ class OrderController extends Controller
     }
     public function allEarnings()
     {
-        $earnings = Vendor_earnings::with(['store', 'order'])->get();
+        $earnings = Vendor_earnings::with(['store.user', 'order'])->get();
         return response()->json([
             'status' => 200,
             'data' => $earnings

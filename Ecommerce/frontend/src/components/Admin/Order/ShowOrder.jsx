@@ -84,7 +84,7 @@ function ShowOrder() {
                                                             Email
                                                         </th>
                                                         <th scope="col" className="px-6 py-3 font-medium text-center">
-                                                            Amount
+                                                            Total Amount
                                                         </th>
                                                         <th scope="col" className="px-6 py-3 font-medium text-center">
                                                             Date
@@ -105,7 +105,7 @@ function ShowOrder() {
                                                             >
                                                                 <th scope="row" className="px-6 py-4 font-medium text-heading whitespace-nowrap">
                                                                     <Link to={`/orders/${order.id}`}>
-                                                                        {order.id}
+                                                                        {index + 1}
                                                                     </Link>
                                                                 </th>
                                                                 <td className="px-6 py-4">

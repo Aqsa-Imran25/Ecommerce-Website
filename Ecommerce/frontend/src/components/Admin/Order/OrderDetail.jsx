@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 function OrderDetail() {
   const { id } = useParams();
   const [order, setOrder] = useState(null);
-  const [profile, setProfile] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -53,6 +52,7 @@ function OrderDetail() {
         const res = await fetch(`${apiUrl}/orders/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+         console.log(res)
         const result = await res.json();
         if (res.ok && result.data) {
           console.log(result)
@@ -65,6 +65,7 @@ function OrderDetail() {
           toast.error("Order not found!");
         }
       } catch (error) {
+        console.log("Error:",error);
         toast.error("Something went wrong!");
       } finally {
         setLoading(false);
@@ -196,12 +197,12 @@ function OrderDetail() {
                 </p>
                 <p className="text-gray-500 text-sm">Qty: {item.qty}</p>
                 <p className="text-gray-700 font-semibold">
-                  Rs. {item.price}
+                  Rs: {item.price}
                 </p>
               </div>
 
               <div className="font-bold text-gray-900">
-                Rs. {item.qty * item.price}
+                Rs: {item.qty * item.price}
               </div>
             </div>
           ))}

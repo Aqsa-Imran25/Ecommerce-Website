@@ -22,7 +22,7 @@ class CheckStoreApproved
                 'message' => 'Unauthenticated'
             ]);
         }
-        $active = $user->store()->where('status', 'active')->exists();
+        $active = $user->stores()->where('status', 'active')->exists();
 
         if ($active) {
 

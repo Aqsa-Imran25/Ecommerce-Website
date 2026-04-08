@@ -81,6 +81,7 @@ function ProductCreate({ placeholder }) {
         },
         body: formData,
       });
+     
       const text = await res.text();
       console.log("result", text);
       console.log("Gallery", text.gallery);

@@ -86,17 +86,6 @@ function App() {
             }
           />
 
-          {/* vendor-product-create */}
-          {/* <Route
-            path="/vendor/products/create"
-            element={
-              <Vendorrequireauth>
-                <ProductCreate />
-              </Vendorrequireauth>
-            }
-          /> */}
-
-
           {/* profile */}
           <Route
             path="/myaccount"
@@ -216,15 +205,6 @@ function App() {
               </RoleBasedRoute>
             }
           />
-          {/* vendor */}
-          {/* <Route
-            path="/vendor/stores"
-            element={
-              <RoleBasedRoute allowedRoles={["vendor"]}>
-                <ShowStore mode="vendor" />
-              </RoleBasedRoute>
-            }
-          /> */}
           {/* user-store */}
           <Route
             path="/my-store"

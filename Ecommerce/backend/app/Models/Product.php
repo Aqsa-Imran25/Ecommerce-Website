@@ -28,7 +28,7 @@ class Product extends Model
     // vendor
     public function vendor()
     {
-        return $this->belongsTo(Store::class);
+        return $this->belongsTo(Store::class, 'store_id');
     }
 
     protected $appends = ['image_url'];

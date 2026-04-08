@@ -230,6 +230,12 @@ function ProductShow() {
                       Id
                     </th>
                     <th scope="col" className="px-6 py-3 font-medium">
+                      Owner
+                    </th>
+                    <th scope="col" className="px-6 py-3 font-medium">
+                      Store
+                    </th>
+                    <th scope="col" className="px-6 py-3 font-medium">
                       Title
                     </th>
                     <th scope="col" className="px-6 py-3 font-medium">
@@ -292,22 +298,26 @@ function ProductShow() {
                         scope="row"
                         className="px-6 py-4 font-medium text-heading whitespace-nowrap"
                       >
-                        {product.id}
+                        {index + 1}
                       </th>
+                      <td className="px-6 py-4">{product.vendor.user?.name}</td>
+                      <td className="px-6 py-4">{product.vendor?.name}</td>
                       <td className="px-6 py-4">{product.title}</td>
 
                       <td className="px-6 py-4">{product.price}</td>
                       <td className="px-6 py-4">{product.sku}</td>
                       <td className="px-6 py-4">
-                        <img
-                          src={
-                            product.image_url ||
-                            (product.product_images.length > 0 &&
-                              `http://backend.test/storage/product/${product.product_images[0].name}`)
-                          }
-                          width={50}
-                          alt="Product"
-                        />
+                        <Link to={`/product/${product.id}/`}>
+                          <img
+                            src={
+                              product.image_url ||
+                              (product.product_images.length > 0 &&
+                                `http://backend.test/storage/product/${product.product_images[0].name}`)
+                            }
+                            width={50}
+                            alt="Product"
+                          />
+                        </Link>
                       </td>
 
                       <td className="px-6 py-4">

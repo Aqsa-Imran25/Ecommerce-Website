@@ -1,28 +1,42 @@
-✨ **Handmade Jewelry Ecommerce Store**
+# ✨ ShopFusion – Multi-Store eCommerce Platform
 
-A modern ecommerce platform for handcrafted jewelry — built with **React** and **Laravel**.
+ShopFusion is a modern multi-store eCommerce platform built with **React, Laravel, and Tailwind CSS**.
 
-Beautiful UI. Clean code. Simple experience.
+Designed for scalability, clean architecture, and a smooth user experience.
+
+---
 
 ## 🚀 Features
 
-- Browse jewelry collections
-- User authentication (login/signup)
-- Add products to cart
-- Place orders
-- Responsive design for both mobile and desktop
-- AI chatbot powered by Ollama (local LLM integration)
+- Multi-store / multi-vendor system  
+- Centralized admin dashboard  
+- Product browsing across multiple stores  
+- Secure authentication (Login / Signup)  
+- Cart & checkout system  
+- Order management system  
+- Fully responsive UI  
+- AI chatbot powered by Ollama (local LLM)  
+
+---
 
 ## 🛠 Tech Stack
 
-| Layer           | Technology                                  |
-|-----------------|---------------------------------------------|
-| Frontend        | React (with Hooks & Context API)            |
-| Backend         | Laravel (REST API)                          |
-| Database        | MySQL                                       |
-| Authentication  | Laravel Sanctum                             |
-| Styling         | Tailwind / Styled‑Components                |
-| Chatbot (AI)    | Ollama local AI models via Laravel package  |
+| Layer           | Technology |
+|----------------|------------|
+| Frontend       | React (Hooks, Context API) |
+| Backend        | Laravel (REST API) |
+| Database       | MySQL |
+| Authentication | Laravel Sanctum |
+| Styling        | Tailwind CSS |
+| AI Chatbot     | Ollama (Local LLM) |
 
-We use Ollama to integrate a local AI chatbot with Laravel so your app can generate text responses without cloud API keys — local LLM integration.
+---
 
+## 🤖 AI Integration (Ollama)
+
+- Fully local AI chatbot  
+- No external API keys required  
+- Fast and private responses  
+- Integrated into eCommerce workflow
+
+Built as a full-stack project focusing on scalability and real-world eCommerce architecture.

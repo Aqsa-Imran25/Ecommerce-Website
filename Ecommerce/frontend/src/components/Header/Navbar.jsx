@@ -105,7 +105,6 @@ function Navbar() {
     }
   };
 
-  // ================= CLOSE DROPDOWN =================
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!e.target.closest(".search-box")) {
@@ -164,7 +163,7 @@ function Navbar() {
 
                 <button
                   onClick={handleSearchClick}
-                  className="px-5 py-2 bg-[#007595] text-white flex items-center gap-2"
+                  className="px-5 py-2 text-white flex items-center gap-2"
                 >
                   <FontAwesomeIcon icon={faSearch} />
                  

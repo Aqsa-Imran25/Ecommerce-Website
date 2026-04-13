@@ -12,8 +12,9 @@ function ShowOrder() {
     const [orders, setOrders] = useState([])
     const [loader, setLoader] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
-    const role = getUserRole();
     const token = getAuthToken();
+    const role = getUserRole();
+
     const fetchOrders = async (page = 1) => {
         setLoader(true)
         const res = await fetch(`${apiUrl}/orders?page=${page}`, {
@@ -52,7 +53,6 @@ function ShowOrder() {
                 <div className='md:container md:mx-auto px-6 py-5 my-5'>
                     <div className='flex justify-between my-4'>
                         <h2 className='my-2 text-base md:text-2xl'>Orders</h2>
-
                     </div>
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="w-full md:w-1/4">

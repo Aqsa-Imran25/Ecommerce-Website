@@ -21,6 +21,9 @@ use App\Http\Controllers\TempController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
+// chatbot
+Route::post('/ai/ask', [AIController::class, 'askAI']);
+Route::post('/ai/chat', [AIController::class, 'chat']);
 
 // latest
 Route::get('/latestProduct', [ProducController::class, 'latestProduct']);
@@ -56,39 +59,14 @@ Route::group([
     ]
 ], function () {
 
-    // chatbot
-    Route::post('/ai/ask', [AIController::class, 'askAI']);
-    Route::post('/ai/chat', [AIController::class, 'chat']);
     // product purchase
     Route::get('/purchaseproduct', [ProducController::class, 'index']);
 
-
-
-
-    // COMMENTlike
-    Route::post('/comment/{id}/like', [FrontUserController::class, 'toggleCommentLike']);
-
     // ratings
     Route::post('/product/{id}/reviews', [FrontUserController::class, 'storeReviews']);
-
-
-    // comment
-    //  Route::resource('/comment',FrontUserController::class);
-
-    Route::post('/comment/{productId}', [FrontUserController::class, 'store']);
-
-
+    // Route::post('/comment/{productId}', [FrontUserController::class, 'store']);
     Route::delete('/comment/{productId}', [FrontUserController::class, 'destroy']);
 });
-
-// store-status
-// Route::middleware(['auth:sanctum'])->get('/vendor/store-status', function () {
-//     $user = auth()->user();
-//     $store = $user->store; // or stores()->first()
-//     return response()->json([
-//         'status' => $store ? $store->status : 'no_store'
-//     ]);
-// });
 
 
 // vendor AND ADMIN ROLE

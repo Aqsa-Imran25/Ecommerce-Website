@@ -27,8 +27,8 @@ function Sidebar({ role }) {
       { name: "My Account", path: "/myaccount" },
       { name: "Stores", path: "/my-store" },
       { name: "Products", path: "/products" },
-      { name: "Orders", path: "/orders" },
-      { name: "My-Orders", path: "/myorder" },
+      { name: "Sales Orders", path: "/orders" },
+      { name: "My Purchases", path: "/myorder" },
       { name: "Earning", path: "/vendor/earnings/" },
     ];
   } else {
@@ -36,7 +36,7 @@ function Sidebar({ role }) {
       { name: "Dashboard", path: "/user/dashboard" },
       { name: "My Account", path: "/myaccount" },
       { name: "Store", path: "/my-store" },
-      { name: "Order", path: "/myorder" },
+      { name: "My Purchases", path: "/myorder" },
     ];
   }
 

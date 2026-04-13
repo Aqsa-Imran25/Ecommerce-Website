@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../common/Layout";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link,  useParams } from "react-router";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -13,15 +13,17 @@ import { apiUrl, getAuthToken, UserToken } from "../common/Http";
 import { toast } from "react-toastify";
 import { CartContext } from "../context/Cart";
 import striptags from "striptags";
-import { useForm } from "react-hook-form";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import ReviewSection from "../common/ReviewSection";
 import Loader from "../common/Loader";
+import ChatLauncher from "../../chatbot/ChatLauncher";
+import ChatModal from "../../chatbot/ChatModal";
 
 dayjs.extend(relativeTime);
 
 function Product() {
+  const [chatOpen, setChatOpen] = useState(false);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [product, setProduct] = useState(null);
   const [productImages, setProductImages] = useState([]);
@@ -36,7 +38,7 @@ function Product() {
   // LIKES
   const [likes, setLikes] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
-  const token=getAuthToken();
+  const token = getAuthToken();
   // like count
 
   // time
@@ -75,32 +77,10 @@ function Product() {
     }
   };
 
-  // getComment
-  // const fetchComment = async () => {
-  //   try {
-  //     const res = await fetch(`${apiUrl}/comment/${id}`, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Accept: "application/json",
-  //       },
-  //     });
-  //     const result = await res.json();
-  //     if (result.status === 200) {
-  //       setComment(result.data);
-  //     } else {
-  //       console.error("Something Went Wrong!");
-  //     }
-  //   } catch (error) {
-  //     console.error("Fetch error:", error);
-  //     toast.error("Something Went Wrong!");
-  //   }
-  // };
 
   useEffect(() => {
     if (id) {
       fetchProduct();
-      // fetchComment();
     }
   }, [id]);
 
@@ -188,12 +168,13 @@ function Product() {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log("401res:", res.status)
 
       const result = await res.json();
-      if (!result.status === 401) {
-
-        toast.error("Login First!");
+      if (res.status === 401) {
+        toast.error("Authentication required. Please log in.");
       }
+
       if (result.status === 200) {
         console.log("like", result.liked)
         setLikes(result.liked);
@@ -207,9 +188,6 @@ function Product() {
     }
   };
 
-  // handleLikesComment
-  // const likeComment = async (commentId) => {
-  //   try {
   //     const res = await fetch(`${apiUrl}/comment/${commentId}/like`, {
   //       method: "POST",
   //       headers: {
@@ -392,19 +370,6 @@ function Product() {
               </button>
 
             </li>
-
-            {/* comments */}
-            {/* <li className="mr-1">
-              <button
-                onClick={() => setActiveTab("comments")}
-                className={`inline-block py-2 px-4 font-semibold cursor-pointer ${activeTab === "comments"
-                  ? "border-b-2 border-[#007595] text-[#007595]"
-                  : "text-gray-600"
-                  }`}
-              >
-                Comments {comment && comment.length > 0 ? comment.length : ""}
-              </button>
-            </li> */}
           </ul>
 
           <div className="mt-4">
@@ -414,160 +379,11 @@ function Product() {
             {/* reviews */}
             {activeTab === "reviews" && <ReviewSection />}
 
-            {/* {activeTab === "comments" && (
-              <div>
-                <section className=" relative">
-                  <div className="w-full max-w-7xl px-4 md:px-5 lg:px-5 mx-auto">
-                    <div className="w-full flex-col justify-start items-start lg:gap-14 gap-7 inline-flex">
-                      <h2 className="w-full text-gray-900 text-4xl font-bold font-manrope leading-normal">
-                        Comments
-                      </h2>
-                      <form
-                        onSubmit={handleSubmit(submitComment)}
-                        className="w-full"
-                      >
-                        <div className="w-full flex-col justify-start items-start gap-5 flex">
-                          <div className="w-full rounded-3xl justify-start items-start gap-3.5 inline-flex">
-                            <img
-                              className="w-10 h-10 object-cover"
-                              src="https://pagedone.io/asset/uploads/1710225753.png"
-                              alt="John smith image"
-                            />
-                            <textarea
-                              {...register("comment", {
-                                required: "The comment field not be empty.",
-                              })}
-                              name="comment"
-                              rows="5"
-                              className="w-full px-5 py-3 rounded-2xl border border-gray-300 shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] resize-none focus:outline-none placeholder-gray-400 text-gray-900 text-lg font-normal leading-7"
-                              placeholder="Write a your thoughts here...."
-                            ></textarea>
-                          </div>
-                          {errors.comment && (
-                            <p className="text-red-500 text-sm">
-                              {errors.comment.message}
-                            </p>
-                          )}
-                          <button className="px-5 py-2.5 bg-[#007595] hover:bg-slate-900 transition-all duration-700 ease-in-out rounded-xl shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] justify-center items-center flex">
-                            <span className="px-2 py-px text-white text-base font-semibold leading-relaxed">
-                              Post your comment
-                            </span>
-                          </button>
-                        </div>
-                      </form>
-                      <div className="w-full flex-col justify-start items-start gap-8 flex">
-                        <div className="w-full pb-6 border-b border-gray-300 justify-start items-start gap-2.5 inline-flex">
-                          <img
-                            className="w-10 h-10 rounded-full object-cover"
-                            src="https://pagedone.io/asset/uploads/1710226776.png"
-                            alt="Mia Thompson image"
-                          />
+            {/* Floating Chat Icon */}
+            <ChatLauncher onClick={() => setChatOpen(true)} />
 
-                          {comment.map((com) => (
-                            <div
-                              key={com.id}
-                              className="w-full flex-col justify-start items-start gap-3.5 inline-flex"
-                            >
-                              <div className="w-full justify-start items-start flex-col flex gap-1">
-                                <div className="w-full justify-between items-start gap-1 inline-flex">
-                                  <h5 className="text-gray-900 text-sm font-semibold leading-snug">
-                                    {com.user?.name}
-                                  </h5>
-                                  <span className="text-right text-gray-500 text-xs font-normal leading-5">
-                                    {timeAgo(com.created_at)}
-                                  </span>
-                                </div>
-                                <h5 className="text-gray-800 text-sm font-normal leading-snug">
-                                  {com.comment}
-                                </h5>
-                              </div>
-                              <div className="justify-start items-start gap-5 inline-flex">
-                                <Link
-                                  to=""
-                                  className="w-5 h-5 flex items-center justify-center group"
-                                >
-                                  <svg
-                                    className="text-[#007595] group-hover:text-gray-800 transition-all duration-700 ease-in-out"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="18"
-                                    height="18"
-                                    viewBox="0 0 18 18"
-                                    fill="none"
-                                  >
-                                    <path
-                                      d="M8.57084 0.140905C8.77176 -0.0157322 9.04438 -0.0441704 9.2733 0.067628C9.50221 0.179426 9.6474 0.411912 9.6474 0.666672V4.007C11.5347 4.11302 13.0359 4.67225 14.2134 5.55105C15.5204 6.52639 16.3797 7.85847 16.9418 9.28015C18.0571 12.1006 18.0478 15.3937 17.9706 17.3595C17.9563 17.7223 17.6544 18.007 17.2913 17.9999C16.9283 17.9927 16.6378 17.6964 16.6378 17.3333C16.6378 17.2088 16.599 16.9855 16.4876 16.6619C16.3796 16.3485 16.2165 15.978 16.0015 15.572C15.5714 14.7597 14.9518 13.8391 14.207 12.9928C13.4603 12.1445 12.6071 11.3927 11.716 10.8938C11.0208 10.5045 10.3252 10.2811 9.6474 10.2644V13.6296C9.6474 13.8844 9.50221 14.1169 9.2733 14.2287C9.04438 14.3405 8.77176 14.312 8.57084 14.1554L0.257105 7.67392C0.095068 7.5476 0.000331879 7.35361 0.000331879 7.14815C0.000331879 6.94269 0.095068 6.74871 0.257105 6.62239L8.57084 0.140905Z"
-                                      fill="currentColor"
-                                    />
-                                  </svg>
-                                </Link>
-                                <button
-                                  onClick={() => likeComment(com.id)}
-                                  className="w-5 h-5 flex items-center justify-center group"
-                                >
-                                  {com.liked ? (
-                                    <svg
-                                      className="text-red-500 group-hover:text-gray-800 transition-all duration-700 ease-in-out"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="18"
-                                      height="18"
-                                      viewBox="0 0 18 18"
-                                      fill="none"
-                                    >
-                                      <path
-                                        d="M1.62629 2.43257C3.64001 0.448687 6.82082 0.311339 8.99614 2.02053C11.1723 0.311339 14.3589 0.448687 16.3726 2.43257L16.3734 2.43334C18.5412 4.57611 18.5412 8.04382 16.3804 10.1867L16.378 10.1891L9.46309 16.9764C9.20352 17.2312 8.78765 17.2309 8.52844 16.9758L1.62629 10.1821C-0.542748 8.04516 -0.542748 4.56947 1.62629 2.43257Z"
-                                        fill="currentColor"
-                                      />
-                                    </svg>
-                                  ) : (
-                                    <svg
-                                      className="text-[#007595] group-hover:text-gray-800 transition-all duration-700 ease-in-out"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="18"
-                                      height="18"
-                                      viewBox="0 0 18 18"
-                                      fill="none"
-                                    >
-                                      <path
-                                        d="M1.62629 2.43257C3.64001 0.448687 6.82082 0.311339 8.99614 2.02053C11.1723 0.311339 14.3589 0.448687 16.3726 2.43257L16.3734 2.43334C18.5412 4.57611 18.5412 8.04382 16.3804 10.1867L16.378 10.1891L9.46309 16.9764C9.20352 17.2312 8.78765 17.2309 8.52844 16.9758L1.62629 10.1821C-0.542748 8.04516 -0.542748 4.56947 1.62629 2.43257Z"
-                                        fill="currentColor"
-                                      />
-                                    </svg>
-                                  )}
-                                </button>
-                                <span className="text-xs text-gray-500">
-                                  {com.likes_count}
-                                </span>
-                                <Link
-                                  onClick={() => deleteComment(com.id)}
-                                  to=""
-                                  className="w-5 h-5 flex items-center justify-center group"
-                                >
-                                  <svg
-                                    className="text-[#007595] group-hover:text-gray-800 transition-all duration-700 ease-in-out"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="18"
-                                    height="18"
-                                    viewBox="0 0 18 18"
-                                    fill="none"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      clipRule="evenodd"
-                                      d="M4.5835 3.16634V3.83301H1.50016C1.13197 3.83301 0.833496 4.13148 0.833496 4.49967C0.833496 4.86786 1.13197 5.16634 1.50016 5.16634L2.33356 5.16642L2.33356 11.5482C2.33354 12.6855 2.33352 13.6065 2.43103 14.3318C2.5325 15.0865 2.75042 15.7283 3.26105 16.2389C3.77168 16.7495 4.4135 16.9675 5.16821 17.0689C5.89348 17.1665 6.81445 17.1664 7.9518 17.1664H10.0486C11.186 17.1664 12.107 17.1665 12.8322 17.0689C13.5869 16.9675 14.2288 16.7495 14.7394 16.2389C15.25 15.7283 15.4679 15.0865 15.5694 14.3318C15.6669 13.6065 15.6669 12.6856 15.6669 11.5483V5.16642L16.5002 5.16634C16.8684 5.16634 17.1668 4.86786 17.1668 4.49967C17.1668 4.13148 16.8684 3.83301 16.5002 3.83301H13.4168V3.16634C13.4168 1.87768 12.3722 0.833008 11.0835 0.833008H6.91683C5.62817 0.833008 4.5835 1.87768 4.5835 3.16634ZM6.91683 2.16634C6.36455 2.16634 5.91683 2.61406 5.91683 3.16634V3.83301H12.0835V3.16634C12.0835 2.61406 11.6358 2.16634 11.0835 2.16634H6.91683ZM7.50014 7.58303C7.86833 7.58303 8.16681 7.8815 8.16681 8.24969L8.16681 12.7497C8.16681 13.1179 7.86833 13.4164 7.50014 13.4164C7.13195 13.4164 6.83348 13.1179 6.83348 12.7497L6.83348 8.24969C6.83348 7.8815 7.13195 7.58303 7.50014 7.58303ZM11.1669 8.24969C11.1669 7.8815 10.8684 7.58303 10.5002 7.58303C10.132 7.58303 9.83356 7.8815 9.83356 8.24969V12.7497C9.83356 13.1179 10.132 13.4164 10.5002 13.4164C10.8684 13.4164 11.1669 13.1179 11.1669 12.7497L11.1669 8.24969Z"
-                                      fill="currentColor"
-                                    />
-                                  </svg>
-                                </Link>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              </div>
-            )} */}
+            {/* Modal with AI Chat */}
+            <ChatModal isOpen={chatOpen} onClose={() => setChatOpen(false)} />
           </div>
         </div>
       </div>

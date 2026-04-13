@@ -124,13 +124,13 @@ class UserController extends Controller
     {
 
         $user = auth()->user();
-       
+
         if (!$user) {
             return response()->json([
-            'status' => 401,
-            'message' => "Login First",
+                'status' => 401,
+                'message' => "Login First",
 
-        ], 401);
+            ], 401);
         }
 
         $product = Product::findOrFail($id);
@@ -209,6 +209,17 @@ class UserController extends Controller
     // ratingStore
     public function storeReviews(Request $request, string $id)
     {
+
+
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 401,
+                'message' => "Login First",
+
+            ], 401);
+        }
 
         $validator = Validator::make($request->all(), [
             'review' => 'nullable|string',

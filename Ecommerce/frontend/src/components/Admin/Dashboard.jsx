@@ -167,7 +167,7 @@ function Dashboard() {
                       <h2>Orders</h2>
                     </div>
                     <div className="bg-gray-100 text-center py-2 border-t border-gray-300">
-                      <Link to="/admin/orders">View Orders</Link>
+                      <Link to="/orders">View Orders</Link>
                     </div>
                   </div>
                   {/* <div className="shadow-lg rounded-lg border-2 border-gray-200">

@@ -135,16 +135,16 @@ function OrderDetail() {
 
         <div className="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition">
           <h3 className="font-semibold text-gray-700">Customer</h3>
-          <p className="text-gray-600 break-words">{order.user?.name}</p>
-          <p className="text-gray-600 break-words">{order.user?.email}</p>
-          <p className="text-gray-600 break-words">
+          <p className="text-gray-600 break-word">{order.user?.name}</p>
+          <p className="text-gray-600 break-word">{order.user?.email}</p>
+          <p className="text-gray-600 break-word">
             {order.user?.profile?.phone_num}
           </p>
         </div>
 
         <div className="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition">
           <h3 className="font-semibold text-gray-700">Shipping</h3>
-          <p className="text-gray-600 break-words">
+          <p className="text-gray-600 break-word">
             {order.user?.profile?.city}, {order.user?.profile?.state}
           </p>
           <p className="text-gray-600">
@@ -192,7 +192,7 @@ function OrderDetail() {
               />
 
               <div className="text-center sm:text-left flex-1">
-                <p className="font-medium text-gray-800 break-words">
+                <p className="font-medium text-gray-800 break-word">
                   {item.product?.title}
                 </p>
                 <p className="text-gray-500 text-sm">Qty: {item.qty}</p>

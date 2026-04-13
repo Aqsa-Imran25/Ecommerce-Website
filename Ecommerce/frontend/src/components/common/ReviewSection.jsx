@@ -22,7 +22,7 @@ function ReviewSection() {
   // submit review
   const submitReview = async () => {
     if (!UserToken()) {
-      toast.error("Login required!");
+      toast.error("Authentication required. Please log in.");
       return;
     }
     if (rating === 0) {

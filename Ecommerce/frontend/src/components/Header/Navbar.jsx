@@ -10,17 +10,15 @@ import { CartContext } from "../context/Cart";
 import { apiUrl } from "../common/Http";
 
 function Navbar() {
-  // ================= SEARCH STATES =================
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [loading, setLoading] = useState(false); // ✅ FIXED
+  const [loading, setLoading] = useState(false); 
 
   const debounceRef = useRef(null);
 
   const [open, setOpen] = useState(false);
 
-  // ================= AUTH =================
   const { user: adminLogin, logout: adminLogout } =
     useContext(AdminAuthContext);
 
@@ -46,7 +44,6 @@ function Navbar() {
     else userLogout();
   };
 
-  // ================= SEARCH (DEBOUNCED) =================
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -82,7 +79,6 @@ function Navbar() {
     }, 400);
   };
 
-  // ================= SEARCH BUTTON =================
   const handleSearchClick = async () => {
     if (!searchTerm.trim()) return;
 
@@ -145,7 +141,6 @@ function Navbar() {
           {/* RIGHT SIDE */}
           <div className="hidden md:flex items-center gap-6">
 
-            {/* ================= SEARCH ================= */}
             <div className="relative w-80 search-box">
 
               <div className="flex items-center bg-white border border-gray-300 rounded-full overflow-hidden shadow-sm">

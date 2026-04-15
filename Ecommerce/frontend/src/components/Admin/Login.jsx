@@ -22,8 +22,6 @@ function Login() {
 
   const [loading, setLoading] = useState(false);
 
-
-
   const onHandleSubmit = async (data) => {
     try {
       setLoading(true);

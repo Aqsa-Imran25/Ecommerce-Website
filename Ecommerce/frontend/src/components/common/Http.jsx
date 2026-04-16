@@ -51,3 +51,6 @@ export const getUserRole = () => {
     if (UserToken()) return "user";
     return null;
 };
+
+// STRIPE
+export const STRIPE_PUBLIC_KEY = "pk_test_51TMhpoLVjBqDWLjX0Fh557bSXA7HlhdpGffkLgWXtdVNeKh8Ko1YZRhh9WxQQDuwbwo9zfeSBvvCCWDlRvku8Gvd00ly03kPiB";

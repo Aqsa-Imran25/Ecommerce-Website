@@ -28,8 +28,6 @@ function Shop() {
   //   fetchProduct
   const fetchProducts = async () => {
     // search
-    console.log('catechecked=', categoriesChecked);
-    console.log('brandchecked=', brandChecked);
 
     try {
       let search = [];
@@ -59,7 +57,6 @@ function Shop() {
       });
       const result = await res.json();
       if (result.status === 200)
-        console.log("products", result)
       setProducts(result.data);
     } catch (error) {
       console.error("Fetch error:", error);

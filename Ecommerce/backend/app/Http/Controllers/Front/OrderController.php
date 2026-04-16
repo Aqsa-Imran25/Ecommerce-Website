@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-
-
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
+use Stripe\Webhook;
+use Illuminate\Support\Facades\Log;
 
 
 class OrderController extends Controller
@@ -71,8 +73,6 @@ class OrderController extends Controller
         DB::beginTransaction();
 
         try {
-
-            // Create Order
             $orderNumber = 'ORD-' . now()->format('Ymd') . '-' . strtoupper(Str::random(5));
 
             $order = Order::create([
@@ -257,5 +257,82 @@ class OrderController extends Controller
             'status' => 200,
             'data' => $earnings
         ]);
+    }
+
+    // stripe
+    public function createPaymentStripe(Request $request)
+    {
+        try {
+
+            Stripe::setApiKey(config('services.stripe.secret'));
+
+            $paymentIntent = PaymentIntent::create([
+                'amount' => (int) round($request->amount * 100),
+                'currency' => 'usd',
+                'automatic_payment_methods' => [
+                    'enabled' => true,
+                ],
+                'metadata' => [
+                    'order_id' => $request->order_id,
+                ]
+            ]);
+
+            return response()->json([
+                'status' => 200,
+                'clientSecret' => $paymentIntent->client_secret
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+
+
+    public function stripeWebhook(Request $request)
+    {
+        $payload = $request->getContent();
+        $sigHeader = $request->header('Stripe-Signature');
+        $endpointSecret = env('STRIPE_WEBHOOK_SECRET');
+
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload,
+                $sigHeader,
+                $endpointSecret
+            );
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Invalid signature'], 400);
+        }
+
+        // IMPORTANT EVENT
+        if ($event->type === 'payment_intent.succeeded') {
+
+            $paymentIntent = $event->data->object;
+
+            $orderId = $paymentIntent->metadata->order_id ?? null;
+
+            if ($orderId) {
+                Payment::where('order_id', $orderId)
+                    ->update(['status' => 'successful']);
+
+                Order::where('id', $orderId)
+                    ->update(['status' => 'paid']);
+            }
+
+            \Log::info("Payment succeeded for order: " . $orderId);
+        }
+
+        if ($event->type === 'payment_intent.payment_failed') {
+
+            $paymentIntent = $event->data->object;
+
+            Payment::where('order_id', $paymentIntent->metadata->order_id ?? null)
+                ->update(['status' => 'failed']);
+        }
+
+        return response()->json(['status' => 'success']);
     }
 }

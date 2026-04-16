@@ -50,7 +50,10 @@ Route::get('/product/{id}/reviews', [FrontUserController::class, 'getReviews']);
 // navbar-product-search 
 Route::get('/products/search', [ProducController::class, 'search']);
 
+// stripe-route
+Route::post('/paymentStripe', [OrderController::class, 'createPaymentStripe']);
 
+Route::post('/stripe/webhook', [OrderController::class, 'stripeWebhook']);
 
 Route::group([
     'middleware' => [

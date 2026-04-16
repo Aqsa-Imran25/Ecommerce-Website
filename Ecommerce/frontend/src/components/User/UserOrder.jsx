@@ -99,9 +99,7 @@ function UserOrder() {
                                                         <th scope="col" className="px-6 py-3 font-medium text-center">
                                                             Date
                                                         </th>
-                                                        {/* <th scope="col" className="px-6 py-3 font-medium text-center">
-                                                            Payment
-                                                        </th> */}
+                                                
                                                         <th scope="col" className="px-6 py-3 font-medium text-center">
                                                             Status
                                                         </th>

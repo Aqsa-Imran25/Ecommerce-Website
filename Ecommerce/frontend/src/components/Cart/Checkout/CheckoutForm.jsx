@@ -203,7 +203,6 @@ function CheckoutForm() {
 
                 if (paymentResult.paymentIntent && paymentResult.paymentIntent.status === "succeeded") {
                     console.log("Payment success:", paymentResult.paymentIntent);
-
                     toast.success("Payment Successful!");
                     navigate(`/myorder/${orderId}`);
                 } else {
@@ -223,7 +222,7 @@ function CheckoutForm() {
         setLoading(false);
     };
 
-    useEffect(() => {
+    useEffect(() => { 
         fetchUserData();
         fetchProfileData();
     }, []);

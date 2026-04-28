@@ -291,48 +291,64 @@ class OrderController extends Controller
 
 
 
-    public function stripeWebhook(Request $request)
-    {
-        $payload = $request->getContent();
-        $sigHeader = $request->header('Stripe-Signature');
-        $endpointSecret = env('STRIPE_WEBHOOK_SECRET');
+ public function stripeWebhook(Request $request)
+{
+    Log::info("🔵 Stripe webhook HIT");
 
-        try {
-            $event = \Stripe\Webhook::constructEvent(
-                $payload,
-                $sigHeader,
-                $endpointSecret
-            );
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Invalid signature'], 400);
-        }
+    $payload = $request->getContent();
+    $sigHeader = $request->header('Stripe-Signature');
+    $endpointSecret = env('STRIPE_WEBHOOK_SECRET');
 
-        // IMPORTANT EVENT
-        if ($event->type === 'payment_intent.succeeded') {
+    Log::info("Payload: " . $payload);
 
-            $paymentIntent = $event->data->object;
-
-            $orderId = $paymentIntent->metadata->order_id ?? null;
-
-            if ($orderId) {
-                Payment::where('order_id', $orderId)
-                    ->update(['status' => 'successful']);
-
-                Order::where('id', $orderId)
-                    ->update(['status' => 'paid']);
-            }
-
-            \Log::info("Payment succeeded for order: " . $orderId);
-        }
-
-        if ($event->type === 'payment_intent.payment_failed') {
-
-            $paymentIntent = $event->data->object;
-
-            Payment::where('order_id', $paymentIntent->metadata->order_id ?? null)
-                ->update(['status' => 'failed']);
-        }
-
-        return response()->json(['status' => 'success']);
+    try {
+        $event = \Stripe\Webhook::constructEvent(
+            $payload,
+            $sigHeader,
+            $endpointSecret
+        );
+    } catch (\Exception $e) {
+        Log::error("❌ Stripe signature error: " . $e->getMessage());
+        return response()->json(['error' => 'Invalid signature'], 400);
     }
+
+    Log::info("Event Type: " . $event->type);
+
+    // SUCCESS PAYMENT
+    if ($event->type === 'payment_intent.succeeded') {
+
+        $paymentIntent = $event->data->object;
+
+        Log::info("PaymentIntent ID: " . $paymentIntent->id);
+
+        $orderId = $paymentIntent->metadata->order_id ?? null;
+
+        Log::info("Order ID: " . $orderId);
+
+        if ($orderId) {
+
+            $updatedPayment = Payment::where('order_id', $orderId)
+                ->update(['status' => 'successful']);
+
+            $updatedOrder = Order::where('id', $orderId)
+                ->update(['status' => 'paid']);
+
+            Log::info("Payment updated: " . $updatedPayment);
+            Log::info("Order updated: " . $updatedOrder);
+        }
+    }
+
+    // FAILED PAYMENT
+    if ($event->type === 'payment_intent.payment_failed') {
+
+        $paymentIntent = $event->data->object;
+
+        Log::info("Payment failed event");
+
+        Payment::where('order_id', $paymentIntent->metadata->order_id ?? null)
+            ->update(['status' => 'failed']);
+    }
+
+    return response()->json(['status' => 'success']);
+}
 }

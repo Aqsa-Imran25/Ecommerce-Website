@@ -263,19 +263,34 @@ class OrderController extends Controller
     public function createPaymentStripe(Request $request)
     {
         try {
-
             Stripe::setApiKey(config('services.stripe.secret'));
 
+            Log::info("Order ID received:", $request->all());
+            $order = Order::find($request->order_id);
+
+            if (!$order) {
+                return response()->json([
+                    'status' => 404,
+                    'error' => 'Order not found'
+                ]);
+            }
+
             $paymentIntent = PaymentIntent::create([
-                'amount' => (int) round($request->amount * 100),
+                'amount' => (int) round($order->grand_total * 100),
                 'currency' => 'usd',
                 'automatic_payment_methods' => [
                     'enabled' => true,
                 ],
                 'metadata' => [
-                    'order_id' => $request->order_id,
+                    'order_id' => (string) $order->id
                 ]
             ]);
+            Log::info("Created PI Metadata:", $paymentIntent->metadata->toArray());
+
+            Payment::where('order_id', $request->order_id)
+                ->update([
+                    'stripe_pi' => $paymentIntent->id
+                ]);
 
             return response()->json([
                 'status' => 200,
@@ -291,64 +306,51 @@ class OrderController extends Controller
 
 
 
- public function stripeWebhook(Request $request)
-{
-    Log::info("🔵 Stripe webhook HIT");
+    public function stripeWebhook(Request $request)
+    {
+        Log::info("🔵 Stripe webhook HIT");
 
-    $payload = $request->getContent();
-    $sigHeader = $request->header('Stripe-Signature');
-    $endpointSecret = env('STRIPE_WEBHOOK_SECRET');
+        $payload = $request->getContent();
+        $sigHeader = $request->header('Stripe-Signature');
+        $endpointSecret = env('STRIPE_WEBHOOK_SECRET');
 
-    Log::info("Payload: " . $payload);
-
-    try {
-        $event = \Stripe\Webhook::constructEvent(
-            $payload,
-            $sigHeader,
-            $endpointSecret
-        );
-    } catch (\Exception $e) {
-        Log::error("❌ Stripe signature error: " . $e->getMessage());
-        return response()->json(['error' => 'Invalid signature'], 400);
-    }
-
-    Log::info("Event Type: " . $event->type);
-
-    // SUCCESS PAYMENT
-    if ($event->type === 'payment_intent.succeeded') {
-
-        $paymentIntent = $event->data->object;
-
-        Log::info("PaymentIntent ID: " . $paymentIntent->id);
-
-        $orderId = $paymentIntent->metadata->order_id ?? null;
-
-        Log::info("Order ID: " . $orderId);
-
-        if ($orderId) {
-
-            $updatedPayment = Payment::where('order_id', $orderId)
-                ->update(['status' => 'successful']);
-
-            $updatedOrder = Order::where('id', $orderId)
-                ->update(['status' => 'paid']);
-
-            Log::info("Payment updated: " . $updatedPayment);
-            Log::info("Order updated: " . $updatedOrder);
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload,
+                $sigHeader,
+                $endpointSecret
+            );
+        } catch (\Exception $e) {
+            Log::error("❌ Signature error: " . $e->getMessage());
+            return response()->json(['error' => 'Invalid signature'], 400);
         }
+
+
+        if ($event->type === 'payment_intent.succeeded') {
+
+            $paymentIntent = $event->data->object;
+
+            $payment = Payment::where('stripe_pi', $paymentIntent->id)->first();
+
+            if (!$payment) {
+                Log::error("❌ Payment not found for PI: " . $paymentIntent->id);
+                return response()->json(['status' => 'error']);
+            }
+
+            $orderId = $payment->order_id;
+
+            $payment->update([
+                'status' => 'successful'
+            ]);
+
+            Order::where('id', $orderId)->update([
+                'status' => 'delivered' 
+            ]);
+
+            Log::info("✅ Payment + Order updated for Order ID: " . $orderId);
+        }
+
+
+        return response()->json(['status' => 'success']);
     }
-
-    // FAILED PAYMENT
-    if ($event->type === 'payment_intent.payment_failed') {
-
-        $paymentIntent = $event->data->object;
-
-        Log::info("Payment failed event");
-
-        Payment::where('order_id', $paymentIntent->metadata->order_id ?? null)
-            ->update(['status' => 'failed']);
-    }
-
-    return response()->json(['status' => 'success']);
-}
 }

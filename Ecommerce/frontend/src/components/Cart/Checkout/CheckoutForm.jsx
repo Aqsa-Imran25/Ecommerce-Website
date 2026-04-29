@@ -151,6 +151,7 @@ function CheckoutForm() {
             }
 
             const orderId = orderResult.order.id;
+            console.log("Order-Id", orderId);
 
             if (data.payment === "stripe") {
                 if (!stripe || !elements) {
@@ -169,8 +170,16 @@ function CheckoutForm() {
                         order_id: orderId
                     })
                 });
+                console.log("Sending body:", {
+                    amount: grandTotal(),
+                    order_id: orderId
+                });
+                console.log("Order-Id", orderId);
+
 
                 const result = await res.json();
+                console.log("Order ID Result:", result);
+                console.log("clientSecret", result.clientSecret);
                 if (!result.clientSecret) {
                     toast.error("Stripe error");
                     return;
@@ -186,9 +195,6 @@ function CheckoutForm() {
                             billing_details: {
                                 name: data.name,
                                 email: data.email,
-                                address: {
-                                    postal_code: data.zip,
-                                },
                             },
                         },
                     }
@@ -222,7 +228,7 @@ function CheckoutForm() {
         setLoading(false);
     };
 
-    useEffect(() => { 
+    useEffect(() => {
         fetchUserData();
         fetchProfileData();
     }, []);

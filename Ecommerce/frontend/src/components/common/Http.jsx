@@ -53,4 +53,5 @@ export const getUserRole = () => {
 };
 
 // STRIPE
-export const STRIPE_PUBLIC_KEY = "pk_test_51TMhpoLVjBqDWLjX0Fh557bSXA7HlhdpGffkLgWXtdVNeKh8Ko1YZRhh9WxQQDuwbwo9zfeSBvvCCWDlRvku8Gvd00ly03kPiB";
+
+export const STRIPE_PUBLIC_KEY = "pk_test_51TMhqKPtKokdEXV3xwEoIK0C8JjBTzf9I3dEVb2Z9TqvaiQyNp1v3zQd3rMUDCA5iE8EajuVBHDU7WxP0WIgQ89K00d1Qn5O4L";

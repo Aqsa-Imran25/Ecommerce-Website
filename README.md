@@ -15,7 +15,9 @@ Designed for scalability, clean architecture, and a smooth user experience.
 - Cart & checkout system  
 - Order management system  
 - Fully responsive UI  
-- AI chatbot powered by Ollama (local LLM)  
+- AI chatbot powered by Ollama (local LLM)
+- Stripe payment integration (secure online payments)  
+
 
 ---
 
@@ -38,5 +40,16 @@ Designed for scalability, clean architecture, and a smooth user experience.
 - No external API keys required  
 - Fast and private responses  
 - Integrated into eCommerce workflow
+
+---
+
+## 💳 Stripe Payment Integration
+
+- Secure online payments using Stripe  
+- Supports credit/debit cards and digital wallets (Apple Pay, Google Pay)  
+- Real-time payment processing with Payment Intents API  
+- Webhook integration for payment confirmation  
+- Automatic order status update after successful payment  
+- Scalable for multi-vendor marketplace (Stripe Connect ready)
 
 Built as a full-stack project focusing on scalability and real-world eCommerce architecture.

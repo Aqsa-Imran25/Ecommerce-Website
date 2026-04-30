@@ -15,6 +15,7 @@ import {
 
 import { apiUrl, getAuthToken, getUserRole } from "../../common/Http";
 import AdminSample from "../../common/AdminSample";
+import Pagination from "../../Pagination";
 
 function ProductShow() {
   const [products, setproducts] = useState([]);
@@ -23,7 +24,7 @@ function ProductShow() {
   const [selectedProducts, setSelectedProducts] = useState([]);
   // role
   const role = getUserRole();
-
+  const [currentPage, setCurrentPage] = useState(1)
   // deleteproduct
 
   const deleteproduct = async (id) => {
@@ -50,9 +51,9 @@ function ProductShow() {
     }
   };
 
-  const fetchproductApi = async () => {
+  const fetchproductApi = async (page = 1) => {
     setLoader(true);
-    const res = await fetch(`${apiUrl}/products`, {
+    const res = await fetch(`${apiUrl}/products?page=${page}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -174,18 +175,17 @@ function ProductShow() {
   // };
 
   useEffect(() => {
-    fetchproductApi();
-  }, []);
+    fetchproductApi(currentPage);
+  }, [currentPage]);
   return (
     <>
       <AdminSample title="Products" btnText="Create" to="/products/create">
         <div className="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base">
           {loader == true && <Loader />}
-          {loader == false && products.length == 0 && (
-            <Empty text="products Are Empty!" />
-          )}
+          {
+            !loader && (!products?.data || products.data.length === 0) && <Empty text="Products Not Found!" />}
 
-          {products && products.length > 0 && (
+          {products?.data && products.data.length > 0 && (
             <>
               {selectedProducts.length > 0 && (
                 <div className="mb-5 font-bold text-white">
@@ -267,7 +267,7 @@ function ProductShow() {
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((product, index) => (
+                  {products.data.map((product, index) => (
                     <tr
                       key={index}
                       className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-gray-300"
@@ -398,6 +398,16 @@ function ProductShow() {
             </>
           )}
         </div>
+        {
+          products?.data && products.data.length > 0 &&
+          <div className='flex justify-end items-end'>
+            <Pagination
+              currentPage={products.current_page}
+              lastPage={products.last_page}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          </div>
+        }
       </AdminSample>
     </>
   );

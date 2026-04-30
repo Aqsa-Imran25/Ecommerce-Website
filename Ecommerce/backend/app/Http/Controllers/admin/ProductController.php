@@ -31,7 +31,7 @@ class ProductController extends Controller
             ->orderBy('created_at', 'ASC');
 
         if ($user->hasRole('admin')) {
-            $products = $query->get();
+            $products = $query->paginate(3);
         } else if ($user->hasRole('vendor')) {
 
             $storeIds = Store::where('user_id', $user->id)->pluck('id');
@@ -43,7 +43,7 @@ class ProductController extends Controller
                 ]);
             }
 
-            $products = $query->whereIn('store_id', $storeIds)->get();
+            $products = $query->whereIn('store_id', $storeIds)->paginate(3);
         }
 
         return response()->json([

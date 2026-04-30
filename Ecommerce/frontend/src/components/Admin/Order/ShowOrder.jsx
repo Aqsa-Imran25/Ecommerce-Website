@@ -149,8 +149,9 @@ function ShowOrder() {
                                     }
                                 </div>
 
-                            </div>{
-                                orders.length === 0 &&
+                            </div>
+                            {
+                                orders?.data && orders.data.length > 0 &&
                                 <div className='flex justify-end items-end'>
                                     <Pagination
                                         currentPage={orders.current_page}

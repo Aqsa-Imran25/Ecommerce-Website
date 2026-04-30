@@ -3,21 +3,24 @@ import { adminToken, apiUrl, getAuthToken, getUserRole } from "../../common/Http
 import Sample2 from "../../common/Sample2";
 import Loader from "../../common/Loader";
 import Empty from "../../common/Empty";
+import Pagination from "../../Pagination";
+
 
 function EarningDashboard() {
   const role = getUserRole();
   const [loader, setLoader] = useState(false);
 
   const [earningsVendor, setEarningsVendor] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1)
+
 
   const [earnings, setEarnings] = useState([]);
 
   // fetch all earnings-admin
-  const fetchEarnings = async () => {
+  const fetchEarnings = async (page = 1) => {
     try {
       setLoader(true);
-
-      const res = await fetch(`${apiUrl}/admin/totalEarnings`, {
+      const res = await fetch(`${apiUrl}/admin/totalEarnings?page=${page}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -25,10 +28,8 @@ function EarningDashboard() {
           Authorization: `Bearer ${adminToken()}`,
         },
       });
-
       const result = await res.json();
       console.log("Result", result.data)
-      console.log("Result", result.data.commission)
 
       if (!res.ok) {
         throw new Error(result.message || "Server Error");
@@ -44,11 +45,11 @@ function EarningDashboard() {
   };
 
   // vendorearnings
-  const fetchVendorEarnings = async () => {
+  const fetchVendorEarnings = async (page = 1) => {
     try {
       setLoader(true);
 
-      const res = await fetch(`${apiUrl}/vendorEarnings`, {
+      const res = await fetch(`${apiUrl}/vendorEarnings?page=${page}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${getAuthToken()}`,
@@ -75,11 +76,11 @@ function EarningDashboard() {
 
   useEffect(() => {
     if (role === "admin") {
-      fetchEarnings();
+      fetchEarnings(currentPage);
     } else {
-      fetchVendorEarnings();
+      fetchVendorEarnings(currentPage);
     }
-  }, [role]);
+  }, [role, currentPage]);
 
   return (
     //  manually
@@ -92,7 +93,8 @@ function EarningDashboard() {
         {role === "vendor" && loader == false && earningsVendor.length == 0 && (
           <Empty text="Vendor Earnings Are Empty!" />
         )}
-        {role === "admin" && earnings.length > 0 && (
+
+        {role === "admin" && earnings?.data && earnings.data.length > 0 && (
           <table className="w-full text-sm text-left rtl:text-right text-body">
             <thead className="bg-neutral-secondary-soft border-b border-gray-300">
               <tr>
@@ -129,43 +131,44 @@ function EarningDashboard() {
               </tr>
             </thead>
             <tbody>
-              {earnings.map((earning, index) => (
+              {
+                earnings.data.map((earning, index) => (
 
-                <tr
-                  key={index}
-                  className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-gray-300"
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-heading whitespace-nowrap"
+                  <tr
+                    key={index}
+                    className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-gray-300"
                   >
-                    {earning.order.order_number}{" "}
-                  </th>
-                  <td className="px-6 py-4">{earning.store.user?.name} </td>
-                  <td className="px-6 py-4">{earning.store.name} </td>
-                  <td className="px-6 py-4">
-                    {new Date(earning.order.created_at).toLocaleString(
-                      "en-US",
-                      {
-                        year: "numeric",
-                        month: "short",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      },
-                    )}
-                  </td>{" "}
-                  <td className="px-6 py-4">{earning.order.grand_total} </td>
-                  <td className="px-6 py-4">{earning.amount}</td>
-                  <td className="px-6 py-4">{earning.commission}</td>
-                  <td className="px-6 py-4">{earning.net_amount}</td>
-                  <td className="px-6 py-4">{earning.order.status}</td>
-                </tr>
-              ))}
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-heading whitespace-nowrap"
+                    >
+                      {earning.order.order_number}{" "}
+                    </th>
+                    <td className="px-6 py-4">{earning.store.user?.name} </td>
+                    <td className="px-6 py-4">{earning.store.name} </td>
+                    <td className="px-6 py-4">
+                      {new Date(earning.order.created_at).toLocaleString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "short",
+                          day: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        },
+                      )}
+                    </td>{" "}
+                    <td className="px-6 py-4">{earning.order.grand_total} </td>
+                    <td className="px-6 py-4">{earning.amount}</td>
+                    <td className="px-6 py-4">{earning.commission}</td>
+                    <td className="px-6 py-4">{earning.net_amount}</td>
+                    <td className="px-6 py-4">{earning.order.status}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         )}
-        {role === "vendor" && earningsVendor.length > 0 && (
+        {role === "vendor" && earningsVendor?.data && earningsVendor.data.length > 0 && (
           <table className="w-full text-sm text-left rtl:text-right text-body">
             <thead className="bg-neutral-secondary-soft border-b border-gray-300">
               <tr>
@@ -196,7 +199,7 @@ function EarningDashboard() {
               </tr>
             </thead>
             <tbody>
-              {earningsVendor.map((earning, index) => (
+              {earningsVendor.data.map((earning, index) => (
                 <tr
                   key={index}
                   className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-gray-300"
@@ -236,6 +239,31 @@ function EarningDashboard() {
           </table>
         )}
       </div>
+      {
+        role === "admin" && earnings?.data && earnings.data.length > 0 && (
+          <div className='flex justify-end items-end'>
+            <Pagination
+              currentPage={earnings.current_page}
+              lastPage={earnings.last_page}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          </div>
+        )
+      }
+      {
+
+        role === "vendor" && earningsVendor?.data && earningsVendor.data.length > 0 &&
+        (
+          <div className='flex justify-end items-end'>
+            <Pagination
+              currentPage={earningsVendor.current_page}
+              lastPage={earningsVendor.last_page}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          </div>
+        )
+      }
+
     </Sample2>
   );
 }

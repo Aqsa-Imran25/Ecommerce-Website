@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     /**
+     * 
      * Display a listing of the resource.
      */
     public function index()
@@ -132,7 +133,7 @@ class OrderController extends Controller
     }
     public function allEarnings()
     {
-        $earnings = Vendor_earnings::with(['store.user', 'order'])->get();
+        $earnings = Vendor_earnings::with(['store.user', 'order'])->orderBy('created_at', 'ASC')->paginate(8);
         return response()->json([
             'status' => 200,
             'data' => $earnings

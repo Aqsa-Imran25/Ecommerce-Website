@@ -251,7 +251,7 @@ class OrderController extends Controller
 
         $earnings = Vendor_earnings::whereIn('store_id', $storeIds)
             ->with(['store.user', 'order.user'])
-            ->get();
+            ->paginate(6);
 
         return response()->json([
             'status' => 200,
